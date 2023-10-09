@@ -1,6 +1,7 @@
 package game;
 
 import game.controller.GameController;
+import game.controller.GameControllerImpl;
 import game.model.KillDoctorLucky;
 import game.model.KillDoctorLuckyImpl;
 import java.io.InputStreamReader;
@@ -25,7 +26,7 @@ public class Driver {
       KillDoctorLucky killDoctorLucky = new KillDoctorLuckyImpl(filePath, 2);
       final Readable in = new InputStreamReader(System.in);
       final Appendable out = System.out;
-      GameController controller = new GameController(killDoctorLucky, in, out);
+      GameController controller = new GameControllerImpl(killDoctorLucky, in, out);
       controller.startGame();
     } catch (IllegalArgumentException e) {
       System.out.printf("%s%n", e.getMessage());

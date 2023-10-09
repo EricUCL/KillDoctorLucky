@@ -12,7 +12,7 @@ import java.util.Scanner;
 /**
  * Controller class to run the game.
  */
-public class GameController {
+public class GameControllerImpl implements GameController{
   private final List<String> commands;
   private final Map<String, Runnable> gameCommands;
   private final KillDoctorLucky killDoctorLucky;
@@ -26,7 +26,7 @@ public class GameController {
    * @param in              Readable object.
    * @param out             Appendable object.
    */
-  public GameController(KillDoctorLucky killDoctorLucky, Readable in, Appendable out) {
+  public GameControllerImpl(KillDoctorLucky killDoctorLucky, Readable in, Appendable out) {
     this.killDoctorLucky = killDoctorLucky;
     this.in = new Scanner(in);
     this.out = out;
@@ -38,6 +38,7 @@ public class GameController {
   /**
    * Method to start the game.
    */
+  @Override
   public void startGame() {
     if (killDoctorLucky == null) {
       throw new IllegalArgumentException("Model cannot be null");
