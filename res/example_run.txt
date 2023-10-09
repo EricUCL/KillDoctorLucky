@@ -1,0 +1,84 @@
+java -jar KillDoctorLucky.jar /Users/ucl/Documents/CS5010/KillDoctorLucky/res/mansion.txt
+Available commands are:
+1. Display World Info
+2. Display Room Info By Index
+3. Display Item Info By Index
+4. Create World Image
+5. Move Target
+6. Display Target Info
+1
+----------------- Start ----------------
+World Name: Doctor Lucky's Mansion
+Target Name: Doctor Lucky
+Target Health: 50
+Max Turns: 2
+Number of Rooms: 21
+Number of Items: 20
+
+------------------ End -----------------
+Available commands are:
+1. Display World Info
+2. Display Room Info By Index
+3. Display Item Info By Index
+4. Create World Image
+5. Move Target
+6. Display Target Info
+2
+----------------- Start ----------------
+Enter room index: 12
+name: Master Suite, id: 12, items: [name: Shoe Horn, damage: 2], neighbor rooms id: 10 11 13 17
+------------------ End -----------------
+Available commands are:
+1. Display World Info
+2. Display Room Info By Index
+3. Display Item Info By Index
+4. Create World Image
+5. Move Target
+6. Display Target Info
+3
+----------------- Start ----------------
+Enter item index: 1
+name: Letter Opener, damage: 2
+------------------ End -----------------
+Available commands are:
+1. Display World Info
+2. Display Room Info By Index
+3. Display Item Info By Index
+4. Create World Image
+5. Move Target
+6. Display Target Info
+4
+----------------- Start ----------------
+Successfully generate to ./image.png
+------------------ End -----------------
+Available commands are:
+1. Display World Info
+2. Display Room Info By Index
+3. Display Item Info By Index
+4. Create World Image
+5. Move Target
+6. Display Target Info
+5
+----------------- Start ----------------
+Target moved to room 1
+------------------ End -----------------
+Available commands are:
+1. Display World Info
+2. Display Room Info By Index
+3. Display Item Info By Index
+4. Create World Image
+5. Move Target
+6. Display Target Info
+6
+----------------- Start ----------------
+Name: Doctor Lucky, Health: 50, Room: 1
+------------------ End -----------------
+Available commands are:
+1. Display World Info
+2. Display Room Info By Index
+3. Display Item Info By Index
+4. Create World Image
+5. Move Target
+6. Display Target Info
+q
+Ending Game

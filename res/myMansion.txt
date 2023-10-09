@@ -1,0 +1,32 @@
+46 40 Doctor Lucky's Mansion
+50 Doctor Lucky
+14
+ 1  4  6  9 Grand Hall
+ 9  1 11  7 Gallery
+ 1  10  4 14 Breakfast Nook
+ 8  8 11 13 Sun Room
+12  1 17  7 Conservatory
+ 1 15  6 19 Ballroom
+ 7 15 11 20 Playroom
+12  8 16 14 Observatory
+12 15 17 19 Music Room
+19  1 24  8 Pool Room
+18  9 23 17 Cinema
+20 18 24 20 Vault
+ 7 22 11 26 Lounge
+12 20 16 25 Reading Room
+14
+8 3 Crepe Pan
+4 2 Letter Opener
+12 2 Shoe Horn
+8 3 Sharp Knife
+0 3 Revolver
+2 4 Chain Saw
+1 2 Billiard Cue
+6 2 Trowel
+2 4 Big Red Hammer
+6 2 Pinking Shears
+13 2 Bad Cream
+11 2 Tight Hat
+9 3 Silken Cord
+7 2 Loud Noise
