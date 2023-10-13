@@ -1,19 +1,12 @@
 package game.model;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.imageio.ImageIO;
 
 /**
  * This class represents the KillDoctorLuckyImpl class. It implements the KillDoctorLucky interface
@@ -24,7 +17,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   private List<Room> rooms;
   private int numRows;
   private int numColumns;
-//  private int maxTurns;
+  private int maxTurns;
   private String worldName;
   private Target target;
 
@@ -35,132 +28,44 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
    * @param maxTurns maximum number of turns
    * @throws IOException if file not found
    */
-  public KillDoctorLuckyImpl(String filePath, int maxTurns) {
-    if (filePath == null || filePath.isEmpty()) {
-      throw new IllegalArgumentException("File path can't be empty");
-    }
+  public KillDoctorLuckyImpl(int maxTurns) {
     if (maxTurns < 0) {
       throw new IllegalArgumentException("Max turns can't be negative");
     }
     this.rooms = new ArrayList<>();
     this.items = new ArrayList<>();
-//    this.maxTurns = maxTurns;
-    readFile(filePath);
+    this.maxTurns = maxTurns;
+    //    readFile(filePath);
   }
 
   /**
    * Constructor for the KillDoctorLuckyImpl class.
-   *
-   * @param filePath path of the file
-   * @throws IOException if file not found
    */
-  public KillDoctorLuckyImpl(String filePath) {
-    if (filePath == null || filePath.isEmpty()) {
-      throw new IllegalArgumentException("File path can't be empty");
-    }
+  public KillDoctorLuckyImpl() {
     this.rooms = new ArrayList<>();
     this.items = new ArrayList<>();
-//    this.maxTurns = 100;
-    readFile(filePath);
+    //    this.maxTurns = 100;
   }
 
-  /**
-   * Function for reading the file and populating the data structures.
-   *
-   * @param filePath path of the file
-   * @throws IllegalArgumentException if file not found
-   */
-  private void readFile(String filePath) {
-    try {
-      BufferedReader br = new BufferedReader(new FileReader(filePath));
-      String line;
-
-      line = br.readLine();
-
-      String[] worldInfo = line.trim().split("\\s+");
-      this.numColumns = Integer.parseInt(worldInfo[0]);
-      this.numRows = Integer.parseInt(worldInfo[1]);
-      worldName = line.substring(worldInfo[0].length() + worldInfo[1].length() + 2);
-      line = br.readLine();
-      String[] targetInfo = line.trim().split("\\s+");
-      int targetHealth = Integer.parseInt(targetInfo[0]);
-      String targetName = line.substring(targetInfo[0].length() + 1);
-      if (targetHealth <= 0) {
-        throw new IllegalArgumentException("Target health can't be negative");
-      }
-      this.target = new TargetImpl(targetName, targetHealth, 0);
-
-      // check numRooms not null or empty
-      int numRooms = Integer.parseInt(br.readLine());
-      if (numRooms <= 0) {
-        throw new IllegalArgumentException("No rooms in the world");
-      }
-      for (int i = 0; i < numRooms; i++) {
-        //        System.out.println("Reading room " + i);
-        line = br.readLine();
-        String[] roomInfo = line.trim().split("\\s+");
-        int upperLeftRow = Integer.parseInt(roomInfo[0]);
-        int upperLeftCol = Integer.parseInt(roomInfo[1]);
-        int lowerRightRow = Integer.parseInt(roomInfo[2]);
-        int lowerRightCol = Integer.parseInt(roomInfo[3]);
-        StringBuilder roomNameBuilder = new StringBuilder();
-        for (int j = 4; j < roomInfo.length; j++) {
-          roomNameBuilder.append(roomInfo[j]);
-          if (j < roomInfo.length - 1) {
-            roomNameBuilder.append(" ");
-          }
+  @Override
+  public void initialMap() {
+    for (Room room1 : rooms) {
+      //        System.out.println(room1);
+      List<Integer> neighbors = new ArrayList<>();
+      for (Room room2 : rooms) {
+        if (room1.equals(room2)) {
+          continue;
         }
-        String roomName = roomNameBuilder.toString();
-        //        System.out.println("Room name: " + roomName);
-        rooms.add(
-            new RoomImpl(i, roomName, upperLeftRow, upperLeftCol, lowerRightRow, lowerRightCol));
-      }
-      for (Room room1 : rooms) {
-        //        System.out.println(room1);
-        List<Integer> neighbors = new ArrayList<>();
-        for (Room room2 : rooms) {
-          if (room1.equals(room2)) {
-            continue;
-          }
-          if (overlaps(room1, room2)) {
-            throw new IllegalArgumentException(
-                "Rooms overlap: " + room1.getName() + " conflicts with " + room2.getName());
-          }
-          if (isNeighbor(room1, room2)) {
-            neighbors.add(room2.getIndex());
-          }
+        if (overlaps(room1, room2)) {
+          throw new IllegalArgumentException(
+              "Rooms overlap: " + room1.getName() + " conflicts with " + room2.getName());
         }
-        room1.setNeighborRooms(neighbors);
-      }
-
-      int numItems = Integer.parseInt(br.readLine());
-      for (int i = 0; i < numItems; i++) {
-        //        System.out.println("Reading item " + i);
-        line = br.readLine();
-        String[] itemInfo = line.trim().split("\\s+");
-        int itemRoomIndex = Integer.parseInt(itemInfo[0]);
-        int itemDamage = Integer.parseInt(itemInfo[1]);
-        StringBuilder itemNameBuilder = new StringBuilder();
-        for (int j = 2; j < itemInfo.length; j++) {
-          itemNameBuilder.append(itemInfo[j]);
-          if (j < itemInfo.length - 1) {
-            itemNameBuilder.append(" ");
-          }
+        if (isNeighbor(room1, room2)) {
+          neighbors.add(room2.getIndex());
         }
-        String itemName = itemNameBuilder.toString();
-        //        System.out.println("Item name: " + itemName);
-        if (itemRoomIndex < 0 || itemRoomIndex >= rooms.size()) {
-          throw new IllegalArgumentException("Invalid room index");
-        }
-        items.add(new ItemImpl(itemDamage, itemName, itemRoomIndex));
-        rooms.get(itemRoomIndex).addItem(items.get(i));
       }
-    } catch (FileNotFoundException e) {
-      throw new IllegalArgumentException("File not found");
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+      room1.setNeighborRooms(neighbors);
     }
-
   }
 
   @Override
@@ -286,7 +191,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     sb.append("World Name: ").append(this.worldName).append("\n");
     sb.append("Target Name: ").append(this.target.getName()).append("\n");
     sb.append("Target Health: ").append(this.target.getHealth()).append("\n");
-//    sb.append("Max Turns: ").append(this.maxTurns).append("\n");
+    //    sb.append("Max Turns: ").append(this.maxTurns).append("\n");
     sb.append("Number of Rooms: ").append(this.rooms.size()).append("\n");
     sb.append("Number of Items: ").append(this.items.size()).append("\n");
     return sb.toString();
@@ -295,5 +200,40 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   @Override
   public String displayTargetInfo() {
     return target.toString();
+  }
+
+  @Override
+  public void setNumRows(int numRows) {
+    this.numRows = numRows;
+  }
+
+  @Override
+  public void setNumCols(int numColumns) {
+    this.numColumns = numColumns;
+  }
+
+  @Override
+  public void setWorldName(String worldName) {
+    this.worldName = worldName;
+  }
+
+  @Override
+  public void setTarget(Target target) {
+    this.target = target;
+  }
+
+  @Override
+  public void addRooms(Room room) {
+    this.rooms.add(room);
+  }
+
+  @Override
+  public void addItems(int itemDamage, String itemName, int itemRoomIndex) {
+    if (itemRoomIndex < 0 || itemRoomIndex >= rooms.size()) {
+      throw new IllegalArgumentException("Invalid Room Index!");
+    }
+    Item item = new ItemImpl(itemDamage, itemName, itemRoomIndex);
+    this.items.add(item);
+    rooms.get(itemRoomIndex).addItem(item);
   }
 }

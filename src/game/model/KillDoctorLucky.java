@@ -88,4 +88,26 @@ public interface KillDoctorLucky {
    * @return true if they are neighbors, false otherwise.
    */
   boolean isNeighbor(Room current, Room other);
+
+  /**
+   * Function for setting the number of rows in the world.
+   *
+   */
+  void setNumRows(int numRows);
+
+  /**
+   * Function for setting the number of columns in the world.
+   *
+   */
+  void setNumCols(int numCols);
+
+  void setWorldName(String worldName);
+
+  void setTarget(Target target);
+
+  void addRooms(Room room);
+
+  void initialMap();
+
+  void addItems(int itemDamage, String itemName, int itemRoomIndex);
 }
