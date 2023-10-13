@@ -24,7 +24,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   private List<Room> rooms;
   private int numRows;
   private int numColumns;
-  private int maxTurns;
+//  private int maxTurns;
   private String worldName;
   private Target target;
 
@@ -44,7 +44,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     }
     this.rooms = new ArrayList<>();
     this.items = new ArrayList<>();
-    this.maxTurns = maxTurns;
+//    this.maxTurns = maxTurns;
     readFile(filePath);
   }
 
@@ -60,7 +60,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     }
     this.rooms = new ArrayList<>();
     this.items = new ArrayList<>();
-    this.maxTurns = 100;
+//    this.maxTurns = 100;
     readFile(filePath);
   }
 
@@ -286,7 +286,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     sb.append("World Name: ").append(this.worldName).append("\n");
     sb.append("Target Name: ").append(this.target.getName()).append("\n");
     sb.append("Target Health: ").append(this.target.getHealth()).append("\n");
-    sb.append("Max Turns: ").append(this.maxTurns).append("\n");
+//    sb.append("Max Turns: ").append(this.maxTurns).append("\n");
     sb.append("Number of Rooms: ").append(this.rooms.size()).append("\n");
     sb.append("Number of Items: ").append(this.items.size()).append("\n");
     return sb.toString();
