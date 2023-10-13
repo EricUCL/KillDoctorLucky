@@ -1,6 +1,9 @@
 package game.controller;
 
-import game.model.*;
+import game.controller.command.DisplayWorldInfo;
+import game.model.KillDoctorLucky;
+import game.model.RoomImpl;
+import game.model.TargetImpl;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -17,6 +20,7 @@ public class GameControllerImpl implements GameController {
   private KillDoctorLucky killDoctorLucky;
   private Scanner in;
   private Appendable out;
+  private CommandRegistry commandRegistry;
   //  private int maxTurns;
 
   /**
@@ -35,20 +39,54 @@ public class GameControllerImpl implements GameController {
     gameCommands = new HashMap<>();
     commands = new ArrayList<>();
     this.readFile(fileReader);
+
+    commandRegistry = new CommandRegistry();
   }
 
   /**
    * Method to start the game.
    */
   @Override
-  public void startGame() {
+  public void startGame() throws IOException {
     if (killDoctorLucky == null) {
       throw new IllegalArgumentException("Model cannot be null");
     }
+    commandRegistry();
+    //    loadCmdLabels();
+    //    loadCommand();
+    //    readExecuteCommands();
 
-    loadCmdLabels();
-    loadCommand();
-    readExecuteCommands();
+    while (true) {
+      displayOptions();
+      String input = in.nextLine();
+
+      if (input.equalsIgnoreCase("q") || input.equalsIgnoreCase("quit")) {
+        out.append("Exiting...");
+        return;
+      }
+
+      Optional<Command> matchedCommand = commandRegistry.getCommands(ProgramState.INIT).stream()
+          .filter(cmd -> cmd.getIdentifier().equals(input)).findFirst();
+
+      if (matchedCommand.isEmpty()) {
+        System.out.println("Invalid command. Try again.");
+      } else {
+        displayWorldInfoCallBack(matchedCommand.get());
+      }
+    }
+  }
+
+  private void displayOptions() throws IOException {
+    out.append("Choose a command:").append("\n");
+    for (Command command : commandRegistry.getCommands(ProgramState.INIT)) {
+      out.append(command.getIdentifier()).append(": ").append(command.getDescription()).append("\n");
+    }
+    out.append("q: Quit").append("\n");
+  }
+
+  private void commandRegistry() {
+    commandRegistry.registerCommand(ProgramState.INIT, new DisplayWorldInfo("1", killDoctorLucky));
+
   }
 
   /**
@@ -123,7 +161,7 @@ public class GameControllerImpl implements GameController {
       throw new IllegalArgumentException("File not found");
     } catch (IOException e) {
       throw new RuntimeException(e);
-    } catch (IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       out.append(e.getMessage());
     }
   }
@@ -136,21 +174,21 @@ public class GameControllerImpl implements GameController {
         "Display Item Info By Index", "Create World Image", "Move Target", "Display Target Info"));
   }
 
-  /**
-   * Method to load the commands.
-   */
-  private void loadCommand() {
-    gameCommands.putAll(new HashMap<String, Runnable>() {
-      {
-        put("1", () -> displayWorldInfoCallBack());
-        put("2", () -> displayRoomInfoCallBack());
-        put("3", () -> displayItemInfoCallBack());
-        put("4", () -> createImageCallBack());
-        put("5", () -> moveTargetCallBack());
-        put("6", () -> displayTargetInfoCallBack());
-      }
-    });
-  }
+  //  /**
+  //   * Method to load the commands.
+  //   */
+  //  private void loadCommand() {
+  //    gameCommands.putAll(new HashMap<String, Runnable>() {
+  //      {
+  //        put("1", () -> displayWorldInfoCallBack());
+  //        put("2", () -> displayRoomInfoCallBack());
+  //        put("3", () -> displayItemInfoCallBack());
+  //        put("4", () -> createImageCallBack());
+  //        put("5", () -> moveTargetCallBack());
+  //        put("6", () -> displayTargetInfoCallBack());
+  //      }
+  //    });
+  //  }
 
   /**
    * Method to display the target information.
@@ -224,10 +262,10 @@ public class GameControllerImpl implements GameController {
   /**
    * Method to display the world information.
    */
-  private void displayWorldInfoCallBack() {
+  private void displayWorldInfoCallBack(Command command) {
     try {
       this.out.append("----------------- Start ----------------\n");
-      this.out.append(killDoctorLucky.getWorldDesc()).append("\n");
+      this.out.append(command.execute()).append("\n");
       this.out.append("------------------ End -----------------\n");
     } catch (IOException e) {
       throw new IllegalStateException("Appendable write is failing.");
