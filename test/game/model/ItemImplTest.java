@@ -13,7 +13,7 @@ public class ItemImplTest {
   @Test
   public void invalidDamage() {
     try {
-      Item item = new ItemImpl(-1, "item");
+      Item item = new ItemImpl(-1, "item", 1);
       fail("Expected IllegalArgumentException");
     } catch (IllegalArgumentException e) {
       assertEquals("Damage can't be negative!", e.getMessage());

@@ -38,7 +38,7 @@ Available commands are:
 3
 ----------------- Start ----------------
 Enter item index: 1
-name: Letter Opener, damage: 2
+Name: Letter Opener, Damage: 2, Room: 4
 ------------------ End -----------------
 Available commands are:
 1. Display World Info

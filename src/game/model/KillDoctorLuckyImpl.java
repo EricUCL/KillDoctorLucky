@@ -152,7 +152,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
         if (itemRoomIndex < 0 || itemRoomIndex >= rooms.size()) {
           throw new IllegalArgumentException("Invalid room index");
         }
-        items.add(new ItemImpl(itemDamage, itemName));
+        items.add(new ItemImpl(itemDamage, itemName, itemRoomIndex));
         rooms.get(itemRoomIndex).addItem(items.get(i));
       }
     } catch (FileNotFoundException e) {
