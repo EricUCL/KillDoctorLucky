@@ -1,7 +1,13 @@
 package game.controller.command;
 
 import game.controller.Command;
+import game.controller.CommandResult;
+import game.controller.ParameterRequest;
 import game.model.KillDoctorLucky;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class DisplayWorldInfo implements Command {
   private String identifier;
@@ -13,8 +19,16 @@ public class DisplayWorldInfo implements Command {
   }
 
   @Override
-  public String execute() {
-    return model.getWorldDesc();
+  public CommandResult execute(Map<String, String> params) {
+    return new CommandResult(model.getWorldDesc(), false);
+  }
+//    return model.getWorldDesc();
+
+
+  @Override
+  public List<ParameterRequest> requiredParameters() {
+    return Collections.emptyList();
+//    return Collections.singletonList(new ParameterRequest("roomNumber", "Enter the room number: "));
   }
 
   @Override

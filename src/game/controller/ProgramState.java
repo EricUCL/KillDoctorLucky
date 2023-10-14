@@ -1,5 +1,5 @@
 package game.controller;
 
-enum ProgramState {
+public enum ProgramState {
   INIT, RUNNING, FINALIZING;
 }

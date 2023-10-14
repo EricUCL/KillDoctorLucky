@@ -4,6 +4,7 @@ import game.controller.command.DisplayWorldInfo;
 import game.model.KillDoctorLucky;
 import game.model.RoomImpl;
 import game.model.TargetImpl;
+import game.view.CommandLineView;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -22,6 +23,7 @@ public class GameControllerImpl implements GameController {
   private Appendable out;
   private CommandRegistry commandRegistry;
   //  private int maxTurns;
+  private CommandLineView view;
 
   /**
    * Constructor to initialize the controller.
@@ -39,7 +41,7 @@ public class GameControllerImpl implements GameController {
     gameCommands = new HashMap<>();
     commands = new ArrayList<>();
     this.readFile(fileReader);
-
+    this.view = new CommandLineView(this.in, this.out);
     commandRegistry = new CommandRegistry();
   }
 
@@ -52,34 +54,46 @@ public class GameControllerImpl implements GameController {
       throw new IllegalArgumentException("Model cannot be null");
     }
     commandRegistry();
-    //    loadCmdLabels();
-    //    loadCommand();
-    //    readExecuteCommands();
 
     while (true) {
-      displayOptions();
+      //      displayOptions();
+      view.displayOptions(commandRegistry.getCommands(ProgramState.INIT));
       String input = in.nextLine();
 
       if (input.equalsIgnoreCase("q") || input.equalsIgnoreCase("quit")) {
-        out.append("Exiting...");
+        out.append("Exiting...\n");
         return;
       }
 
-      Optional<Command> matchedCommand = commandRegistry.getCommands(ProgramState.INIT).stream()
+      Optional<Command> matchedCommandOpt = commandRegistry.getCommands(ProgramState.INIT).stream()
           .filter(cmd -> cmd.getIdentifier().equals(input)).findFirst();
 
-      if (matchedCommand.isEmpty()) {
-        System.out.println("Invalid command. Try again.");
-      } else {
-        displayWorldInfoCallBack(matchedCommand.get());
+      if (matchedCommandOpt.isEmpty()) {
+        view.displayError("Invalid command. Try again.");
+        continue;
       }
+      Command matchedCommand = matchedCommandOpt.get();
+      Map<String, String> params = new HashMap<>();
+      for (ParameterRequest paramRequest : matchedCommand.requiredParameters()) {
+        view.prompt(paramRequest.getPromptMessage());
+        params.put(paramRequest.getParamName(), in.nextLine());
+      }
+
+      CommandResult result = matchedCommand.execute(params);
+      if (result.isError()) {
+        view.displayError(result.getMessage());
+      } else {
+        view.displayMessage(result.getMessage());
+      }
+
     }
   }
 
   private void displayOptions() throws IOException {
     out.append("Choose a command:").append("\n");
     for (Command command : commandRegistry.getCommands(ProgramState.INIT)) {
-      out.append(command.getIdentifier()).append(": ").append(command.getDescription()).append("\n");
+      out.append(command.getIdentifier()).append(": ").append(command.getDescription())
+          .append("\n");
     }
     out.append("q: Quit").append("\n");
   }
@@ -262,15 +276,15 @@ public class GameControllerImpl implements GameController {
   /**
    * Method to display the world information.
    */
-  private void displayWorldInfoCallBack(Command command) {
-    try {
-      this.out.append("----------------- Start ----------------\n");
-      this.out.append(command.execute()).append("\n");
-      this.out.append("------------------ End -----------------\n");
-    } catch (IOException e) {
-      throw new IllegalStateException("Appendable write is failing.");
-    }
-  }
+//  private void displayWorldInfoCallBack(Command command) {
+//    try {
+//      this.out.append("----------------- Start ----------------\n");
+//      this.out.append(command.execute()).append("\n");
+//      this.out.append("------------------ End -----------------\n");
+//    } catch (IOException e) {
+//      throw new IllegalStateException("Appendable write is failing.");
+//    }
+//  }
 
   /**
    * Method to read and execute the commands.
