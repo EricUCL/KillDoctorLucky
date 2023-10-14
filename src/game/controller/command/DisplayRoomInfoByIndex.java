@@ -8,29 +8,29 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class DisplayWorldInfo implements Command {
+public class DisplayRoomInfoByIndex implements Command {
   private String identifier;
   private KillDoctorLucky model;
 
-  public DisplayWorldInfo(String identifier, KillDoctorLucky model) {
+  public DisplayRoomInfoByIndex(String identifier, KillDoctorLucky model) {
     this.identifier = identifier;
     this.model = model;
   }
 
   @Override
   public CommandResult execute(Map<String, String> params) {
-    return new CommandResult(model.getWorldDesc(), false);
+    String roomIndex = params.getOrDefault("roomIndex", "");
+    return new CommandResult(model.displayRoomDescription(Integer.parseInt(roomIndex)), false);
   }
-
 
   @Override
   public List<ParameterRequest> requiredParameters() {
-    return Collections.emptyList();
- }
+    return Collections.singletonList(new ParameterRequest("roomIndex", "Enter the room index: "));
+  }
 
   @Override
   public String getDescription() {
-    return "Displaying world info";
+    return "Display Room Info By Index";
   }
 
   @Override

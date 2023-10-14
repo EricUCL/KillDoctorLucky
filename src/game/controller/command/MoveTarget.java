@@ -8,29 +8,27 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class DisplayWorldInfo implements Command {
+public class MoveTarget implements Command{
   private String identifier;
   private KillDoctorLucky model;
 
-  public DisplayWorldInfo(String identifier, KillDoctorLucky model) {
+  public MoveTarget(String identifier, KillDoctorLucky model) {
     this.identifier = identifier;
     this.model = model;
   }
-
   @Override
   public CommandResult execute(Map<String, String> params) {
-    return new CommandResult(model.getWorldDesc(), false);
+    return new CommandResult(model.moveTarget(), false);
   }
-
 
   @Override
   public List<ParameterRequest> requiredParameters() {
     return Collections.emptyList();
- }
+  }
 
   @Override
   public String getDescription() {
-    return "Displaying world info";
+    return "Move Target";
   }
 
   @Override

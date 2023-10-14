@@ -44,7 +44,7 @@ public interface KillDoctorLucky {
    *
    * @return image path.
    */
-  String createBufferedImage();
+  String createWorldImage();
 
   /**
    * Function for getting information about item. This is being used by GameWorld to show item

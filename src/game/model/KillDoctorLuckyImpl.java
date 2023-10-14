@@ -24,7 +24,6 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   /**
    * Constructor for the KillDoctorLuckyImpl class.
    *
-   * @param filePath path of the file
    * @param maxTurns maximum number of turns
    * @throws IOException if file not found
    */
@@ -128,7 +127,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
-  public String createBufferedImage() {
+  public String createWorldImage() {
     int scale = 25;
     int width = numColumns * (scale + 3);
     int height = numRows * (scale + 10);

@@ -1,10 +1,11 @@
 package game.controller;
 
-import game.controller.command.DisplayWorldInfo;
+import game.controller.command.*;
 import game.model.KillDoctorLucky;
 import game.model.RoomImpl;
 import game.model.TargetImpl;
 import game.view.CommandLineView;
+import game.view.View;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -23,7 +24,7 @@ public class GameControllerImpl implements GameController {
   private Appendable out;
   private CommandRegistry commandRegistry;
   //  private int maxTurns;
-  private CommandLineView view;
+  private View view;
 
   /**
    * Constructor to initialize the controller.
@@ -72,6 +73,7 @@ public class GameControllerImpl implements GameController {
         view.displayError("Invalid command. Try again.");
         continue;
       }
+      view.prompt("----------------- Start ----------------\n");
       Command matchedCommand = matchedCommandOpt.get();
       Map<String, String> params = new HashMap<>();
       for (ParameterRequest paramRequest : matchedCommand.requiredParameters()) {
@@ -85,7 +87,7 @@ public class GameControllerImpl implements GameController {
       } else {
         view.displayMessage(result.getMessage());
       }
-
+      view.prompt("------------------ End -----------------\n");
     }
   }
 
@@ -100,7 +102,14 @@ public class GameControllerImpl implements GameController {
 
   private void commandRegistry() {
     commandRegistry.registerCommand(ProgramState.INIT, new DisplayWorldInfo("1", killDoctorLucky));
-
+    commandRegistry.registerCommand(ProgramState.INIT,
+        new DisplayRoomInfoByIndex("2", killDoctorLucky));
+    commandRegistry.registerCommand(ProgramState.INIT,
+        new DisplayItemInfoByIndex("3", killDoctorLucky));
+    commandRegistry.registerCommand(ProgramState.INIT,new CreateWorldImage("4", killDoctorLucky));
+    commandRegistry.registerCommand(ProgramState.INIT, new MoveTarget("5", killDoctorLucky));
+    commandRegistry.registerCommand(ProgramState.INIT,
+        new DisplayTargetInfo("6", killDoctorLucky));
   }
 
   /**
@@ -236,7 +245,7 @@ public class GameControllerImpl implements GameController {
   private void createImageCallBack() {
     try {
       this.out.append("----------------- Start ----------------\n");
-      this.out.append(killDoctorLucky.createBufferedImage()).append("\n");
+      this.out.append(killDoctorLucky.createWorldImage()).append("\n");
       this.out.append("------------------ End -----------------\n");
     } catch (IOException e) {
       throw new IllegalStateException("Appendable write is failing.");
@@ -272,19 +281,6 @@ public class GameControllerImpl implements GameController {
       throw new IllegalStateException("Appendable write is failing.");
     }
   }
-
-  /**
-   * Method to display the world information.
-   */
-//  private void displayWorldInfoCallBack(Command command) {
-//    try {
-//      this.out.append("----------------- Start ----------------\n");
-//      this.out.append(command.execute()).append("\n");
-//      this.out.append("------------------ End -----------------\n");
-//    } catch (IOException e) {
-//      throw new IllegalStateException("Appendable write is failing.");
-//    }
-//  }
 
   /**
    * Method to read and execute the commands.

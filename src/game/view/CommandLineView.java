@@ -1,17 +1,15 @@
 package game.view;
 
-import game.controller.Command;
+import game.controller.command.Command;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
-public class CommandLineView {
-  private Scanner in;
+public class CommandLineView implements View {
   private Appendable out;
 
   public CommandLineView(Scanner in, Appendable out) {
-    this.in = in;
     this.out = out;
   }
 

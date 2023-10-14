@@ -1,4 +1,6 @@
 package game.controller;
+import game.controller.command.Command;
+
 import java.util.*;
 
 class CommandRegistry {
