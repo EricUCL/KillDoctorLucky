@@ -325,7 +325,16 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
-  public Player getCurrentPlayer(){
+  public Player getCurrentPlayer() {
     return currentPlayer;
+  }
+
+  @Override
+  public String startGame() {
+    if (players.isEmpty()) {
+      throw new IllegalArgumentException("Please add Players!");
+    }
+    currentPlayer = this.players.get(0);
+    return "Start game successfully!";
   }
 }

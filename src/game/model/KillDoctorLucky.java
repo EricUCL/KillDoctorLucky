@@ -122,4 +122,6 @@ public interface KillDoctorLucky {
   Player getPlayer(String playerName);
 
   Player getCurrentPlayer();
+
+  String startGame();
 }

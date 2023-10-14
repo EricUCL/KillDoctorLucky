@@ -100,6 +100,7 @@ public class GameControllerImpl implements GameController {
     commandRegistry.registerCommand(ProgramState.INIT, new DisplayTargetInfo("6", killDoctorLucky));
     commandRegistry.registerCommand(ProgramState.INIT, new AddPlayer("7", killDoctorLucky));
     commandRegistry.registerCommand(ProgramState.INIT, new AddComputerPlayer("8", killDoctorLucky));
+    commandRegistry.registerCommand(ProgramState.INIT, new StartGame("9", killDoctorLucky));
     commandRegistry.registerCommand(ProgramState.RUNNING, new MovePlayer("1", killDoctorLucky));
   }
 
