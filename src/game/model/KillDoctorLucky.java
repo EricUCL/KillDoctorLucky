@@ -110,4 +110,6 @@ public interface KillDoctorLucky {
   void initialMap();
 
   void addItems(int itemDamage, String itemName, int itemRoomIndex);
+
+  String addPlayer(String playerName, int spaceIndex, int maxItemsLimit);
 }

@@ -11,14 +11,15 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Scanner;
 
 /**
  * Controller class to run the game.
  */
 public class GameControllerImpl implements GameController {
-  private final List<String> commands;
-  private final Map<String, Runnable> gameCommands;
   private KillDoctorLucky killDoctorLucky;
   private Scanner in;
   private Appendable out;
@@ -39,8 +40,6 @@ public class GameControllerImpl implements GameController {
     this.in = new Scanner(in);
     this.out = out;
     this.killDoctorLucky = killDoctorLucky;
-    gameCommands = new HashMap<>();
-    commands = new ArrayList<>();
     this.readFile(fileReader);
     this.view = new CommandLineView(this.in, this.out);
     commandRegistry = new CommandRegistry();
@@ -57,7 +56,6 @@ public class GameControllerImpl implements GameController {
     commandRegistry();
 
     while (true) {
-      //      displayOptions();
       view.displayOptions(commandRegistry.getCommands(ProgramState.INIT));
       String input = in.nextLine();
 
@@ -91,25 +89,16 @@ public class GameControllerImpl implements GameController {
     }
   }
 
-  private void displayOptions() throws IOException {
-    out.append("Choose a command:").append("\n");
-    for (Command command : commandRegistry.getCommands(ProgramState.INIT)) {
-      out.append(command.getIdentifier()).append(": ").append(command.getDescription())
-          .append("\n");
-    }
-    out.append("q: Quit").append("\n");
-  }
-
   private void commandRegistry() {
     commandRegistry.registerCommand(ProgramState.INIT, new DisplayWorldInfo("1", killDoctorLucky));
     commandRegistry.registerCommand(ProgramState.INIT,
         new DisplayRoomInfoByIndex("2", killDoctorLucky));
     commandRegistry.registerCommand(ProgramState.INIT,
         new DisplayItemInfoByIndex("3", killDoctorLucky));
-    commandRegistry.registerCommand(ProgramState.INIT,new CreateWorldImage("4", killDoctorLucky));
+    commandRegistry.registerCommand(ProgramState.INIT, new CreateWorldImage("4", killDoctorLucky));
     commandRegistry.registerCommand(ProgramState.INIT, new MoveTarget("5", killDoctorLucky));
-    commandRegistry.registerCommand(ProgramState.INIT,
-        new DisplayTargetInfo("6", killDoctorLucky));
+    commandRegistry.registerCommand(ProgramState.INIT, new DisplayTargetInfo("6", killDoctorLucky));
+    commandRegistry.registerCommand(ProgramState.INIT, new AddPlayer("7", killDoctorLucky));
   }
 
   /**
@@ -158,7 +147,6 @@ public class GameControllerImpl implements GameController {
           }
         }
         String roomName = roomNameBuilder.toString();
-        //        System.out.println("Room name: " + roomName);
         killDoctorLucky.addRooms(
             new RoomImpl(i, roomName, upperLeftRow, upperLeftCol, lowerRightRow, lowerRightCol));
       }
@@ -186,157 +174,6 @@ public class GameControllerImpl implements GameController {
       throw new RuntimeException(e);
     } catch (IllegalArgumentException e) {
       out.append(e.getMessage());
-    }
-  }
-
-  /**
-   * Method to load the commands.
-   */
-  private void loadCmdLabels() {
-    commands.addAll(Arrays.asList("Display World Info", "Display Room Info By Index",
-        "Display Item Info By Index", "Create World Image", "Move Target", "Display Target Info"));
-  }
-
-  //  /**
-  //   * Method to load the commands.
-  //   */
-  //  private void loadCommand() {
-  //    gameCommands.putAll(new HashMap<String, Runnable>() {
-  //      {
-  //        put("1", () -> displayWorldInfoCallBack());
-  //        put("2", () -> displayRoomInfoCallBack());
-  //        put("3", () -> displayItemInfoCallBack());
-  //        put("4", () -> createImageCallBack());
-  //        put("5", () -> moveTargetCallBack());
-  //        put("6", () -> displayTargetInfoCallBack());
-  //      }
-  //    });
-  //  }
-
-  /**
-   * Method to display the target information.
-   */
-  private void displayTargetInfoCallBack() {
-    try {
-      this.out.append("----------------- Start ----------------\n");
-      this.out.append(killDoctorLucky.displayTargetInfo()).append("\n");
-      this.out.append("------------------ End -----------------\n");
-    } catch (IOException e) {
-      throw new IllegalStateException("Appendable write is failing.");
-    }
-  }
-
-  /**
-   * Method to move the target.
-   */
-  private void moveTargetCallBack() {
-    try {
-      this.out.append("----------------- Start ----------------\n");
-      this.out.append(killDoctorLucky.moveTarget()).append("\n");
-      this.out.append("------------------ End -----------------\n");
-    } catch (IOException e) {
-      throw new IllegalStateException("Appendable write is failing.");
-    }
-  }
-
-  /**
-   * Method to create the image.
-   */
-  private void createImageCallBack() {
-    try {
-      this.out.append("----------------- Start ----------------\n");
-      this.out.append(killDoctorLucky.createWorldImage()).append("\n");
-      this.out.append("------------------ End -----------------\n");
-    } catch (IOException e) {
-      throw new IllegalStateException("Appendable write is failing.");
-    }
-  }
-
-  /**
-   * Method to display the item information.
-   */
-  private void displayItemInfoCallBack() {
-    try {
-      this.out.append("----------------- Start ----------------\n");
-      this.out.append("Enter item index: ");
-      int itemIdx = Integer.parseInt(in.next());
-      this.out.append(killDoctorLucky.displayItemInfo(itemIdx)).append("\n");
-      this.out.append("------------------ End -----------------\n");
-    } catch (IOException e) {
-      throw new IllegalStateException("Appendable write is failing.");
-    }
-  }
-
-  /**
-   * Method to display the room information.
-   */
-  private void displayRoomInfoCallBack() {
-    try {
-      this.out.append("----------------- Start ----------------\n");
-      this.out.append("Enter room index: ");
-      int roomIdx = Integer.parseInt(in.next());
-      this.out.append(killDoctorLucky.displayRoomDescription(roomIdx)).append("\n");
-      this.out.append("------------------ End -----------------\n");
-    } catch (IOException e) {
-      throw new IllegalStateException("Appendable write is failing.");
-    }
-  }
-
-  /**
-   * Method to read and execute the commands.
-   */
-  private void readExecuteCommands() {
-    String input = "";
-    try {
-      do {
-        // pre game state
-        this.out.append("Available commands are: \n");
-        displayList(commands);
-        input = in.next();
-
-        if ("q".equalsIgnoreCase(input)) {
-          this.out.append("Ending Game\n");
-          break;
-        }
-        executor(gameCommands, input);
-      } while (!"7".equalsIgnoreCase(input));
-    } catch (IOException e) {
-      throw new IllegalStateException("Appendable write is failing.");
-    }
-  }
-
-  /**
-   * Method to display the list of commands.
-   *
-   * @param cmd List of commands.
-   */
-  private void displayList(List<String> cmd) {
-    try {
-      for (int i = 0; i < cmd.size(); i++) {
-        this.out.append(String.format("%d. %s\n", i + 1, cmd.get(i)));
-      }
-    } catch (IOException e) {
-      throw new IllegalStateException("Appendable write is failing!!!");
-    }
-  }
-
-  /**
-   * Method to execute the commands.
-   *
-   * @param cmd Map of commands.
-   * @param ip  Input command.
-   */
-  private void executor(Map<String, Runnable> cmd, String ip) {
-    try {
-      Runnable runnable = cmd.get(ip);
-      if (runnable == null) {
-        this.out.append(String.format("Invalid command: %s. Please check once again!!!", ip));
-        return;
-      }
-      // execute the command
-      runnable.run();
-    } catch (IOException e) {
-      throw new IllegalStateException("Appendable write is failing!!!");
     }
   }
 }

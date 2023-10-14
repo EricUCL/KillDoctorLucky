@@ -86,4 +86,6 @@ public interface Room {
    * @return Returns list of items which are present in the calling room object.
    */
   List<Item> getItems();
+
+  void addPlayer(Player player);
 }

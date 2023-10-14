@@ -1,5 +1,7 @@
 package game.model;
 
+import game.constants.PlayerType;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -20,6 +22,8 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   private int maxTurns;
   private String worldName;
   private Target target;
+  private List<Player> players;
+  private int maxPlayerLimit;
 
   /**
    * Constructor for the KillDoctorLuckyImpl class.
@@ -34,7 +38,8 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     this.rooms = new ArrayList<>();
     this.items = new ArrayList<>();
     this.maxTurns = maxTurns;
-    //    readFile(filePath);
+    this.players = new ArrayList<>();
+    this.maxPlayerLimit = 10;
   }
 
   /**
@@ -234,5 +239,52 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     Item item = new ItemImpl(itemDamage, itemName, itemRoomIndex);
     this.items.add(item);
     rooms.get(itemRoomIndex).addItem(item);
+  }
+
+  @Override
+  public String addPlayer(String playerName, int roomIndex, int maxItemsLimit) {
+
+    if (players.size() >= maxPlayerLimit) {
+      return "Max players limit reached!";
+    }
+
+    if (playerName == null || playerName.isEmpty()) {
+      throw new IllegalArgumentException("Player name can't be null!");
+    }
+
+    if (maxItemsLimit < 0) {
+      throw new IllegalArgumentException("Max item limit can not be negative!");
+    }
+
+    validateSpaceIndex(roomIndex);
+    validatePlayer(playerName);
+
+    Player player = new PlayerImpl(playerName, roomIndex, maxItemsLimit, PlayerType.HUMAN);
+    this.players.add(player);
+    Room room = rooms.get(roomIndex);
+    room.addPlayer(player);
+    return "Player added successfully";
+  }
+
+  private void validateSpaceIndex(int roomIndex) {
+    if (roomIndex < 0 || roomIndex > rooms.size()) {
+      throw new IllegalArgumentException("Invalid room index!");
+    }
+  }
+
+  private void validatePlayer(String playerName) {
+    if (playerName == null || playerName.isEmpty()) {
+      throw new IllegalArgumentException("Player name can't be null!");
+    }
+
+    if (playerName.equals(target.getName())) {
+      throw new IllegalArgumentException("Player name can't be same as target name!");
+    }
+
+    for (Player player : players) {
+      if (player.getPlayerName().equals(playerName)) {
+        throw new IllegalArgumentException("Player name already exists!");
+      }
+    }
   }
 }

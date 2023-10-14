@@ -36,8 +36,6 @@ public class Driver {
       controller.startGame();
     } catch (IllegalArgumentException e) {
       System.out.printf("%s%n", e.getMessage());
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

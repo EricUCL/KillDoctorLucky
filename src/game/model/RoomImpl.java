@@ -17,6 +17,7 @@ public class RoomImpl implements Room {
   private int upperLeftCol;
   private int lowerRightRow;
   private int lowerRightCol;
+  private List<Player> players;
 
   /**
    * Constructor for the RoomImpl class.
@@ -47,6 +48,7 @@ public class RoomImpl implements Room {
     this.lowerRightCol = lowerRightCol;
     this.items = new ArrayList<>();
     this.neighborRooms = new ArrayList<>();
+    this.players = new ArrayList<>();
   }
 
   /**
@@ -141,4 +143,13 @@ public class RoomImpl implements Room {
     return "name: " + name + ", id: " + id + ", items: " + items + ", neighbor rooms id: "
         + neighbors;
   }
+
+  @Override
+  public void addPlayer(Player player) {
+    if (player == null) {
+      throw new IllegalArgumentException("Player can not be null!");
+    }
+    this.players.add(player);
+  }
+
 }
