@@ -88,4 +88,6 @@ public interface Room {
   List<Item> getItems();
 
   void addPlayer(Player player);
+
+  void removePlayer(Player player);
 }

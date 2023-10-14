@@ -140,8 +140,13 @@ public class RoomImpl implements Room {
       neighbors.append(neighbor);
       neighbors.append(" ");
     }
-    return "name: " + name + ", id: " + id + ", items: " + items + ", neighbor rooms id: "
-        + neighbors;
+    StringBuilder players = new StringBuilder();
+    for (Player player : this.players) {
+      players.append(player.getPlayerName());
+      players.append(" ");
+    }
+    return "name: " + name + ", id: " + id + "\nItems: " + items + ", neighbor rooms id: "
+        + neighbors + "\nPlayers: " + players;
   }
 
   @Override
@@ -152,4 +157,17 @@ public class RoomImpl implements Room {
     this.players.add(player);
   }
 
+  @Override
+  public void removePlayer(Player player) {
+    if (player == null) {
+      throw new IllegalArgumentException("Player can't be null");
+    }
+    for (int i = 0; i < this.players.size(); i++) {
+      Player player1 = this.players.get(i);
+      if (player1.equals(player)) {
+        players.remove(i);
+        return;
+      }
+    }
+  }
 }

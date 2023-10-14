@@ -32,8 +32,13 @@ public class PlayerImpl implements Player {
   }
 
   @Override
-  public int getRoom() {
+  public int getRoomIndex() {
     return roomIndex;
+  }
+
+  @Override
+  public void setRoomIndex(int roomIndex) {
+    this.roomIndex=roomIndex;
   }
 
   @Override
@@ -54,5 +59,17 @@ public class PlayerImpl implements Player {
   @Override
   public void removeItemByIndex(int itemIndex) {
 
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Player)) {
+      return false;
+    }
+    Player that = (Player) o;
+    return this.getPlayerName().equals(that.getPlayerName());
   }
 }

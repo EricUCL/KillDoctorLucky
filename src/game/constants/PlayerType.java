@@ -6,11 +6,11 @@ package game.constants;
  * COMP -> Computer player
  */
 public enum PlayerType {
-  HUMAN("HUMAN"), COMP("COMP");
+  HUMAN("HUMAN"), COMPUTER("COMPUTER");
 
   private final String disp;
 
-  private PlayerType(String disp) {
+  PlayerType(String disp) {
     this.disp = disp;
   }
 

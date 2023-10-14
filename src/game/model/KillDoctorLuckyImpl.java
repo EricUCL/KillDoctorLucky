@@ -24,6 +24,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   private Target target;
   private List<Player> players;
   private int maxPlayerLimit;
+  private Player currentPlayer;
 
   /**
    * Constructor for the KillDoctorLuckyImpl class.
@@ -242,7 +243,8 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
-  public String addPlayer(String playerName, int roomIndex, int maxItemsLimit) {
+  public String addPlayer(String playerName, int roomIndex, int maxItemsLimit,
+      PlayerType playerType) {
 
     if (players.size() >= maxPlayerLimit) {
       return "Max players limit reached!";
@@ -256,17 +258,30 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
       throw new IllegalArgumentException("Max item limit can not be negative!");
     }
 
-    validateSpaceIndex(roomIndex);
+    validateRoomIndex(roomIndex);
     validatePlayer(playerName);
 
-    Player player = new PlayerImpl(playerName, roomIndex, maxItemsLimit, PlayerType.HUMAN);
+    Player player = new PlayerImpl(playerName, roomIndex, maxItemsLimit, playerType);
     this.players.add(player);
     Room room = rooms.get(roomIndex);
     room.addPlayer(player);
     return "Player added successfully";
   }
 
-  private void validateSpaceIndex(int roomIndex) {
+  @Override
+  public String addComputerPlayer() {
+    if (players.size() >= maxPlayerLimit) {
+      return "Max players limit reached!";
+    }
+    String playerName = "ComputerPlayer" + players.size();
+    Player player = new PlayerImpl(playerName, 0, 10, PlayerType.COMPUTER);
+    this.players.add(player);
+    Room room = rooms.get(0);
+    room.addPlayer(player);
+    return "Computer Player added successfully";
+  }
+
+  private void validateRoomIndex(int roomIndex) {
     if (roomIndex < 0 || roomIndex > rooms.size()) {
       throw new IllegalArgumentException("Invalid room index!");
     }
@@ -286,5 +301,31 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
         throw new IllegalArgumentException("Player name already exists!");
       }
     }
+  }
+
+  @Override
+  public String movePlayer(int roomIndex) {
+    validateRoomIndex(roomIndex);
+    Room originRoom = rooms.get(currentPlayer.getRoomIndex());
+    originRoom.removePlayer(currentPlayer);
+    currentPlayer.setRoomIndex(roomIndex);
+    Room room = rooms.get(roomIndex);
+    room.addPlayer(currentPlayer);
+    return "Player moved successfully";
+  }
+
+  @Override
+  public Player getPlayer(String playerName) {
+    for (Player player : players) {
+      if (player.getPlayerName().equals(playerName)) {
+        return player;
+      }
+    }
+    throw new IllegalArgumentException("Player not found!");
+  }
+
+  @Override
+  public Player getCurrentPlayer(){
+    return currentPlayer;
   }
 }

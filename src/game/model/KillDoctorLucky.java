@@ -1,5 +1,7 @@
 package game.model;
 
+import game.constants.PlayerType;
+
 import java.util.List;
 
 /**
@@ -111,5 +113,13 @@ public interface KillDoctorLucky {
 
   void addItems(int itemDamage, String itemName, int itemRoomIndex);
 
-  String addPlayer(String playerName, int spaceIndex, int maxItemsLimit);
+  String addPlayer(String playerName, int spaceIndex, int maxItemsLimit, PlayerType playerType);
+
+  String movePlayer(int roomIndex);
+
+  String addComputerPlayer();
+
+  Player getPlayer(String playerName);
+
+  Player getCurrentPlayer();
 }

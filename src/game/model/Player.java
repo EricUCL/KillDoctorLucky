@@ -7,6 +7,8 @@ import java.util.List;
 public interface Player {
   String getPlayerName();
 
+  void setRoomIndex(int roomIndex);
+
   void movePlayer(int roomIdx);
 
   PlayerType getPlayerType();
@@ -19,6 +21,6 @@ public interface Player {
 
   List<Integer> getItemsIndexList();
 
-  int getRoom();
+  int getRoomIndex();
 
 }
