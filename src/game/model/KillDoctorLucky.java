@@ -124,4 +124,6 @@ public interface KillDoctorLucky {
   Player getCurrentPlayer();
 
   String startGame();
+
+  String pickItem(String itemName);
 }

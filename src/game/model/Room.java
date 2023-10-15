@@ -90,4 +90,6 @@ public interface Room {
   void addPlayer(Player player);
 
   void removePlayer(Player player);
+
+  void deleteItem(Item item);
 }

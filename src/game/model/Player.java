@@ -5,6 +5,8 @@ import game.constants.PlayerType;
 import java.util.List;
 
 public interface Player {
+  void addItem(Item item);
+
   String getPlayerName();
 
   void setRoomIndex(int roomIndex);

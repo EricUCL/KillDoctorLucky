@@ -170,4 +170,9 @@ public class RoomImpl implements Room {
       }
     }
   }
+
+  @Override
+  public void deleteItem(Item item){
+    items.remove(item);
+  }
 }

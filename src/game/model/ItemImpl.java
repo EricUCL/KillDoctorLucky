@@ -37,6 +37,18 @@ public class ItemImpl implements Item {
 
   @Override
   public String toString() {
-    return "Name: " + name + ", Damage: " + damage+ ", Room Index: " + roomIdx;
+    return "Name: " + name + ", Damage: " + damage;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Item)) {
+      return false;
+    }
+    Item that = (Item) o;
+    return this.getName().equals(that.getName());
   }
 }

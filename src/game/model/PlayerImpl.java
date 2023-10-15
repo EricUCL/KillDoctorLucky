@@ -8,14 +8,29 @@ public class PlayerImpl implements Player {
   private final String playerName;
   private int roomIndex;
   private final int maxItems;
-  private List<Integer> itemsIndexList;
+
+  public List<Item> getItemsList() {
+    return itemsList;
+  }
+
+  @Override
+  public void addItem(Item item) {
+    if (itemsList.size() >= maxItems) {
+      throw new IllegalArgumentException("Items reached to upper limit！");
+    }
+    itemsList.add(item);
+  }
+
+  private List<Item> itemsList;
   private final PlayerType playerType;
+
   PlayerImpl(String playerName, int roomIndex, int maxItems, PlayerType playerType) {
     this.playerName = playerName;
     this.roomIndex = roomIndex;
     this.maxItems = maxItems;
     this.playerType = playerType;
   }
+
   @Override
   public String getPlayerName() {
     return playerName;
@@ -38,7 +53,7 @@ public class PlayerImpl implements Player {
 
   @Override
   public void setRoomIndex(int roomIndex) {
-    this.roomIndex=roomIndex;
+    this.roomIndex = roomIndex;
   }
 
   @Override

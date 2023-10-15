@@ -337,4 +337,25 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     currentPlayer = this.players.get(0);
     return "Start game successfully!";
   }
+
+  @Override
+  public String pickItem(String itemName) {
+    if (itemName.isEmpty()) {
+      throw new IllegalArgumentException("Please select a valid index!");
+    }
+    int roomIndex = currentPlayer.getRoomIndex();
+    Room room = rooms.get(roomIndex);
+    Item choosenItem = null;
+    for (Item item : room.getItems()) {
+      if (item.getName().equals(itemName))
+        choosenItem = item;
+    }
+    if(choosenItem == null){
+      throw new IllegalArgumentException("Can not find the item!");
+    }
+
+    currentPlayer.addItem(choosenItem);
+    room.deleteItem(choosenItem);
+    return "Item is picked successfully!";
+  }
 }
