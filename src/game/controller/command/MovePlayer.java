@@ -20,7 +20,11 @@ public class MovePlayer implements Command {
 
   @Override
   public CommandResult execute(Map<String, String> params) {
-    return new CommandResult(model.movePlayer(Integer.parseInt(params.get("roomIndex"))), false);
+    try {
+      return new CommandResult(model.movePlayer(Integer.parseInt(params.get("roomIndex"))), false);
+    } catch (Exception e) {
+      return new CommandResult(e.getMessage(), true);
+    }
   }
 
   @Override

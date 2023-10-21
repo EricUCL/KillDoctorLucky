@@ -1,6 +1,7 @@
 package game.model;
 
 import game.constants.PlayerType;
+import game.controller.ProgramState;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -25,6 +26,8 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   private List<Player> players;
   private int maxPlayerLimit;
   private int currentPlayerIndex;
+  private int currentTurn;
+  private ProgramState programState;
 
   /**
    * Constructor for the KillDoctorLuckyImpl class.
@@ -41,6 +44,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     this.maxTurns = maxTurns;
     this.players = new ArrayList<>();
     this.maxPlayerLimit = 10;
+    programState = ProgramState.INIT;
   }
 
   /**
@@ -199,6 +203,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     sb.append("Max Turns: ").append(this.maxTurns).append("\n");
     sb.append("Number of Rooms: ").append(this.rooms.size()).append("\n");
     sb.append("Number of Items: ").append(this.items.size()).append("\n");
+    sb.append("Number of Players: ").append(this.players.size()).append("\n");
     return sb.toString();
   }
 
@@ -248,10 +253,6 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
 
     if (players.size() >= maxPlayerLimit) {
       return "Max players limit reached!";
-    }
-
-    if (playerName == null || playerName.isEmpty()) {
-      throw new IllegalArgumentException("Player name can't be null!");
     }
 
     if (maxItemsLimit < 0) {
@@ -305,12 +306,22 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public String movePlayer(int roomIndex) {
+    Player player = players.get(currentPlayerIndex);
+    // check if roomIndex is in neighbours
+    if(!getNeighboursOfRoom(player.getRoomIndex()).contains(roomIndex)) {
+      throw new IllegalArgumentException("Please give neighbor room index!");
+    }
     validateRoomIndex(roomIndex);
-    Room originRoom = rooms.get(players.get(currentPlayerIndex).getRoomIndex());
-    originRoom.removePlayer(players.get(currentPlayerIndex));
-    players.get(currentPlayerIndex).setRoomIndex(roomIndex);
+
+    // remove player from current room
+    Room originRoom = rooms.get(player.getRoomIndex());
+    originRoom.removePlayer(player);
+    // update player's room index
+    player.setRoomIndex(roomIndex);
+    // add player to new room
     Room room = rooms.get(roomIndex);
     room.addPlayer(players.get(currentPlayerIndex));
+
     return "Player moved successfully";
   }
 
@@ -335,6 +346,8 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
       throw new IllegalArgumentException("Please add Players!");
     }
     currentPlayerIndex = 0;
+    currentTurn = 0;
+    programState = ProgramState.RUNNING;
     return "Start game successfully!";
   }
 
@@ -386,6 +399,11 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     if (rooms.size() > 1) {
       moveTarget();
     }
+  }
+
+  @Override
+  public ProgramState getProgramState() {
+    return programState;
   }
 
 }

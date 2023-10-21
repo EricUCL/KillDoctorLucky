@@ -1,6 +1,7 @@
 package game.model;
 
 import game.constants.PlayerType;
+import game.controller.ProgramState;
 
 import java.util.List;
 
@@ -128,4 +129,6 @@ public interface KillDoctorLucky {
   String pickItem(String itemName);
 
   String lookAround();
+
+  ProgramState getProgramState();
 }

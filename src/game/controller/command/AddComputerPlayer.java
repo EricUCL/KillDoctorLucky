@@ -32,7 +32,7 @@ public class AddComputerPlayer implements Command {
 
   @Override
   public String getDescription() {
-    return "Add Player";
+    return "Add Computer Player";
   }
 
   @Override

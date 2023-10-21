@@ -27,7 +27,7 @@ public class LookAround implements Command {
 
   @Override
   public String getDescription() {
-    return "Look Around!";
+    return "Look Around";
   }
 
   @Override

@@ -26,6 +26,7 @@ public class GameControllerImpl implements GameController {
   private CommandRegistry commandRegistry;
   //  private int maxTurns;
   private View view;
+  private ProgramState programState;
 
   /**
    * Constructor to initialize the controller.
@@ -43,6 +44,7 @@ public class GameControllerImpl implements GameController {
     this.readFile(fileReader);
     this.view = new CommandLineView(this.in, this.out);
     commandRegistry = new CommandRegistry();
+    programState = ProgramState.INIT;
   }
 
   /**
@@ -56,7 +58,7 @@ public class GameControllerImpl implements GameController {
     commandRegistry();
 
     while (true) {
-      view.displayOptions(commandRegistry.getCommands(ProgramState.INIT));
+      view.displayOptions(commandRegistry.getCommands(killDoctorLucky.getProgramState()));
       String input = in.nextLine();
 
       if (input.equalsIgnoreCase("q") || input.equalsIgnoreCase("quit")) {
@@ -64,7 +66,8 @@ public class GameControllerImpl implements GameController {
         return;
       }
 
-      Optional<Command> matchedCommandOpt = commandRegistry.getCommands(ProgramState.INIT).stream()
+      Optional<Command> matchedCommandOpt = commandRegistry.getCommands(
+              killDoctorLucky.getProgramState()).stream()
           .filter(cmd -> cmd.getIdentifier().equals(input)).findFirst();
 
       if (matchedCommandOpt.isEmpty()) {
@@ -96,8 +99,7 @@ public class GameControllerImpl implements GameController {
     commandRegistry.registerCommand(ProgramState.INIT,
         new DisplayItemInfoByIndex("3", killDoctorLucky));
     commandRegistry.registerCommand(ProgramState.INIT, new CreateWorldImage("4", killDoctorLucky));
-    commandRegistry.registerCommand(ProgramState.INIT, new MoveTarget("5", killDoctorLucky));
-    commandRegistry.registerCommand(ProgramState.INIT, new DisplayTargetInfo("6", killDoctorLucky));
+    commandRegistry.registerCommand(ProgramState.INIT, new DisplayTargetInfo("5", killDoctorLucky));
     commandRegistry.registerCommand(ProgramState.INIT, new AddPlayer("7", killDoctorLucky));
     commandRegistry.registerCommand(ProgramState.INIT, new AddComputerPlayer("8", killDoctorLucky));
     commandRegistry.registerCommand(ProgramState.INIT, new StartGame("9", killDoctorLucky));

@@ -19,7 +19,11 @@ public class StartGame implements Command {
 
   @Override
   public CommandResult execute(Map<String, String> params) {
-    return new CommandResult(model.startGame(), false);
+    try {
+      return new CommandResult(model.startGame(), false);
+    } catch (Exception e) {
+      return new CommandResult(e.getMessage(), true);
+    }
   }
 
   @Override

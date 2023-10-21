@@ -20,9 +20,13 @@ public class AddPlayer implements Command {
 
   @Override
   public CommandResult execute(Map<String, String> params) {
-    return new CommandResult(
-        model.addPlayer(params.get("playerName"), Integer.parseInt(params.get("roomIndex")),
-            Integer.parseInt(params.get("maxItemsLimit")), PlayerType.HUMAN), false);
+    try {
+      return new CommandResult(
+          model.addPlayer(params.get("playerName"), Integer.parseInt(params.get("roomIndex")),
+              Integer.parseInt(params.get("maxItemsLimit")), PlayerType.HUMAN), false);
+    } catch (Exception e) {
+      return new CommandResult(e.getMessage(), true);
+    }
   }
 
   @Override
