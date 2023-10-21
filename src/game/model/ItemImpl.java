@@ -7,22 +7,24 @@ package game.model;
 public class ItemImpl implements Item {
   private int damage;
   private String name;
-  private int roomIdx;
+  //  private int roomIdx;
+  private int id;
 
   /**
    * Constructor for the ItemImpl class.
    *
-   * @param damage        damage of the item
-   * @param name          name of the item
-   * @param itemRoomIndex
+   * @param damage damage of the item
+   * @param name   name of the item
+   * @param id     index of the item
    */
-  public ItemImpl(int damage, String name, int itemRoomIndex) {
+  public ItemImpl(int id, int damage, String name) {
     if (damage < 0) {
       throw new IllegalArgumentException("Damage can't be negative!");
     }
     this.damage = damage;
     this.name = name;
-    this.roomIdx = itemRoomIndex;
+    //    this.roomIdx = itemRoomIndex;
+    this.id = id;
   }
 
   @Override
@@ -37,7 +39,12 @@ public class ItemImpl implements Item {
 
   @Override
   public String toString() {
-    return "Name: " + name + ", Damage: " + damage;
+    return "Id: " + id + ", Name: " + name + ", Damage: " + damage;
+  }
+
+  @Override
+  public int getId() {
+    return this.id;
   }
 
   @Override

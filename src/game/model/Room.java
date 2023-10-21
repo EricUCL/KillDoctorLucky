@@ -92,4 +92,6 @@ public interface Room {
   void removePlayer(Player player);
 
   void deleteItem(Item item);
+
+  String displayRoomDescription();
 }

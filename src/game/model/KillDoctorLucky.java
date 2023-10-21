@@ -112,7 +112,7 @@ public interface KillDoctorLucky {
 
   void initialMap();
 
-  void addItems(int itemDamage, String itemName, int itemRoomIndex);
+  void addItems(int id, int itemDamage, String itemName, int itemRoomIndex);
 
   String addPlayer(String playerName, int spaceIndex, int maxItemsLimit, PlayerType playerType);
 
@@ -126,9 +126,19 @@ public interface KillDoctorLucky {
 
   String startGame();
 
-  String pickItem(String itemName);
+  String pickItem(int itemID);
 
   String lookAround();
 
+  int getTurnCount();
+
+  int getMaxTurns();
+
   ProgramState getProgramState();
+
+  String getItemsInCurrentRoom();
+
+  List<Player> getPlayers();
+
+  String displayPlayerDescription(String playerName);
 }

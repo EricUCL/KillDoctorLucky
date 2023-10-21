@@ -45,6 +45,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     this.players = new ArrayList<>();
     this.maxPlayerLimit = 10;
     programState = ProgramState.INIT;
+    currentTurn = 0;
   }
 
   /**
@@ -123,7 +124,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public String displayRoomDescription(int roomIdx) {
-    return rooms.get(roomIdx).toString();
+    return rooms.get(roomIdx).displayRoomDescription();
   }
 
   @Override
@@ -238,11 +239,9 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
-  public void addItems(int itemDamage, String itemName, int itemRoomIndex) {
-    if (itemRoomIndex < 0 || itemRoomIndex >= rooms.size()) {
-      throw new IllegalArgumentException("Invalid Room Index!");
-    }
-    Item item = new ItemImpl(itemDamage, itemName, itemRoomIndex);
+  public void addItems(int id, int itemDamage, String itemName, int itemRoomIndex) {
+    validateRoomIndex(itemRoomIndex);
+    Item item = new ItemImpl(id, itemDamage, itemName);
     this.items.add(item);
     rooms.get(itemRoomIndex).addItem(item);
   }
@@ -266,7 +265,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     this.players.add(player);
     Room room = rooms.get(roomIndex);
     room.addPlayer(player);
-    return "Player added successfully";
+    return "Player added successfully!";
   }
 
   @Override
@@ -308,7 +307,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   public String movePlayer(int roomIndex) {
     Player player = players.get(currentPlayerIndex);
     // check if roomIndex is in neighbours
-    if(!getNeighboursOfRoom(player.getRoomIndex()).contains(roomIndex)) {
+    if (!getNeighboursOfRoom(player.getRoomIndex()).contains(roomIndex)) {
       throw new IllegalArgumentException("Please give neighbor room index!");
     }
     validateRoomIndex(roomIndex);
@@ -321,7 +320,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     // add player to new room
     Room room = rooms.get(roomIndex);
     room.addPlayer(players.get(currentPlayerIndex));
-
+    updateTurn();
     return "Player moved successfully";
   }
 
@@ -352,23 +351,20 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
-  public String pickItem(String itemName) {
-    if (itemName.isEmpty()) {
-      throw new IllegalArgumentException("Please select a valid index!");
-    }
+  public String pickItem(int itemId) {
     int roomIndex = players.get(currentPlayerIndex).getRoomIndex();
     Room room = rooms.get(roomIndex);
-    Item choosenItem = null;
+    List<Integer> itemsIndex = new ArrayList<>();
     for (Item item : room.getItems()) {
-      if (item.getName().equals(itemName))
-        choosenItem = item;
+      itemsIndex.add(item.getId());
     }
-    if (choosenItem == null) {
-      throw new IllegalArgumentException("Can not find the item!");
+    if (!itemsIndex.contains(itemId)) {
+      throw new IllegalArgumentException("Please select a valid index!");
     }
-
+    Item choosenItem = items.get(itemId);
     players.get(currentPlayerIndex).addItem(choosenItem);
     room.deleteItem(choosenItem);
+    updateTurn();
     return "Item is picked successfully!";
   }
 
@@ -382,13 +378,12 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     sb.append(currentRoom);
     if (!neighboursIndex.isEmpty()) {
       sb.append("Details on neighbor rooms of player are: \n");
-      sb.append("----------------------------\n");
       for (int neighborIndex : neighboursIndex) {
-
+        sb.append(rooms.get(neighborIndex));
+        sb.append("--------------------\n");
       }
     } else {
       sb.append("No neighbors for this space. \n");
-      sb.append("----------------------------\n");
     }
     updateTurn();
     return sb.toString();
@@ -399,11 +394,57 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     if (rooms.size() > 1) {
       moveTarget();
     }
+    currentTurn++;
+  }
+
+  @Override
+  public int getTurnCount() {
+    return currentTurn;
+  }
+
+  @Override
+  public int getMaxTurns() {
+    return maxTurns;
   }
 
   @Override
   public ProgramState getProgramState() {
     return programState;
+  }
+
+  @Override
+  public String getItemsInCurrentRoom() {
+    int roomIndex = this.players.get(currentPlayerIndex).getRoomIndex();
+    Room currentRoom = rooms.get(roomIndex);
+    List<Item> items = currentRoom.getItems();
+    StringBuilder sb = new StringBuilder();
+    if (items.isEmpty()) {
+      sb.append("No items in current room!");
+      return sb.toString();
+    }
+    sb.append("Items in current room are: \n");
+    for (Item item : items) {
+      sb.append(item);
+      sb.append("\n--------------------\n");
+    }
+    return sb.toString();
+  }
+
+  @Override
+  public List<Player> getPlayers() {
+    List<Player> playersCopy = new ArrayList<>();
+    for (Player player : this.players) {
+      playersCopy.add(
+          new PlayerImpl(player.getPlayerName(), player.getRoomIndex(), player.getItemLimit(),
+              player.getPlayerType()));
+    }
+    return playersCopy;
+  }
+
+  @Override
+  public String displayPlayerDescription(String playerName) {
+    Player player = getPlayer(playerName);
+    return player.displayPlayerDescription();
   }
 
 }

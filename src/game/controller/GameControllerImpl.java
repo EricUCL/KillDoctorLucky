@@ -26,7 +26,7 @@ public class GameControllerImpl implements GameController {
   private CommandRegistry commandRegistry;
   //  private int maxTurns;
   private View view;
-  private ProgramState programState;
+  //  private ProgramState programState;
 
   /**
    * Constructor to initialize the controller.
@@ -44,7 +44,6 @@ public class GameControllerImpl implements GameController {
     this.readFile(fileReader);
     this.view = new CommandLineView(this.in, this.out);
     commandRegistry = new CommandRegistry();
-    programState = ProgramState.INIT;
   }
 
   /**
@@ -58,6 +57,14 @@ public class GameControllerImpl implements GameController {
     commandRegistry();
 
     while (true) {
+      if (killDoctorLucky.getProgramState() == ProgramState.RUNNING) {
+        view.displayMessage("Turn Counter: " + killDoctorLucky.getTurnCount());
+        view.displayMessage("Max Turn: " + killDoctorLucky.getMaxTurns());
+        view.displayMessage("Current turn: " + killDoctorLucky.getCurrentPlayer().getPlayerName());
+        view.displayMessage(killDoctorLucky.displayRoomDescription(
+            killDoctorLucky.getCurrentPlayer().getRoomIndex()));
+        view.displayMessage(killDoctorLucky.getItemsInCurrentRoom());
+      }
       view.displayOptions(commandRegistry.getCommands(killDoctorLucky.getProgramState()));
       String input = in.nextLine();
 
@@ -74,7 +81,8 @@ public class GameControllerImpl implements GameController {
         view.displayError("Invalid command. Try again.");
         continue;
       }
-      view.prompt("----------------- Start ----------------\n");
+
+      view.prompt("----------------- Start ----------------");
       Command matchedCommand = matchedCommandOpt.get();
       Map<String, String> params = new HashMap<>();
       for (ParameterRequest paramRequest : matchedCommand.requiredParameters()) {
@@ -88,7 +96,7 @@ public class GameControllerImpl implements GameController {
       } else {
         view.displayMessage(result.getMessage());
       }
-      view.prompt("------------------ End -----------------\n");
+      view.prompt("------------------ End -----------------");
     }
   }
 
@@ -105,6 +113,11 @@ public class GameControllerImpl implements GameController {
     commandRegistry.registerCommand(ProgramState.INIT, new StartGame("9", killDoctorLucky));
     commandRegistry.registerCommand(ProgramState.RUNNING, new MovePlayer("1", killDoctorLucky));
     commandRegistry.registerCommand(ProgramState.RUNNING, new LookAround("2", killDoctorLucky));
+    commandRegistry.registerCommand(ProgramState.RUNNING, new PickItem("3", killDoctorLucky));
+    commandRegistry.registerCommand(ProgramState.RUNNING,
+        new DisplayPlayerDescription("4", killDoctorLucky));
+    commandRegistry.registerCommand(ProgramState.RUNNING,
+        new DisplayTargetInfo("5", killDoctorLucky));
   }
 
   /**
@@ -171,7 +184,7 @@ public class GameControllerImpl implements GameController {
           }
         }
         String itemName = itemNameBuilder.toString();
-        killDoctorLucky.addItems(itemDamage, itemName, itemRoomIndex);
+        killDoctorLucky.addItems(i, itemDamage, itemName, itemRoomIndex);
       }
       killDoctorLucky.initialMap();
     } catch (FileNotFoundException e) {

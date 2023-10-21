@@ -25,4 +25,5 @@ public interface Player {
 
   int getRoomIndex();
 
+  String displayPlayerDescription();
 }

@@ -3,25 +3,26 @@ package game.controller.command;
 import game.controller.CommandResult;
 import game.controller.ParameterRequest;
 import game.model.KillDoctorLucky;
+import game.model.Player;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class DisplayRoomInfoByIndex implements Command {
+public class DisplayPlayerDescription implements Command {
   private String identifier;
   private KillDoctorLucky model;
 
-  public DisplayRoomInfoByIndex(String identifier, KillDoctorLucky model) {
+  public DisplayPlayerDescription(String identifier, KillDoctorLucky model) {
     this.identifier = identifier;
     this.model = model;
   }
 
   @Override
   public CommandResult execute(Map<String, String> params) {
-    String roomIndex = params.getOrDefault("roomIndex", "");
+    String playerName = params.getOrDefault("playerName", "");
     try {
-      return new CommandResult(model.displayRoomDescription(Integer.parseInt(roomIndex)), false);
+      return new CommandResult(model.displayPlayerDescription(playerName),false);
     } catch (Exception e) {
       return new CommandResult(e.getMessage(), true);
     }
@@ -29,12 +30,18 @@ public class DisplayRoomInfoByIndex implements Command {
 
   @Override
   public List<ParameterRequest> requiredParameters() {
-    return Collections.singletonList(new ParameterRequest("roomIndex", "Enter the room index: "));
+    StringBuilder promptMessage = new StringBuilder();
+    List<Player> players = model.getPlayers();
+    for (Player player : players) {
+      promptMessage.append(player.getPlayerName()).append("\n");
+    }
+    promptMessage.append("Enter the player name: ");
+    return Collections.singletonList(new ParameterRequest("playerName", promptMessage.toString()));
   }
 
   @Override
   public String getDescription() {
-    return "Display Room Info By Index";
+    return "Display Player Description";
   }
 
   @Override

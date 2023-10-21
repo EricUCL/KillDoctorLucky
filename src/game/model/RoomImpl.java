@@ -145,7 +145,7 @@ public class RoomImpl implements Room {
       players.append(player.getPlayerName());
       players.append(" ");
     }
-    return "name: " + name + ", id: " + id + "\nItems: " + items + ", neighbor rooms id: "
+    return "name: " + name + "\nid: " + id + "\nItems: " + items + "\nneighbor rooms id: "
         + neighbors + "\nPlayers: " + players;
   }
 
@@ -174,5 +174,15 @@ public class RoomImpl implements Room {
   @Override
   public void deleteItem(Item item){
     items.remove(item);
+  }
+  @Override
+  public String displayRoomDescription(){
+    StringBuilder sb = new StringBuilder();
+    sb.append("Room Name: " + this.name + "\n");
+    sb.append("Room Index: " + this.id + "\n");
+    sb.append("Room Items: " + this.items + "\n");
+    sb.append("Room Neighbors: " + this.neighborRooms + "\n");
+    sb.append("Room Players: " + this.players + "\n");
+    return sb.toString();
   }
 }

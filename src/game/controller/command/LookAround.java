@@ -4,6 +4,7 @@ import game.controller.CommandResult;
 import game.controller.ParameterRequest;
 import game.model.KillDoctorLucky;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -17,12 +18,16 @@ public class LookAround implements Command {
   }
   @Override
   public CommandResult execute(Map<String, String> params) {
-    return new CommandResult(model.lookAround(), false);
+    try {
+      return new CommandResult(model.lookAround(), false);
+    } catch (Exception e) {
+      return new CommandResult(e.getMessage(), true);
+    }
   }
 
   @Override
   public List<ParameterRequest> requiredParameters() {
-    return null;
+    return Collections.emptyList();
   }
 
   @Override

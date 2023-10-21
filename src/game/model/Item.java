@@ -18,4 +18,5 @@ public interface Item {
    */
   public int getDamage();
 
+  int getId();
 }
