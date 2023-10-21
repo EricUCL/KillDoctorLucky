@@ -126,4 +126,6 @@ public interface KillDoctorLucky {
   String startGame();
 
   String pickItem(String itemName);
+
+  String lookAround();
 }

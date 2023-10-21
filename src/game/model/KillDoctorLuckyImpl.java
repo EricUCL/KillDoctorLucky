@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class KillDoctorLuckyImpl implements KillDoctorLucky {
   List<Item> items;
-  private List<Room> rooms;
+  private final List<Room> rooms;
   private int numRows;
   private int numColumns;
   private int maxTurns;
@@ -24,7 +24,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   private Target target;
   private List<Player> players;
   private int maxPlayerLimit;
-  private Player currentPlayer;
+  private int currentPlayerIndex;
 
   /**
    * Constructor for the KillDoctorLuckyImpl class.
@@ -196,7 +196,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     sb.append("World Name: ").append(this.worldName).append("\n");
     sb.append("Target Name: ").append(this.target.getName()).append("\n");
     sb.append("Target Health: ").append(this.target.getHealth()).append("\n");
-    //    sb.append("Max Turns: ").append(this.maxTurns).append("\n");
+    sb.append("Max Turns: ").append(this.maxTurns).append("\n");
     sb.append("Number of Rooms: ").append(this.rooms.size()).append("\n");
     sb.append("Number of Items: ").append(this.items.size()).append("\n");
     return sb.toString();
@@ -306,11 +306,11 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   @Override
   public String movePlayer(int roomIndex) {
     validateRoomIndex(roomIndex);
-    Room originRoom = rooms.get(currentPlayer.getRoomIndex());
-    originRoom.removePlayer(currentPlayer);
-    currentPlayer.setRoomIndex(roomIndex);
+    Room originRoom = rooms.get(players.get(currentPlayerIndex).getRoomIndex());
+    originRoom.removePlayer(players.get(currentPlayerIndex));
+    players.get(currentPlayerIndex).setRoomIndex(roomIndex);
     Room room = rooms.get(roomIndex);
-    room.addPlayer(currentPlayer);
+    room.addPlayer(players.get(currentPlayerIndex));
     return "Player moved successfully";
   }
 
@@ -326,7 +326,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public Player getCurrentPlayer() {
-    return currentPlayer;
+    return players.get(currentPlayerIndex);
   }
 
   @Override
@@ -334,7 +334,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     if (players.isEmpty()) {
       throw new IllegalArgumentException("Please add Players!");
     }
-    currentPlayer = this.players.get(0);
+    currentPlayerIndex = 0;
     return "Start game successfully!";
   }
 
@@ -343,19 +343,49 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     if (itemName.isEmpty()) {
       throw new IllegalArgumentException("Please select a valid index!");
     }
-    int roomIndex = currentPlayer.getRoomIndex();
+    int roomIndex = players.get(currentPlayerIndex).getRoomIndex();
     Room room = rooms.get(roomIndex);
     Item choosenItem = null;
     for (Item item : room.getItems()) {
       if (item.getName().equals(itemName))
         choosenItem = item;
     }
-    if(choosenItem == null){
+    if (choosenItem == null) {
       throw new IllegalArgumentException("Can not find the item!");
     }
 
-    currentPlayer.addItem(choosenItem);
+    players.get(currentPlayerIndex).addItem(choosenItem);
     room.deleteItem(choosenItem);
     return "Item is picked successfully!";
   }
+
+  @Override
+  public String lookAround() {
+    int roomIndex = this.players.get(currentPlayerIndex).getRoomIndex();
+    Room currentRoom = rooms.get(roomIndex);
+    List<Integer> neighboursIndex = currentRoom.getNeighbours();
+
+    StringBuilder sb = new StringBuilder();
+    sb.append(currentRoom);
+    if (!neighboursIndex.isEmpty()) {
+      sb.append("Details on neighbor rooms of player are: \n");
+      sb.append("----------------------------\n");
+      for (int neighborIndex : neighboursIndex) {
+
+      }
+    } else {
+      sb.append("No neighbors for this space. \n");
+      sb.append("----------------------------\n");
+    }
+    updateTurn();
+    return sb.toString();
+  }
+
+  private void updateTurn() {
+    currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+    if (rooms.size() > 1) {
+      moveTarget();
+    }
+  }
+
 }
