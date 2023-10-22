@@ -52,15 +52,6 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     randomGenerator = new RandomGenerator();
   }
 
-  /**
-   * Constructor for the KillDoctorLuckyImpl class.
-   */
-  public KillDoctorLuckyImpl() {
-    this.rooms = new ArrayList<>();
-    this.items = new ArrayList<>();
-    //    this.maxTurns = 100;
-  }
-
   @Override
   public void initialMap() {
     for (Room room1 : rooms) {

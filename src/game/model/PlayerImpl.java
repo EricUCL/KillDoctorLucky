@@ -10,7 +10,7 @@ public class PlayerImpl implements Player {
   private final String playerName;
   private int roomIndex;
   private final int maxItems;
-  private List<Item> itemsList;
+  private final List<Item> itemsList;
   private final PlayerType playerType;
 
   public List<Item> getItemsList() {
@@ -39,16 +39,6 @@ public class PlayerImpl implements Player {
   }
 
   @Override
-  public void addItemByIndex(int itemIndex) {
-
-  }
-
-  @Override
-  public List<Integer> getItemsIndexList() {
-    return null;
-  }
-
-  @Override
   public int getRoomIndex() {
     return roomIndex;
   }
@@ -59,11 +49,6 @@ public class PlayerImpl implements Player {
   }
 
   @Override
-  public void movePlayer(int roomIdx) {
-
-  }
-
-  @Override
   public PlayerType getPlayerType() {
     return playerType;
   }
@@ -71,11 +56,6 @@ public class PlayerImpl implements Player {
   @Override
   public int getItemLimit() {
     return maxItems;
-  }
-
-  @Override
-  public void removeItemByIndex(int itemIndex) {
-
   }
 
   @Override

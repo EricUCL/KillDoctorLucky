@@ -33,13 +33,6 @@ public interface Player {
   void setRoomIndex(int roomIndex);
 
   /**
-   * Moves the player to a specified room.
-   *
-   * @param roomIdx The index of the room to which the player should move.
-   */
-  void movePlayer(int roomIdx);
-
-  /**
    * Retrieves the type of the player (e.g., NPC, human).
    *
    * @return The player type.
@@ -52,27 +45,6 @@ public interface Player {
    * @return The item limit for the player.
    */
   int getItemLimit();
-
-  /**
-   * Removes an item from the player's inventory based on its index.
-   *
-   * @param itemIndex The index of the item to be removed.
-   */
-  void removeItemByIndex(int itemIndex);
-
-  /**
-   * Adds an item to the player's inventory based on its index.
-   *
-   * @param itemIndex The index of the item to be added.
-   */
-  void addItemByIndex(int itemIndex);
-
-  /**
-   * Retrieves a list of indexes of items currently in the player's inventory.
-   *
-   * @return A list of item indexes.
-   */
-  List<Integer> getItemsIndexList();
 
   /**
    * Retrieves the index of the room in which the player is currently located.
