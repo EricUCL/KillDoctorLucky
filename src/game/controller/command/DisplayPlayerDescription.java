@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 public class DisplayPlayerDescription implements Command {
-  private String identifier;
-  private KillDoctorLucky model;
+  private final String identifier;
+  private final KillDoctorLucky model;
 
   public DisplayPlayerDescription(String identifier, KillDoctorLucky model) {
     this.identifier = identifier;

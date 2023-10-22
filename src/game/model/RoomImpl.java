@@ -172,17 +172,30 @@ public class RoomImpl implements Room {
   }
 
   @Override
-  public void deleteItem(Item item){
+  public void deleteItem(Item item) {
     items.remove(item);
   }
+
   @Override
-  public String displayRoomDescription(){
+  public String displayRoomDescription() {
     StringBuilder sb = new StringBuilder();
-    sb.append("Room Name: " + this.name + "\n");
-    sb.append("Room Index: " + this.id + "\n");
-    sb.append("Room Items: " + this.items + "\n");
-    sb.append("Room Neighbors: " + this.neighborRooms + "\n");
-    sb.append("Room Players: " + this.players + "\n");
+    sb.append("Room Name: ").append(this.name).append("\n");
+    sb.append("Room Index: ").append(this.id).append("\n");
+    if (!this.items.isEmpty()) {
+      sb.append("Room Items: ").append(this.items).append("\n");
+    } else {
+      sb.append("No items in this room" + "\n");
+    }
+    sb.append("Room Neighbors index: ").append(this.neighborRooms).append("\n");
+    if(!this.players.isEmpty()) {
+      sb.append("Players in Room: ");
+      for (Player player : this.players) {
+        sb.append(player.getPlayerName());
+        sb.append(" ");
+      }
+    } else {
+      sb.append("No players in this room");
+    }
     return sb.toString();
   }
 }

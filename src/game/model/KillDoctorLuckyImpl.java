@@ -1,7 +1,8 @@
 package game.model;
 
 import game.constants.PlayerType;
-import game.controller.ProgramState;
+import game.constants.ProgramState;
+import game.utils.RandomGenerator;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -28,6 +29,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   private int currentPlayerIndex;
   private int currentTurn;
   private ProgramState programState;
+  RandomGenerator randomGenerator;
 
   /**
    * Constructor for the KillDoctorLuckyImpl class.
@@ -45,7 +47,9 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     this.players = new ArrayList<>();
     this.maxPlayerLimit = 10;
     programState = ProgramState.INIT;
-    currentTurn = 0;
+    currentTurn = 1;
+    currentPlayerIndex = 0;
+    randomGenerator = new RandomGenerator();
   }
 
   /**
@@ -344,8 +348,6 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     if (players.isEmpty()) {
       throw new IllegalArgumentException("Please add Players!");
     }
-    currentPlayerIndex = 0;
-    currentTurn = 0;
     programState = ProgramState.RUNNING;
     return "Start game successfully!";
   }
@@ -375,12 +377,12 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     List<Integer> neighboursIndex = currentRoom.getNeighbours();
 
     StringBuilder sb = new StringBuilder();
-    sb.append(currentRoom);
+    sb.append(currentRoom.displayRoomDescription()).append("\n");
     if (!neighboursIndex.isEmpty()) {
-      sb.append("Details on neighbor rooms of player are: \n");
+      sb.append("Details on neighbor rooms of player are: \n").append("--------------------\n");
       for (int neighborIndex : neighboursIndex) {
-        sb.append(rooms.get(neighborIndex));
-        sb.append("--------------------\n");
+        sb.append(rooms.get(neighborIndex).displayRoomDescription());
+        sb.append("\n--------------------\n");
       }
     } else {
       sb.append("No neighbors for this space. \n");
@@ -395,6 +397,9 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
       moveTarget();
     }
     currentTurn++;
+    if (currentTurn > maxTurns) {
+      programState = ProgramState.FINALIZING;
+    }
   }
 
   @Override
@@ -447,4 +452,48 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     return player.displayPlayerDescription();
   }
 
+  @Override
+  public String computerPlayerTurn() {
+    Player player = getCurrentPlayer();
+    if (player.getPlayerType() == PlayerType.COMPUTER) {
+      int randomOperateIndex = randomGenerator.getRandomNumberInRange(0, 2);
+      switch (randomOperateIndex) {
+        case 0:
+          // Picking up an item from the space they are currently occupying.
+          Room currentRoom = rooms.get(player.getRoomIndex());
+          if (currentRoom.getItems().isEmpty()) {
+            return computerPlayerTurn();
+          }
+          int randomItemIndex = randomGenerator.getRandomNumberInRange(0,
+              currentRoom.getItems().size() - 1);
+          Item pickedItem = currentRoom.getItems().get(randomItemIndex);
+          pickItem(pickedItem.getId());
+          return "Computer player picked item " + pickedItem.getName();
+        case 1:
+          // Look around the space they are currently occupying.
+          return "Computer player looked around\n\n" + lookAround();
+        case 2:
+          // Moving to a neighboring space.
+          List<Integer> neighbors = getNeighboursOfRoom(player.getRoomIndex());
+          if (neighbors.isEmpty()) {
+            return computerPlayerTurn();
+          }
+          int randomNeighborIndex = randomGenerator.getRandomNumberInRange(0, neighbors.size() - 1);
+          movePlayer(neighbors.get(randomNeighborIndex));
+          return "Computer player moved to room " + neighbors.get(randomNeighborIndex);
+      }
+    }
+    return "Current player is not computer player";
+  }
+
+  @Override
+  public String displayPrepareMessage(){
+    StringBuilder sb = new StringBuilder();
+    sb.append("\nTurn Counter: ").append(getTurnCount()).append("\n");
+    sb.append("Max Turn: ").append(getMaxTurns()).append("\n");
+    Player currentPlayer = getCurrentPlayer();
+    sb.append("Current turn: ").append(currentPlayer.getPlayerName()).append("\n");
+    sb.append(displayRoomDescription(currentPlayer.getRoomIndex()));
+    return sb.toString();
+  }
 }

@@ -9,9 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents the command to add a player.
+ */
 public class AddPlayer implements Command {
-  private String identifier;
-  private KillDoctorLucky model;
+  private final String identifier;
+  private final KillDoctorLucky model;
 
   public AddPlayer(String identifier, KillDoctorLucky model) {
     this.identifier = identifier;

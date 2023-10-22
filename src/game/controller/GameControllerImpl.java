@@ -1,7 +1,10 @@
 package game.controller;
 
+import game.constants.PlayerType;
+import game.constants.ProgramState;
 import game.controller.command.*;
 import game.model.KillDoctorLucky;
+import game.model.Player;
 import game.model.RoomImpl;
 import game.model.TargetImpl;
 import game.view.CommandLineView;
@@ -20,13 +23,11 @@ import java.util.Scanner;
  * Controller class to run the game.
  */
 public class GameControllerImpl implements GameController {
-  private KillDoctorLucky killDoctorLucky;
-  private Scanner in;
-  private Appendable out;
-  private CommandRegistry commandRegistry;
-  //  private int maxTurns;
-  private View view;
-  //  private ProgramState programState;
+  private final KillDoctorLucky killDoctorLucky;
+  private final Scanner in;
+  private final Appendable out;
+  private final CommandRegistry commandRegistry;
+  private final View view;
 
   /**
    * Constructor to initialize the controller.
@@ -42,13 +43,10 @@ public class GameControllerImpl implements GameController {
     this.out = out;
     this.killDoctorLucky = killDoctorLucky;
     this.readFile(fileReader);
-    this.view = new CommandLineView(this.in, this.out);
+    this.view = new CommandLineView(this.out);
     commandRegistry = new CommandRegistry();
   }
 
-  /**
-   * Method to start the game.
-   */
   @Override
   public void startGame() throws IOException {
     if (killDoctorLucky == null) {
@@ -57,14 +55,23 @@ public class GameControllerImpl implements GameController {
     commandRegistry();
 
     while (true) {
-      if (killDoctorLucky.getProgramState() == ProgramState.RUNNING) {
-        view.displayMessage("Turn Counter: " + killDoctorLucky.getTurnCount());
-        view.displayMessage("Max Turn: " + killDoctorLucky.getMaxTurns());
-        view.displayMessage("Current turn: " + killDoctorLucky.getCurrentPlayer().getPlayerName());
-        view.displayMessage(killDoctorLucky.displayRoomDescription(
-            killDoctorLucky.getCurrentPlayer().getRoomIndex()));
-        view.displayMessage(killDoctorLucky.getItemsInCurrentRoom());
+      if (killDoctorLucky.getProgramState() == ProgramState.FINALIZING) {
+        view.displayMessage("Game Over");
+        return;
       }
+
+      if (killDoctorLucky.getProgramState() == ProgramState.RUNNING) {
+        view.displayMessage(killDoctorLucky.displayPrepareMessage());
+        Player currentPlayer = killDoctorLucky.getCurrentPlayer();
+        if (currentPlayer.getPlayerType() == PlayerType.COMPUTER) {
+          view.prompt("----------------- Start ----------------");
+          view.displayMessage("Computer player " + currentPlayer.getPlayerName() + " is playing");
+          view.displayMessage(killDoctorLucky.computerPlayerTurn());
+          view.prompt("------------------ End -----------------");
+          continue;
+        }
+      }
+
       view.displayOptions(commandRegistry.getCommands(killDoctorLucky.getProgramState()));
       String input = in.nextLine();
 
@@ -100,6 +107,9 @@ public class GameControllerImpl implements GameController {
     }
   }
 
+  /**
+   * Function to register all the commands.
+   */
   private void commandRegistry() {
     commandRegistry.registerCommand(ProgramState.INIT, new DisplayWorldInfo("1", killDoctorLucky));
     commandRegistry.registerCommand(ProgramState.INIT,

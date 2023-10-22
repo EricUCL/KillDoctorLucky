@@ -1,7 +1,5 @@
 package game.controller;
 
-import game.model.KillDoctorLucky;
-
 import java.io.IOException;
 
 /**
@@ -9,5 +7,8 @@ import java.io.IOException;
  * interface take cares of starting the game.
  */
 public interface GameController {
+  /**
+   * Method to start the game.
+   */
   void startGame() throws IOException;
 }

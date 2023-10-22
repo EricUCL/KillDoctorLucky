@@ -87,11 +87,32 @@ public interface Room {
    */
   List<Item> getItems();
 
+  /**
+   * Adds a player to the room.
+   *
+   * @param player The player object to be added to the room.
+   */
   void addPlayer(Player player);
 
+  /**
+   * Removes a player from the room.
+   *
+   * @param player The player object to be removed from the room.
+   */
   void removePlayer(Player player);
 
+  /**
+   * Deletes an item from the room.
+   *
+   * @param item The item object to be deleted from the room.
+   */
   void deleteItem(Item item);
 
+  /**
+   * Provides a detailed description of the room, including its contents and any players present.
+   * This description is useful for players to get a textual representation of the room's state.
+   *
+   * @return A string containing a detailed description of the room.
+   */
   String displayRoomDescription();
 }

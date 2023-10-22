@@ -3,15 +3,17 @@ package game.controller.command;
 import game.controller.CommandResult;
 import game.controller.ParameterRequest;
 import game.model.KillDoctorLucky;
-import game.model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents the command to pick item.
+ */
 public class PickItem implements Command {
-  private String identifier;
-  private KillDoctorLucky model;
+  private final String identifier;
+  private final KillDoctorLucky model;
 
   public PickItem(String identifier, KillDoctorLucky model) {
     this.identifier = identifier;
@@ -30,10 +32,9 @@ public class PickItem implements Command {
   @Override
   public List<ParameterRequest> requiredParameters() {
     List<ParameterRequest> requests = new ArrayList<>();
-    StringBuilder promptMessage = new StringBuilder();
-    promptMessage.append(model.getItemsInCurrentRoom());
-    promptMessage.append("\nEnter the item index you want to pick up: ");
-    requests.add(new ParameterRequest("itemIndex", promptMessage.toString()));
+    String promptMessage =
+        model.getItemsInCurrentRoom() + "\nEnter the item index you want to pick up: ";
+    requests.add(new ParameterRequest("itemIndex", promptMessage));
     return requests;
   }
 

@@ -8,9 +8,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents the command to display room information.
+ */
 public class DisplayRoomInfoByIndex implements Command {
-  private String identifier;
-  private KillDoctorLucky model;
+  private final String identifier;
+  private final KillDoctorLucky model;
 
   public DisplayRoomInfoByIndex(String identifier, KillDoctorLucky model) {
     this.identifier = identifier;

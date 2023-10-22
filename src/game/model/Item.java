@@ -18,5 +18,10 @@ public interface Item {
    */
   public int getDamage();
 
+  /**
+   * Returns the id of the item.
+   *
+   * @return id of the item.
+   */
   int getId();
 }

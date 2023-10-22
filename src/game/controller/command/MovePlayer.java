@@ -9,9 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents the command to move player.
+ */
 public class MovePlayer implements Command {
-  private String identifier;
-  private KillDoctorLucky model;
+  private final String identifier;
+  private final KillDoctorLucky model;
 
   public MovePlayer(String identifier, KillDoctorLucky model) {
     this.identifier = identifier;

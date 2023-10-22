@@ -1,18 +1,19 @@
 package game.controller.command;
 
-import game.constants.PlayerType;
 import game.controller.CommandResult;
 import game.controller.ParameterRequest;
 import game.model.KillDoctorLucky;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents the command to add a computer player.
+ */
 public class AddComputerPlayer implements Command {
-  private String identifier;
-  private KillDoctorLucky model;
+  private final String identifier;
+  private final KillDoctorLucky model;
 
   public AddComputerPlayer(String identifier, KillDoctorLucky model) {
     this.identifier = identifier;

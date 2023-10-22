@@ -8,9 +8,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents the command to create the world image.
+ */
 public class CreateWorldImage implements Command{
-  private String identifier;
-  private KillDoctorLucky model;
+  private final String identifier;
+  private final KillDoctorLucky model;
   public CreateWorldImage(String identifier, KillDoctorLucky model) {
     this.identifier = identifier;
     this.model = model;
