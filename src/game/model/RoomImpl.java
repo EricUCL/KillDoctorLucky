@@ -39,7 +39,7 @@ public class RoomImpl implements Room {
       throw new IllegalArgumentException("Name can't be empty");
     }
     // check coordinates not null or empty
-    ValidateCoordinates(upperLeftRow, upperLeftCol, lowerRightRow, lowerRightCol);
+    validateCoordinates(upperLeftRow, upperLeftCol, lowerRightRow, lowerRightCol);
     this.name = name;
     this.id = id;
     this.upperLeftRow = upperLeftRow;
@@ -59,7 +59,7 @@ public class RoomImpl implements Room {
    * @param lowerRightRow lower right row of the room
    * @param lowerRightCol lower right column of the room
    */
-  private void ValidateCoordinates(int upperLeftRow, int upperLeftCol, int lowerRightRow,
+  private void validateCoordinates(int upperLeftRow, int upperLeftCol, int lowerRightRow,
       int lowerRightCol) {
     if (upperLeftRow < 0 || upperLeftCol < 0 || lowerRightRow < 0 || lowerRightCol < 0) {
       throw new IllegalArgumentException("Invalid coordinates");
@@ -187,7 +187,7 @@ public class RoomImpl implements Room {
       sb.append("No items in this room" + "\n");
     }
     sb.append("Room Neighbors index: ").append(this.neighborRooms).append("\n");
-    if(!this.players.isEmpty()) {
+    if (!this.players.isEmpty()) {
       sb.append("Players in Room: ");
       for (Player player : this.players) {
         sb.append(player.getPlayerName());

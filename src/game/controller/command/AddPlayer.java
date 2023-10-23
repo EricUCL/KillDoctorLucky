@@ -4,7 +4,6 @@ import game.constants.PlayerType;
 import game.controller.CommandResult;
 import game.controller.ParameterRequest;
 import game.model.KillDoctorLucky;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,12 @@ public class AddPlayer implements Command {
   private final String identifier;
   private final KillDoctorLucky model;
 
+  /**
+   * This class represents the command to add a player.
+   *
+   * @param identifier The identifier of the command.
+   * @param model      The model to add a player.
+   */
   public AddPlayer(String identifier, KillDoctorLucky model) {
     this.identifier = identifier;
     this.model = model;
@@ -27,7 +32,7 @@ public class AddPlayer implements Command {
       return new CommandResult(
           model.addPlayer(params.get("playerName"), Integer.parseInt(params.get("roomIndex")),
               Integer.parseInt(params.get("maxItemsLimit")), PlayerType.HUMAN), false);
-    } catch (Exception e) {
+    } catch (IllegalArgumentException e) {
       return new CommandResult(e.getMessage(), true);
     }
   }

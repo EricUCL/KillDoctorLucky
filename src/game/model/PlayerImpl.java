@@ -1,11 +1,13 @@
 package game.model;
 
 import game.constants.PlayerType;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class represents the player in the game.
+ */
 public class PlayerImpl implements Player {
   private final String playerName;
   private int roomIndex;
@@ -13,6 +15,23 @@ public class PlayerImpl implements Player {
   private final List<Item> itemsList;
   private final PlayerType playerType;
 
+  /**
+   * Constructor for the PlayerImpl class.
+   *
+   * @param playerName name of the player
+   * @param roomIndex  index of the room
+   * @param maxItems   maximum number of items that the player can carry
+   * @param playerType type of the player
+   */
+  public PlayerImpl(String playerName, int roomIndex, int maxItems, PlayerType playerType) {
+    this.playerName = playerName;
+    this.roomIndex = roomIndex;
+    this.maxItems = maxItems;
+    this.playerType = playerType;
+    this.itemsList = new ArrayList<>();
+  }
+
+  @Override
   public List<Item> getItemsList() {
     return itemsList;
   }
@@ -23,14 +42,6 @@ public class PlayerImpl implements Player {
       throw new IllegalArgumentException("Items reached to upper limit！");
     }
     itemsList.add(item);
-  }
-
-  public PlayerImpl(String playerName, int roomIndex, int maxItems, PlayerType playerType) {
-    this.playerName = playerName;
-    this.roomIndex = roomIndex;
-    this.maxItems = maxItems;
-    this.playerType = playerType;
-    this.itemsList = new ArrayList<>();
   }
 
   @Override
@@ -71,15 +82,19 @@ public class PlayerImpl implements Player {
   }
 
   @Override
-  public String displayPlayerDescription(){
+  public int hashCode() {
+    return this.getPlayerName().hashCode();
+  }
+
+  @Override
+  public String displayPlayerDescription() {
     StringBuilder sb = new StringBuilder();
     sb.append(String.format("Player Name: %s\n", this.playerName));
     sb.append(String.format("Player Type: %s\n", this.playerType));
     sb.append(String.format("Room Index: %d\n", this.roomIndex));
     if (!this.itemsList.isEmpty()) {
-      sb.append(String.format("Items: %s \n", this.itemsList.stream()
-              .map(Item::getName)
-              .collect(Collectors.joining(", "))));
+      sb.append(String.format("Items: %s \n",
+          this.itemsList.stream().map(Item::getName).collect(Collectors.joining(", "))));
     } else {
       sb.append("Not carrying any items. \n");
     }

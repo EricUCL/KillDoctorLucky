@@ -1,13 +1,5 @@
 package game.controller;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Scanner;
 import game.constants.PlayerType;
 import game.constants.ProgramState;
 import game.controller.command.AddComputerPlayer;
@@ -28,6 +20,14 @@ import game.model.Player;
 import game.model.RoomImpl;
 import game.model.TargetImpl;
 import game.view.View;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Scanner;
 
 /**
  * Controller class to run the game.
@@ -45,10 +45,14 @@ public class GameControllerImpl implements GameController {
    * @param in              Readable object.
    * @param view            Appendable object.
    * @param killDoctorLucky Model object.
+   * @param fileReader      Readable object.
    */
   public GameControllerImpl(KillDoctorLucky killDoctorLucky, Readable in, View view,
       Readable fileReader) throws IOException {
 
+    if (in == null) {
+      throw new IllegalArgumentException("Readable cannot be null");
+    }
     this.in = new Scanner(in);
     this.killDoctorLucky = killDoctorLucky;
     this.fileReader = fileReader;
@@ -91,7 +95,7 @@ public class GameControllerImpl implements GameController {
       view.displayOptions(commandRegistry.getCommands(killDoctorLucky.getProgramState()));
       String input = in.nextLine();
 
-      if (input.equalsIgnoreCase("q") || input.equalsIgnoreCase("quit")) {
+      if ("q".equalsIgnoreCase(input) || "quit".equalsIgnoreCase(input)) {
         view.prompt("Exiting...\n");
         return;
       }
@@ -111,6 +115,11 @@ public class GameControllerImpl implements GameController {
       for (ParameterRequest paramRequest : matchedCommand.requiredParameters()) {
         view.prompt(paramRequest.getPromptMessage());
         params.put(paramRequest.getParamName(), in.nextLine());
+        // check if the input is not empty
+        if (params.get(paramRequest.getParamName()).isEmpty()) {
+          view.displayError("Invalid input");
+          break;
+        }
       }
 
       CommandResult result = matchedCommand.execute(params);

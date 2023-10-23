@@ -4,7 +4,6 @@ import game.controller.CommandResult;
 import game.controller.ParameterRequest;
 import game.model.KillDoctorLucky;
 import game.model.Player;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,12 @@ public class MovePlayer implements Command {
   private final String identifier;
   private final KillDoctorLucky model;
 
+  /**
+   * This class represents the command to move player.
+   *
+   * @param identifier The identifier of the command.
+   * @param model      The model to move player.
+   */
   public MovePlayer(String identifier, KillDoctorLucky model) {
     this.identifier = identifier;
     this.model = model;
@@ -25,14 +30,13 @@ public class MovePlayer implements Command {
   public CommandResult execute(Map<String, String> params) {
     try {
       return new CommandResult(model.movePlayer(Integer.parseInt(params.get("roomIndex"))), false);
-    } catch (Exception e) {
+    } catch (IllegalArgumentException e) {
       return new CommandResult(e.getMessage(), true);
     }
   }
 
   @Override
   public List<ParameterRequest> requiredParameters() {
-    List<ParameterRequest> requests = new ArrayList<>();
     Player currentPlayer = model.getCurrentPlayer();
     List<Integer> neighbours = model.getNeighboursOfRoom(currentPlayer.getRoomIndex());
     StringBuilder promptMessage = new StringBuilder();
@@ -41,6 +45,7 @@ public class MovePlayer implements Command {
       promptMessage.append(roomIndex).append(" ");
     }
     promptMessage.append("\nEnter the room index you want to move to: ");
+    List<ParameterRequest> requests = new ArrayList<>();
     requests.add(new ParameterRequest("roomIndex", promptMessage.toString()));
     return requests;
   }

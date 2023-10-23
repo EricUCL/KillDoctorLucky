@@ -3,17 +3,15 @@ package game.model;
 import game.constants.PlayerType;
 import game.constants.ProgramState;
 import game.utils.RandomGenerator;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents the KillDoctorLuckyImpl class. It implements the KillDoctorLucky interface
+ * and has all the methods which are required for the game to be played.
+ */
 public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
-  List<Item> items;
+  private List<Item> items;
   private List<Room> rooms;
   private int numRows;
   private int numColumns;
@@ -25,12 +23,13 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
   private int currentPlayerIndex;
   private int currentTurn;
   private ProgramState programState;
-  RandomGenerator randomGenerator;
+  private RandomGenerator randomGenerator;
 
   /**
    * Constructor for the KillDoctorLuckyImpl class.
    *
-   * @param maxTurns maximum number of turns
+   * @param maxTurns        maximum number of turns
+   * @param randomGenerator random generator
    */
   public MockKillDoctorLuckyImpl(int maxTurns, RandomGenerator randomGenerator) {
     if (maxTurns < 0) {
@@ -40,8 +39,10 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
     this.items = new ArrayList<>();
     this.maxTurns = maxTurns;
     this.players = new ArrayList<>();
+    players.add(new PlayerImpl("Player1", 0, 10, PlayerType.HUMAN));
+    players.add(new PlayerImpl("Computer1", 0, 10, PlayerType.COMPUTER));
     this.maxPlayerLimit = 10;
-    programState = ProgramState.INIT;
+    programState = ProgramState.RUNNING;
     currentTurn = 1;
     currentPlayerIndex = 0;
     this.randomGenerator = randomGenerator;
@@ -140,46 +141,7 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public String createWorldImage() {
-    int scale = 25;
-    int width = numColumns * (scale + 3);
-    int height = numRows * (scale + 10);
-
-    BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-    Graphics2D g = image.createGraphics();
-
-    g.setColor(Color.WHITE); // set background to white
-    g.fillRect(0, 0, width, height);
-    g.setStroke(new BasicStroke(2));
-    g.setColor(Color.BLACK); // set color to black
-
-    for (Room room : rooms) {
-      int scaledY1 = room.getUpperLeftRow() * scale;
-      int scaledX1 = room.getUpperLeftCol() * scale;
-      int rectangleWidth = (room.getLowerRightCol() - room.getUpperLeftCol() + 1) * scale;
-      int rectangleHeight = (room.getLowerRightRow() - room.getUpperLeftRow() + 1) * scale;
-      g.drawRect(scaledX1, scaledY1, rectangleWidth, rectangleHeight);
-
-      final String text = String.format("%s-%s", room.getIndex(), room.getName());
-      int fontSize = 14;
-      FontMetrics metrics;
-      g.setFont(g.getFont().deriveFont((float) fontSize));
-      metrics = g.getFontMetrics(g.getFont());
-
-      final int x = scaledX1 + (rectangleWidth - metrics.stringWidth(text) + 3) / 2;
-      final int y = scaledY1 + ((rectangleHeight - metrics.getHeight()) / 2) + metrics.getAscent();
-      g.setFont(new Font("", Font.PLAIN, 15));
-      g.drawString(text, x, y);
-    }
-
-    String outputPath = "./image.png";
-
-    try {
-      ImageIO.write(image, "png", new File(outputPath));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    return "Successfully generate to " + outputPath;
+    return "Create World Image Activated!";
   }
 
   @Override
@@ -198,20 +160,12 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public String getWorldDesc() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("World Name: ").append(this.worldName).append("\n");
-    sb.append("Target Name: ").append(this.target.getName()).append("\n");
-    sb.append("Target Health: ").append(this.target.getHealth()).append("\n");
-    sb.append("Max Turns: ").append(this.maxTurns).append("\n");
-    sb.append("Number of Rooms: ").append(this.rooms.size()).append("\n");
-    sb.append("Number of Items: ").append(this.items.size()).append("\n");
-    sb.append("Number of Players: ").append(this.players.size()).append("\n");
-    return sb.toString();
+    return "Display World Description Activated!";
   }
 
   @Override
   public String displayTargetInfo() {
-    return target.toString();
+    return "Display Target Info Activated!";
   }
 
   @Override
@@ -250,22 +204,7 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
   @Override
   public String addPlayer(String playerName, int roomIndex, int maxItemsLimit,
       PlayerType playerType) {
-
-    if (players.size() >= maxPlayerLimit) {
-      return "Max players limit reached!";
-    }
-
-    if (maxItemsLimit < 0) {
-      throw new IllegalArgumentException("Max item limit can not be negative!");
-    }
-
-    validateRoomIndex(roomIndex);
-    validatePlayer(playerName);
-
-    Player player = new PlayerImpl(playerName, roomIndex, maxItemsLimit, playerType);
-    this.players.add(player);
-    Room room = rooms.get(roomIndex);
-    room.addPlayer(player);
+    programState = ProgramState.FINALIZING;
     return "Player added successfully!";
   }
 
@@ -306,23 +245,7 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public String movePlayer(int roomIndex) {
-    Player player = players.get(currentPlayerIndex);
-    // check if roomIndex is in neighbours
-    if (!getNeighboursOfRoom(player.getRoomIndex()).contains(roomIndex)) {
-      throw new IllegalArgumentException("Please give neighbor room index!");
-    }
-    validateRoomIndex(roomIndex);
-
-    // remove player from current room
-    Room originRoom = rooms.get(player.getRoomIndex());
-    originRoom.removePlayer(player);
-    // update player's room index
-    player.setRoomIndex(roomIndex);
-    // add player to new room
-    Room room = rooms.get(roomIndex);
-    room.addPlayer(players.get(currentPlayerIndex));
-    updateTurn();
-    return "Player moved successfully";
+    return "Move Player Activated!";
   }
 
   @Override
@@ -351,41 +274,12 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public String pickItem(int itemId) {
-    int roomIndex = players.get(currentPlayerIndex).getRoomIndex();
-    Room room = rooms.get(roomIndex);
-    List<Integer> itemsIndex = new ArrayList<>();
-    for (Item item : room.getItems()) {
-      itemsIndex.add(item.getId());
-    }
-    if (!itemsIndex.contains(itemId)) {
-      throw new IllegalArgumentException("Please select a valid index!");
-    }
-    Item choosenItem = items.get(itemId);
-    players.get(currentPlayerIndex).addItem(choosenItem);
-    room.deleteItem(choosenItem);
-    updateTurn();
-    return "Item is picked successfully!";
+    return "Pick Item Activated!";
   }
 
   @Override
   public String lookAround() {
-    int roomIndex = this.players.get(currentPlayerIndex).getRoomIndex();
-    Room currentRoom = rooms.get(roomIndex);
-    List<Integer> neighboursIndex = currentRoom.getNeighbours();
-
-    StringBuilder sb = new StringBuilder();
-    sb.append(currentRoom.displayRoomDescription()).append("\n");
-    if (!neighboursIndex.isEmpty()) {
-      sb.append("Details on neighbor rooms of player are: \n").append("--------------------\n");
-      for (int neighborIndex : neighboursIndex) {
-        sb.append(rooms.get(neighborIndex).displayRoomDescription());
-        sb.append("\n--------------------\n");
-      }
-    } else {
-      sb.append("No neighbors for this space. \n");
-    }
-    updateTurn();
-    return sb.toString();
+    return "Look Around Activated!";
   }
 
   void updateTurn() {
@@ -438,8 +332,8 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public String displayPlayerDescription(String playerName) {
-    Player player = getPlayer(playerName);
-    return player.displayPlayerDescription();
+
+    return "Display Player Description Activated!";
   }
 
   @Override
@@ -459,13 +353,12 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
     return sb.toString();
   }
 
+  /**
+   * Set program state for testing.
+   *
+   * @param programState program state
+   */
   public void setProgramState(ProgramState programState) {
     this.programState = programState;
-  }
-
-  public void setCurrentPlayer(Player computerPlayer) {
-    this.players.add(computerPlayer);
-    this.currentPlayerIndex = 0;
-    this.currentTurn = 1;
   }
 }

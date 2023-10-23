@@ -5,6 +5,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import game.constants.PlayerType;
+import game.constants.ProgramState;
+import game.utils.RandomGenerator;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,9 +16,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-import game.constants.PlayerType;
-import game.constants.ProgramState;
-import game.utils.RandomGenerator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,6 +27,9 @@ public class KillDoctorLuckyImplTest {
   private KillDoctorLuckyImpl game;
   private RandomGenerator randomGenerator;
 
+  /**
+   * Set up the test.
+   */
   @Before
   public void setUp() {
     randomGenerator = new RandomGenerator(1, 1, 2, 3, 2, 1);
@@ -375,10 +378,10 @@ public class KillDoctorLuckyImplTest {
 
   @Test
   public void testUpdateTurnWithMultiplePlayers() {
-    Player p2 = new PlayerImpl("John", 0, 5, PlayerType.HUMAN);
-    Player p1 = new PlayerImpl("Jane", 1, 5, PlayerType.HUMAN);
     game.addPlayer("Jane", 1, 5, PlayerType.HUMAN);
     game.addPlayer("John", 0, 5, PlayerType.HUMAN);
+    Player p1 = new PlayerImpl("Jane", 1, 5, PlayerType.HUMAN);
+    Player p2 = new PlayerImpl("John", 0, 5, PlayerType.HUMAN);
     assertEquals(p1, game.getCurrentPlayer());
     game.updateTurn();
     assertEquals(p2, game.getCurrentPlayer());
@@ -417,5 +420,14 @@ public class KillDoctorLuckyImplTest {
     }
     String result = game.addComputerPlayer();
     assertEquals("Max players limit reached!", result);
+  }
+
+  @Test
+  public void testReachMaxTurns() {
+    KillDoctorLuckyImpl tempGame = new KillDoctorLuckyImpl(1, randomGenerator);
+    readFile(tempGame);
+    tempGame.addPlayer("John", 0, 5, PlayerType.HUMAN);
+    tempGame.updateTurn();
+    assertEquals(ProgramState.FINALIZING, tempGame.getProgramState());
   }
 }

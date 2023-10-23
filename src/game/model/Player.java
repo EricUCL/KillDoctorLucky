@@ -1,7 +1,6 @@
 package game.model;
 
 import game.constants.PlayerType;
-
 import java.util.List;
 
 /**
@@ -10,6 +9,13 @@ import java.util.List;
  * inventory, and their movement within the game world.
  */
 public interface Player {
+
+  /**
+   * Retrieves the list of items that the player currently possesses.
+   *
+   * @return The list of items that the player currently possesses.
+   */
+  List<Item> getItemsList();
 
   /**
    * Adds an item to the player's inventory.

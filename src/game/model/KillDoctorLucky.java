@@ -2,7 +2,6 @@ package game.model;
 
 import game.constants.PlayerType;
 import game.constants.ProgramState;
-
 import java.util.List;
 
 /**
@@ -94,11 +93,15 @@ public interface KillDoctorLucky {
 
   /**
    * Function for setting the number of rows in the world.
+   *
+   * @param numRows number of rows
    */
   void setNumRows(int numRows);
 
   /**
    * Function for setting the number of columns in the world.
+   *
+   * @param numCols number of columns
    */
   void setNumCols(int numCols);
 
@@ -191,10 +194,10 @@ public interface KillDoctorLucky {
   /**
    * Allows the current player to pick up a specified item.
    *
-   * @param itemID The index of the item to be picked up.
+   * @param itemId The index of the item to be picked up.
    * @return A string message indicating the result of the action.
    */
-  String pickItem(int itemID);
+  String pickItem(int itemId);
 
   /**
    * Allows the current player to survey their surroundings.

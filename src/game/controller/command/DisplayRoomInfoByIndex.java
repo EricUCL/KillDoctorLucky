@@ -3,7 +3,6 @@ package game.controller.command;
 import game.controller.CommandResult;
 import game.controller.ParameterRequest;
 import game.model.KillDoctorLucky;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +14,12 @@ public class DisplayRoomInfoByIndex implements Command {
   private final String identifier;
   private final KillDoctorLucky model;
 
+  /**
+   * Constructs a display room info command.
+   *
+   * @param identifier the identifier of the command
+   * @param model      the model to update
+   */
   public DisplayRoomInfoByIndex(String identifier, KillDoctorLucky model) {
     this.identifier = identifier;
     this.model = model;
@@ -25,7 +30,7 @@ public class DisplayRoomInfoByIndex implements Command {
     String roomIndex = params.getOrDefault("roomIndex", "");
     try {
       return new CommandResult(model.displayRoomDescription(Integer.parseInt(roomIndex)), false);
-    } catch (Exception e) {
+    } catch (IllegalArgumentException e) {
       return new CommandResult(e.getMessage(), true);
     }
   }

@@ -2,7 +2,6 @@ package game.controller.command;
 
 import game.controller.CommandResult;
 import game.controller.ParameterRequest;
-
 import java.util.List;
 import java.util.Map;
 

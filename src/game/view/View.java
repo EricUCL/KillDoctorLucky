@@ -1,7 +1,6 @@
 package game.view;
 
 import game.controller.command.Command;
-
 import java.io.IOException;
 import java.util.List;
 

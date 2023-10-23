@@ -2,12 +2,11 @@ package game.controller;
 
 import game.constants.ProgramState;
 import game.controller.command.Command;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Collections;
 
 /**
  * Maintains a registry of commands mapped to specific game states. Allows the association of

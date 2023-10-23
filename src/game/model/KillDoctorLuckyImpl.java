@@ -3,21 +3,24 @@ package game.model;
 import game.constants.PlayerType;
 import game.constants.ProgramState;
 import game.utils.RandomGenerator;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.ImageIO;
 
 /**
  * This class represents the KillDoctorLuckyImpl class. It implements the KillDoctorLucky interface
  * and has all the methods which are required for the game to be played.
  */
 public class KillDoctorLuckyImpl implements KillDoctorLucky {
-  List<Item> items;
+  private final List<Item> items;
   private final List<Room> rooms;
   private int numRows;
   private int numColumns;
@@ -29,12 +32,13 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   private int currentPlayerIndex;
   private int currentTurn;
   private ProgramState programState;
-  RandomGenerator randomGenerator;
+  private final RandomGenerator randomGenerator;
 
   /**
    * Constructor for the KillDoctorLuckyImpl class.
    *
-   * @param maxTurns maximum number of turns
+   * @param maxTurns        maximum number of turns
+   * @param randomGenerator random generator
    */
   public KillDoctorLuckyImpl(int maxTurns, RandomGenerator randomGenerator) {
     if (maxTurns < 0) {
@@ -481,6 +485,8 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
           int randomNeighborIndex = randomGenerator.getRandomNumberInRange(0, neighbors.size() - 1);
           movePlayer(neighbors.get(randomNeighborIndex));
           return "Computer player moved to room " + neighbors.get(randomNeighborIndex);
+        default:
+          return "Invalid operation";
       }
     }
     return "Current player is not computer player";

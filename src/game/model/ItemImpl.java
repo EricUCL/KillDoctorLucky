@@ -58,4 +58,9 @@ public class ItemImpl implements Item {
     Item that = (Item) o;
     return this.getName().equals(that.getName());
   }
+
+  @Override
+  public int hashCode() {
+    return this.getName().hashCode();
+  }
 }
