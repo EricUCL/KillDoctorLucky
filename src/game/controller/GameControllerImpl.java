@@ -1,15 +1,5 @@
 package game.controller;
 
-import game.constants.PlayerType;
-import game.constants.ProgramState;
-import game.controller.command.*;
-import game.model.KillDoctorLucky;
-import game.model.Player;
-import game.model.RoomImpl;
-import game.model.TargetImpl;
-import game.view.CommandLineView;
-import game.view.View;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,6 +8,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
+import game.constants.PlayerType;
+import game.constants.ProgramState;
+import game.controller.command.AddComputerPlayer;
+import game.controller.command.AddPlayer;
+import game.controller.command.Command;
+import game.controller.command.CreateWorldImage;
+import game.controller.command.DisplayItemInfoByIndex;
+import game.controller.command.DisplayPlayerDescription;
+import game.controller.command.DisplayRoomInfoByIndex;
+import game.controller.command.DisplayTargetInfo;
+import game.controller.command.DisplayWorldInfo;
+import game.controller.command.LookAround;
+import game.controller.command.MovePlayer;
+import game.controller.command.PickItem;
+import game.controller.command.StartGame;
+import game.model.KillDoctorLucky;
+import game.model.Player;
+import game.model.RoomImpl;
+import game.model.TargetImpl;
+import game.view.View;
 
 /**
  * Controller class to run the game.
@@ -25,25 +35,24 @@ import java.util.Scanner;
 public class GameControllerImpl implements GameController {
   private final KillDoctorLucky killDoctorLucky;
   private final Scanner in;
-  private final Appendable out;
   private final CommandRegistry commandRegistry;
   private final View view;
+  private final Readable fileReader;
 
   /**
    * Constructor to initialize the controller.
    *
    * @param in              Readable object.
-   * @param out             Appendable object.
+   * @param view            Appendable object.
    * @param killDoctorLucky Model object.
    */
-  public GameControllerImpl(KillDoctorLucky killDoctorLucky, Readable in, Appendable out,
+  public GameControllerImpl(KillDoctorLucky killDoctorLucky, Readable in, View view,
       Readable fileReader) throws IOException {
 
     this.in = new Scanner(in);
-    this.out = out;
     this.killDoctorLucky = killDoctorLucky;
-    this.readFile(fileReader);
-    this.view = new CommandLineView(this.out);
+    this.fileReader = fileReader;
+    this.view = view;
     commandRegistry = new CommandRegistry();
   }
 
@@ -52,6 +61,13 @@ public class GameControllerImpl implements GameController {
     if (killDoctorLucky == null) {
       throw new IllegalArgumentException("Model cannot be null");
     }
+    if (view == null) {
+      throw new IllegalArgumentException("View cannot be null");
+    }
+    if (fileReader == null) {
+      throw new IllegalArgumentException("FileReader cannot be null");
+    }
+    this.readFile(fileReader);
     commandRegistry();
 
     while (true) {
@@ -76,7 +92,7 @@ public class GameControllerImpl implements GameController {
       String input = in.nextLine();
 
       if (input.equalsIgnoreCase("q") || input.equalsIgnoreCase("quit")) {
-        out.append("Exiting...\n");
+        view.prompt("Exiting...\n");
         return;
       }
 
@@ -202,7 +218,7 @@ public class GameControllerImpl implements GameController {
     } catch (IOException e) {
       throw new RuntimeException(e);
     } catch (IllegalArgumentException e) {
-      out.append(e.getMessage());
+      view.prompt(e.getMessage());
     }
   }
 }

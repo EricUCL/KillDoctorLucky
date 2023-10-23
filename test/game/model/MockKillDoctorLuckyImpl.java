@@ -12,13 +12,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * This class represents the KillDoctorLuckyImpl class. It implements the KillDoctorLucky interface
- * and has all the methods which are required for the game to be played.
- */
-public class KillDoctorLuckyImpl implements KillDoctorLucky {
+public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
   List<Item> items;
-  private final List<Room> rooms;
+  private List<Room> rooms;
   private int numRows;
   private int numColumns;
   private final int maxTurns;
@@ -36,7 +32,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
    *
    * @param maxTurns maximum number of turns
    */
-  public KillDoctorLuckyImpl(int maxTurns, RandomGenerator randomGenerator) {
+  public MockKillDoctorLuckyImpl(int maxTurns, RandomGenerator randomGenerator) {
     if (maxTurns < 0) {
       throw new IllegalArgumentException("Max turns can't be negative");
     }
@@ -49,6 +45,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     currentTurn = 1;
     currentPlayerIndex = 0;
     this.randomGenerator = randomGenerator;
+    this.rooms = new ArrayList<>();
   }
 
   @Override
@@ -179,7 +176,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     try {
       ImageIO.write(image, "png", new File(outputPath));
     } catch (IOException e) {
-      throw new IllegalArgumentException("Failed to write image");
+      e.printStackTrace();
     }
 
     return "Successfully generate to " + outputPath;
@@ -392,14 +389,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   void updateTurn() {
-    currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-    if (rooms.size() > 1) {
-      moveTarget();
-    }
-    currentTurn++;
-    if (currentTurn > maxTurns) {
-      programState = ProgramState.FINALIZING;
-    }
+
   }
 
   @Override
@@ -454,36 +444,8 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public String computerPlayerTurn() {
-    Player player = getCurrentPlayer();
-    if (player.getPlayerType() == PlayerType.COMPUTER) {
-      int randomOperateIndex = randomGenerator.getRandomNumberInRange(0, 2);
-      switch (randomOperateIndex) {
-        case 0:
-          // Picking up an item from the space they are currently occupying.
-          Room currentRoom = rooms.get(player.getRoomIndex());
-          if (currentRoom.getItems().isEmpty()) {
-            return computerPlayerTurn();
-          }
-          int randomItemIndex = randomGenerator.getRandomNumberInRange(0,
-              currentRoom.getItems().size() - 1);
-          Item pickedItem = currentRoom.getItems().get(randomItemIndex);
-          pickItem(pickedItem.getId());
-          return "Computer player picked item " + pickedItem.getName();
-        case 1:
-          // Look around the space they are currently occupying.
-          return "Computer player looked around\n\n" + lookAround();
-        case 2:
-          // Moving to a neighboring space.
-          List<Integer> neighbors = getNeighboursOfRoom(player.getRoomIndex());
-          if (neighbors.isEmpty()) {
-            return computerPlayerTurn();
-          }
-          int randomNeighborIndex = randomGenerator.getRandomNumberInRange(0, neighbors.size() - 1);
-          movePlayer(neighbors.get(randomNeighborIndex));
-          return "Computer player moved to room " + neighbors.get(randomNeighborIndex);
-      }
-    }
-    return "Current player is not computer player";
+    this.programState = ProgramState.FINALIZING;
+    return "Current player turn is computer player";
   }
 
   @Override
@@ -495,5 +457,15 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     sb.append("Current turn: ").append(currentPlayer.getPlayerName()).append("\n");
     sb.append(displayRoomDescription(currentPlayer.getRoomIndex()));
     return sb.toString();
+  }
+
+  public void setProgramState(ProgramState programState) {
+    this.programState = programState;
+  }
+
+  public void setCurrentPlayer(Player computerPlayer) {
+    this.players.add(computerPlayer);
+    this.currentPlayerIndex = 0;
+    this.currentTurn = 1;
   }
 }

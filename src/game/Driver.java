@@ -1,13 +1,14 @@
 package game;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import game.controller.GameController;
 import game.controller.GameControllerImpl;
 import game.model.KillDoctorLuckyImpl;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import game.utils.RandomGenerator;
+import game.view.CommandLineView;
+import game.view.View;
 
 /**
  * Driver class to run the game.
@@ -21,9 +22,9 @@ public class Driver {
   public static void main(String[] args) {
     try {
       // read file path from args
-//      if (args.length < 1) {
-//        throw new IllegalArgumentException("Please provide a file path as an argument.");
-//      }
+      //      if (args.length < 1) {
+      //        throw new IllegalArgumentException("Please provide a file path as an argument.");
+      //      }
       args = new String[2];
       args[0] = "res/mansion.txt";
       args[1] = "10";
@@ -31,8 +32,10 @@ public class Driver {
       Readable fileReader = new InputStreamReader(new FileInputStream(args[0]));
       final Readable in = new InputStreamReader(System.in);
       final Appendable out = System.out;
-      GameController controller = new GameControllerImpl(new KillDoctorLuckyImpl(maxTurns), in, out,
-          fileReader);
+      View view = new CommandLineView(out);
+      RandomGenerator randomGenerator = new RandomGenerator();
+      GameController controller = new GameControllerImpl(
+          new KillDoctorLuckyImpl(maxTurns, randomGenerator), in, view, fileReader);
       controller.startGame();
     } catch (IllegalArgumentException e) {
       System.out.printf("%s%n", e.getMessage());

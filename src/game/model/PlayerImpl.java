@@ -25,7 +25,7 @@ public class PlayerImpl implements Player {
     itemsList.add(item);
   }
 
-  PlayerImpl(String playerName, int roomIndex, int maxItems, PlayerType playerType) {
+  public PlayerImpl(String playerName, int roomIndex, int maxItems, PlayerType playerType) {
     this.playerName = playerName;
     this.roomIndex = roomIndex;
     this.maxItems = maxItems;

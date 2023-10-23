@@ -1,28 +1,45 @@
 package game.model;
 
-import game.constants.PlayerType;
-import game.constants.ProgramState;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-import static org.junit.Assert.*;
+import game.constants.PlayerType;
+import game.constants.ProgramState;
+import game.utils.RandomGenerator;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test for KillDoctorLuckyImpl class.
  */
 public class KillDoctorLuckyImplTest {
   private KillDoctorLuckyImpl killDoctorLucky;
+  private KillDoctorLuckyImpl game;
+  private RandomGenerator randomGenerator;
 
   @Before
-  public void setUp() throws FileNotFoundException {
-    killDoctorLucky = new KillDoctorLuckyImpl(10);
-    Readable fileReader = new InputStreamReader(new FileInputStream("res/mansion.txt"));
+  public void setUp() {
+    randomGenerator = new RandomGenerator(1, 1, 2, 3, 2, 1);
+    killDoctorLucky = new KillDoctorLuckyImpl(10, randomGenerator);
+    game = new KillDoctorLuckyImpl(10, randomGenerator);
+    readFile(killDoctorLucky);
+    readFile(game);
+  }
 
+  void readFile(KillDoctorLucky killDoctorLucky) {
     try {
       String line;
+      Readable fileReader = new InputStreamReader(new FileInputStream("res/mansion.txt"));
       BufferedReader br = new BufferedReader((Reader) fileReader);
       line = br.readLine();
 
@@ -225,7 +242,7 @@ public class KillDoctorLuckyImplTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testNegativeMaxTurns() {
-    new KillDoctorLuckyImpl(-1);
+    new KillDoctorLuckyImpl(-1, randomGenerator);
   }
 
   @Test
@@ -300,7 +317,6 @@ public class KillDoctorLuckyImplTest {
   @Test
   public void testGetCurrentPlayer() {
     Player p1 = new PlayerImpl("John", 1, 5, PlayerType.HUMAN);
-    Player p2 = new PlayerImpl("Jane", 2, 5, PlayerType.HUMAN);
     killDoctorLucky.addPlayer("John", 1, 5, PlayerType.HUMAN);
     killDoctorLucky.addPlayer("Jane", 2, 5, PlayerType.HUMAN);
     assertEquals(p1, killDoctorLucky.getCurrentPlayer());
@@ -327,5 +343,79 @@ public class KillDoctorLuckyImplTest {
     killDoctorLucky.addPlayer("John", 0, 5, PlayerType.HUMAN);
     String message = killDoctorLucky.getItemsInCurrentRoom();
     assertTrue(message.contains("Items in current room are:"));
+  }
+
+  @Test
+  public void testStartGame() {
+    game.addPlayer("John", 0, 5, PlayerType.HUMAN);
+    String result = game.startGame();
+    assertEquals("Start game successfully!", result);
+    assertEquals(ProgramState.RUNNING, game.getProgramState());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testMovePlayerToInvalidRoomIndex() {
+    game.addPlayer("John", 1, 5, PlayerType.HUMAN);
+    game.movePlayer(999); // Assume 999 is an invalid room index
+  }
+
+  @Test
+  public void testMovePlayer() {
+    game.addPlayer("John", 1, 5, PlayerType.HUMAN);
+    // Assume room 1 has a neighbor room 2
+    String result = game.movePlayer(3);
+    assertEquals("Player moved successfully", result);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testPickNonexistentItem() {
+    game.addPlayer("John", 0, 5, PlayerType.HUMAN);
+    game.pickItem(999); // Assume 999 is an invalid item ID
+  }
+
+  @Test
+  public void testUpdateTurnWithMultiplePlayers() {
+    Player p2 = new PlayerImpl("John", 0, 5, PlayerType.HUMAN);
+    Player p1 = new PlayerImpl("Jane", 1, 5, PlayerType.HUMAN);
+    game.addPlayer("Jane", 1, 5, PlayerType.HUMAN);
+    game.addPlayer("John", 0, 5, PlayerType.HUMAN);
+    assertEquals(p1, game.getCurrentPlayer());
+    game.updateTurn();
+    assertEquals(p2, game.getCurrentPlayer());
+    game.updateTurn();
+    assertEquals(p1, game.getCurrentPlayer());
+  }
+
+  @Test
+  public void testEndOfMaxTurns() {
+    KillDoctorLuckyImpl tempGame = new KillDoctorLuckyImpl(1, randomGenerator);
+    readFile(tempGame);
+    tempGame.addPlayer("John", 0, 5, PlayerType.HUMAN);
+    tempGame.updateTurn();
+    assertEquals(ProgramState.FINALIZING, tempGame.getProgramState());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddItemsToInvalidRoom() {
+    game.addItems(1, 5, "Knife", 999); // Assuming 999 is an invalid room index
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddPlayerToInvalidRoom() {
+    game.addPlayer("John", 999, 5, PlayerType.HUMAN); // Assuming 999 is an invalid room index
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddPlayerWithNegativeMaxItems() {
+    game.addPlayer("John", 0, -1, PlayerType.HUMAN); // Assuming room 0 exists
+  }
+
+  @Test
+  public void testMaxPlayerLimit() {
+    for (int i = 0; i < game.getMaxPlayerLimit(); i++) {
+      game.addComputerPlayer();
+    }
+    String result = game.addComputerPlayer();
+    assertEquals("Max players limit reached!", result);
   }
 }

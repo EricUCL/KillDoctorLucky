@@ -123,6 +123,8 @@ public interface KillDoctorLucky {
    */
   void addRooms(Room room);
 
+  int getMaxPlayerLimit();
+
   /**
    * Initializes the game's map with default or initial settings.
    */
