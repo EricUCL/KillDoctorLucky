@@ -8,15 +8,16 @@ import java.util.List;
 public interface Room {
 
   /**
-   * Function for getting neighbors of the room object. This is being used by GameWorld to show
-   * neighbors info.
+   * Function for getting neighbors of the room object.
+   * GameWorld is using this to show neighbors
+   * info.
    *
    * @return List of rooms which are sharing the "wall" with the calling room object.
    */
   List<Integer> getNeighbours();
 
   /**
-   * Getter which is used in the calculating neighbor function, which returns the index of the
+   * Getter, which is used in the calculating neighbor function, which returns the index of the
    * room.
    *
    * @return Returns the index of the room
@@ -26,35 +27,35 @@ public interface Room {
   /**
    * Getter for fetching name of the room, needed while displaying Room information.
    *
-   * @return Returns name of room object.
+   * @return Returns name of a room object.
    */
   String getName();
 
   /**
    * Getter for fetching upper left row of the room, needed while displaying Room information.
    *
-   * @return Returns upper left row of room object.
+   * @return Returns the upper left row of a room object.
    */
   int getUpperLeftRow();
 
   /**
    * Getter for fetching upper left column of the room, needed while displaying Room information.
    *
-   * @return Returns upper left column of room object.
+   * @return Returns upper left column of a room object.
    */
   int getUpperLeftCol();
 
   /**
-   * Getter for fetching lower right row of the room, needed while displaying Room information.
+   * Getter for fetching the lower right row of the room, needed while displaying Room information.
    *
-   * @return Returns lower right row of room object.
+   * @return Returns lower right row of a room object.
    */
   int getLowerRightRow();
 
   /**
    * Getter for fetching lower right column of the room, needed while displaying Room information.
    *
-   * @return Returns lower right column of room object.
+   * @return Returns lower right column of a room object.
    */
   int getLowerRightCol();
 

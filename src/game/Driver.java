@@ -21,7 +21,7 @@ public class Driver {
    */
   public static void main(String[] args) {
     try {
-      // read file path from args
+      // read a file path from args
       if (args.length < 1) {
         throw new IllegalArgumentException("Please provide a file path as an argument.");
       }

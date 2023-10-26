@@ -38,7 +38,7 @@ public class TargetImpl implements Target {
   /**
    * Update space after parsing through the input file.
    *
-   * @param roomIdx Room index is needed as argument.
+   * @param roomIdx Room index is needed as an argument.
    */
   @Override
   public void setRoom(int roomIdx) {
@@ -51,7 +51,7 @@ public class TargetImpl implements Target {
   /**
    * Getter for space, to know where the target is present.
    *
-   * @return Returns the space object where target is.
+   * @return Returns the space object where the target is.
    */
   @Override
   public int getRoomIdx() {

@@ -9,14 +9,14 @@ public interface Item {
    *
    * @return name of the item.
    */
-  public String getName();
+  String getName();
 
   /**
    * Returns the damage the item can cause upon attacking by player on the target.
    *
    * @return damage amount which is of type number.
    */
-  public int getDamage();
+  int getDamage();
 
   /**
    * Returns the id of the item.

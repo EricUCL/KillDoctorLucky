@@ -314,13 +314,13 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   @Override
   public String movePlayer(int roomIndex) {
     Player player = players.get(currentPlayerIndex);
-    // check if roomIndex is in neighbours
+    // check if roomIndex is in neighbors
     if (!getNeighboursOfRoom(player.getRoomIndex()).contains(roomIndex)) {
       throw new IllegalArgumentException("Please give neighbor room index!");
     }
     validateRoomIndex(roomIndex);
 
-    // remove player from current room
+    // remove player from the current room
     Room originRoom = rooms.get(player.getRoomIndex());
     originRoom.removePlayer(player);
     // update player's room index

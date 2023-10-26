@@ -5,15 +5,15 @@ package game.model;
  * methods which are required for the game to be played.
  */
 public class ItemImpl implements Item {
-  private int damage;
-  private String name;
+  private final int damage;
+  private final String name;
   //  private int roomIdx;
-  private int id;
+  private final int id;
 
   /**
    * Constructor for the ItemImpl class.
    *
-   * @param damage damage of the item
+   * @param damage damage to the item
    * @param name   name of the item
    * @param id     index of the item
    */

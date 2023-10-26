@@ -1,8 +1,8 @@
 package game.model;
 
 /**
- * This interface represents all the operations offered by a Target. Target interface take cares of
- * location of target, name of the target, health and damage.
+ * This interface represents all the operations offered by a Target. Target interface takes care of
+ * the location of target, name of the target, health and damage.
  */
 public interface Target {
 
@@ -11,33 +11,33 @@ public interface Target {
    *
    * @return Returns name in text format.
    */
-  public String getName();
+  String getName();
 
   /**
    * Update space after parsing through the input file.
    *
-   * @param roomIdx Room index is needed as argument.
+   * @param roomIdx Room index is needed as an argument.
    */
-  public void setRoom(int roomIdx);
+  void setRoom(int roomIdx);
 
   /**
    * Getter for space, to know where the target is present.
    *
-   * @return Returns the space object where target is.
+   * @return Returns the space object where the target is.
    */
-  public int getRoomIdx();
+  int getRoomIdx();
 
   /**
    * Returns the health of the target, which is necessary for game continuation.
    *
    * @return Returns the health in the number format.
    */
-  public int getHealth();
+  int getHealth();
 
   /**
    * Reduces the target health, upon being attacked by the player.
    *
    * @param damage weapons strength which is used on the target.
    */
-  public void reduceHealth(int damage);
+  void reduceHealth(int damage);
 }

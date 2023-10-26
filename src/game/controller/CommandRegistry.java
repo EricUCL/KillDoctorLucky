@@ -19,9 +19,10 @@ class CommandRegistry {
 
   /**
    * Registers a command to be associated with a specific game state.
-   *
-   * If the state is already associated with some commands, the new command is appended to the list.
-   * Otherwise, a new list is created for the state and the command is added to it.
+   * If the state is already
+   * associated with some commands, the new command is appended to the list.
+   * Otherwise, a new list
+   * is created for the state and the command is added to it.
    *
    * @param state   The game state with which the command is to be associated.
    * @param command The command to be associated with the given state.
@@ -32,7 +33,7 @@ class CommandRegistry {
 
   /**
    * Retrieves the list of commands associated with a specific game state.
-   *
+   * <p>
    * If no commands are associated with the provided state, an empty list is returned.
    *
    * @param state The game state for which to retrieve associated commands.

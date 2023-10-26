@@ -159,7 +159,7 @@ public class GameControllerImpl implements GameController {
    * Function for reading the file and populating the data structures.
    *
    * @param fileReader path of the file
-   * @throws IllegalArgumentException if file not found
+   * @throws IllegalArgumentException if file isn't found
    */
   private void readFile(Readable fileReader) throws IOException {
     try {

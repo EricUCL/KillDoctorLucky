@@ -11,21 +11,21 @@ import java.util.Objects;
 public class RoomImpl implements Room {
   private final String name;
   private final int id;
-  private List<Item> items;
+  private final List<Item> items;
   private List<Integer> neighborRooms;
-  private int upperLeftRow;
-  private int upperLeftCol;
-  private int lowerRightRow;
-  private int lowerRightCol;
-  private List<Player> players;
+  private final int upperLeftRow;
+  private final int upperLeftCol;
+  private final int lowerRightRow;
+  private final int lowerRightCol;
+  private final List<Player> players;
 
   /**
    * Constructor for the RoomImpl class.
    *
    * @param id            index of the room
    * @param name          name of the room
-   * @param upperLeftRow  upper left row of the room
-   * @param upperLeftCol  upper left column of the room
+   * @param upperLeftRow  upper-left row of the room
+   * @param upperLeftCol  upper-left column of the room
    * @param lowerRightRow lower right row of the room
    * @param lowerRightCol lower right column of the room
    */
@@ -54,8 +54,8 @@ public class RoomImpl implements Room {
   /**
    * Function for validating coordinates.
    *
-   * @param upperLeftRow  upper left row of the room
-   * @param upperLeftCol  upper left column of the room
+   * @param upperLeftRow  upper-left row of the room
+   * @param upperLeftCol  upper-left column of the room
    * @param lowerRightRow lower right row of the room
    * @param lowerRightCol lower right column of the room
    */
