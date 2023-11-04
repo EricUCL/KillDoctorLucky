@@ -3,6 +3,8 @@ package game.controller;
 import static org.junit.Assert.assertTrue;
 
 import game.constants.ProgramState;
+import game.model.KillDoctorLucky;
+import game.model.KillDoctorLuckyImpl;
 import game.model.MockKillDoctorLuckyImpl;
 import game.utils.RandomGenerator;
 import game.view.CommandLineView;
@@ -80,6 +82,17 @@ public class GameControllerImplTest {
         fileReader);
     gameController.startGame();
     assertTrue(output.toString().contains("Player added successfully!"));
+  }
+
+  @Test
+  public void testAddComputerPlayer() throws IOException {
+    mockModel.setProgramState(ProgramState.INIT);
+    inputReader = new StringReader("8\nq");
+    GameController gameController = new GameControllerImpl(mockModel, inputReader, view,
+        fileReader);
+    gameController.startGame();
+    System.out.println(output.toString());
+    assertTrue(output.toString().contains("Computer Player added successfully"));
   }
 
   @Test
@@ -170,7 +183,20 @@ public class GameControllerImplTest {
     GameController gameController = new GameControllerImpl(mockModel, inputReader, view,
         fileReader);
     gameController.startGame();
-    System.out.println(output.toString());
     assertTrue(output.toString().contains("Create World Image Activated!"));
+  }
+
+  @Test
+  public void testPlayerOrder() throws IOException {
+    randomGenerator = new RandomGenerator(1, 1, 2, 3, 2, 1);
+    int maxTurns = 100;
+    KillDoctorLucky model = new KillDoctorLuckyImpl(maxTurns, randomGenerator);
+    inputReader = new StringReader("7\nEric\n1\n1\n7\nMike\n1\n1\n9\n2\n2\nq");
+    GameController gameController = new GameControllerImpl(model, inputReader, view, fileReader);
+    gameController.startGame();
+    assertTrue(
+        output.toString().contains("Turn Counter: 1\n" + "Max Turn: 100\n" + "Current turn: Eric"));
+    assertTrue(
+        output.toString().contains("Turn Counter: 2\n" + "Max Turn: 100\n" + "Current turn: Mike"));
   }
 }

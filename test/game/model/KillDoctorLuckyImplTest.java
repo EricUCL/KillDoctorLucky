@@ -291,6 +291,14 @@ public class KillDoctorLuckyImplTest {
   }
 
   @Test
+  public void testLookAroundWithTarget() {
+    killDoctorLucky.addPlayer("John", 1, 5, PlayerType.HUMAN);
+    killDoctorLucky.startGame();
+    String message = killDoctorLucky.lookAround();
+    assertTrue(message.contains("Details on neighbor rooms of player are:"));
+  }
+
+  @Test
   public void testGetTurnCount() {
     assertEquals(1, killDoctorLucky.getTurnCount());
   }
@@ -330,7 +338,8 @@ public class KillDoctorLuckyImplTest {
     killDoctorLucky.addPlayer("Bot", 0, 5, PlayerType.COMPUTER);
     killDoctorLucky.startGame();
     String message = killDoctorLucky.computerPlayerTurn();
-    assertNotNull(message);
+    System.out.println(message);
+    assertTrue(message.contains("Computer player looked around"));
   }
 
   @Test
@@ -374,6 +383,12 @@ public class KillDoctorLuckyImplTest {
   public void testPickNonexistentItem() {
     game.addPlayer("John", 0, 5, PlayerType.HUMAN);
     game.pickItem(999); // Assume 999 is an invalid item ID
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testPickItemWithFullItems() {
+    game.addPlayer("John", 0, 0, PlayerType.HUMAN);
+    game.pickItem(0);
   }
 
   @Test
@@ -429,5 +444,14 @@ public class KillDoctorLuckyImplTest {
     tempGame.addPlayer("John", 0, 5, PlayerType.HUMAN);
     tempGame.updateTurn();
     assertEquals(ProgramState.FINALIZING, tempGame.getProgramState());
+  }
+
+  @Test
+  public void testRoomDescription() {
+    game.addPlayer("John", 1, 5, PlayerType.HUMAN);
+    String result = game.displayRoomDescription(1);
+    assertEquals("Room Name: Billiard Room\n" + "Room Index: 1\n"
+        + "Room Items: [Id: 8, Name: Billiard Cue, Damage: 2]\n"
+        + "Room Neighbors index: [0, 3, 18]\n" + "Players in Room: John ", result);
   }
 }
