@@ -7,7 +7,6 @@ package game.model;
 public class ItemImpl implements Item {
   private final int damage;
   private final String name;
-  //  private int roomIdx;
   private final int id;
 
   /**
