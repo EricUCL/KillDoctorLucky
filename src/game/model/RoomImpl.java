@@ -12,7 +12,7 @@ public class RoomImpl implements Room {
   private final String name;
   private final int id;
   private final List<Item> items;
-  private List<Integer> neighborRooms;
+  private List<Room> neighborRooms;
   private final int upperLeftRow;
   private final int upperLeftCol;
   private final int lowerRightRow;
@@ -70,7 +70,7 @@ public class RoomImpl implements Room {
   }
 
   @Override
-  public List<Integer> getNeighbours() {
+  public List<Room> getNeighbours() {
     return this.neighborRooms;
   }
 
@@ -115,7 +115,7 @@ public class RoomImpl implements Room {
   }
 
   @Override
-  public void setNeighborRooms(List<Integer> neighborRooms) {
+  public void setNeighborRooms(List<Room> neighborRooms) {
     this.neighborRooms = neighborRooms;
   }
 
@@ -136,8 +136,8 @@ public class RoomImpl implements Room {
   public String toString() {
     // get all neighbors id
     StringBuilder neighbors = new StringBuilder();
-    for (int neighbor : neighborRooms) {
-      neighbors.append(neighbor);
+    for (Room neighbor : neighborRooms) {
+      neighbors.append(neighbor.getIndex());
       neighbors.append(" ");
     }
     StringBuilder players = new StringBuilder();

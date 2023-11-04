@@ -38,10 +38,10 @@ public class MovePlayer implements Command {
   @Override
   public List<ParameterRequest> requiredParameters() {
     Player currentPlayer = model.getCurrentPlayer();
-    List<Integer> neighbours = model.getNeighboursOfRoom(currentPlayer.getRoomIndex());
+    List<Integer> neighboursIndex = model.getNeighboursOfRoom(currentPlayer.getRoomIndex());
     StringBuilder promptMessage = new StringBuilder();
     promptMessage.append("All rooms you can move to: ");
-    for (Integer roomIndex : neighbours) {
+    for (int roomIndex : neighboursIndex) {
       promptMessage.append(roomIndex).append(" ");
     }
     promptMessage.append("\nEnter the room index you want to move to: ");

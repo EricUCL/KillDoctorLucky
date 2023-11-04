@@ -36,10 +36,10 @@ public interface KillDoctorLucky {
   /**
    * Function for getting neighbours for a specified room with index.
    *
-   * @param idx Index of the room for which we have get neighbors
+   * @param index Index of the room for which we have get neighbors
    * @return Returns list of rooms.
    */
-  List<Integer> getNeighboursOfRoom(int idx);
+  List<Integer> getNeighboursOfRoom(int index);
 
   /**
    * Function for generate the image of the world.
@@ -262,4 +262,18 @@ public interface KillDoctorLucky {
    */
   String displayPrepareMessage();
 
+  /**
+   * Assigns a pet to the game world.
+   *
+   * @param pet The {@link Pet} instance representing the target's pet.
+   */
+  void setPet(PetImpl pet);
+
+  /**
+   * Moves a pet to a specified room.
+   *
+   * @param roomIndex The index of the room where the pet should be moved.
+   * @return A message or status after moving the pet.
+   */
+  String movePet(int roomIndex);
 }

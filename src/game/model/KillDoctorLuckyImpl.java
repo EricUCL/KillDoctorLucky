@@ -2,6 +2,8 @@ package game.model;
 
 import game.constants.PlayerType;
 import game.constants.ProgramState;
+import game.utils.DfsGraphImpl;
+import game.utils.Graph;
 import game.utils.RandomGenerator;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -13,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 
 /**
@@ -33,6 +36,8 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   private int currentTurn;
   private ProgramState programState;
   private final RandomGenerator randomGenerator;
+  private Pet pet;
+  Graph graph;
 
   /**
    * Constructor for the KillDoctorLuckyImpl class.
@@ -53,13 +58,14 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     currentTurn = 1;
     currentPlayerIndex = 0;
     this.randomGenerator = randomGenerator;
+    graph = new DfsGraphImpl();
   }
 
   @Override
   public void initialMap() {
     for (Room room1 : rooms) {
       //        System.out.println(room1);
-      List<Integer> neighbors = new ArrayList<>();
+      List<Room> neighbors = new ArrayList<>();
       for (Room room2 : rooms) {
         if (room1.equals(room2)) {
           continue;
@@ -69,7 +75,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
               "Rooms overlap: " + room1.getName() + " conflicts with " + room2.getName());
         }
         if (isNeighbor(room1, room2)) {
-          neighbors.add(room2.getIndex());
+          neighbors.add(room2);
         }
       }
       room1.setNeighborRooms(neighbors);
@@ -141,8 +147,9 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
-  public List<Integer> getNeighboursOfRoom(int idx) {
-    return this.rooms.get(idx).getNeighbours();
+  public List<Integer> getNeighboursOfRoom(int index) {
+    return this.rooms.get(index).getNeighbours().stream().map(Room::getIndex)
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -205,15 +212,10 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public String getWorldDesc() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("World Name: ").append(this.worldName).append("\n");
-    sb.append("Target Name: ").append(this.target.getName()).append("\n");
-    sb.append("Target Health: ").append(this.target.getHealth()).append("\n");
-    sb.append("Max Turns: ").append(this.maxTurns).append("\n");
-    sb.append("Number of Rooms: ").append(this.rooms.size()).append("\n");
-    sb.append("Number of Items: ").append(this.items.size()).append("\n");
-    sb.append("Number of Players: ").append(this.players.size()).append("\n");
-    return sb.toString();
+    return "World Name: " + this.worldName + "\n" + "Target Name: " + this.target.getName() + "\n"
+        + "Target Health: " + this.target.getHealth() + "\n" + "Max Turns: " + this.maxTurns + "\n"
+        + "Number of Rooms: " + this.rooms.size() + "\n" + "Number of Items: " + this.items.size()
+        + "\n" + "Number of Players: " + this.players.size() + "\n";
   }
 
   @Override
@@ -255,8 +257,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
-  public String addPlayer(String playerName, int maxItemsLimit,
-      PlayerType playerType) {
+  public String addPlayer(String playerName, int maxItemsLimit, PlayerType playerType) {
 
     if (players.size() >= maxPlayerLimit) {
       return "Max players limit reached!";
@@ -330,7 +331,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     // add player to new room
     Room room = rooms.get(roomIndex);
     room.addPlayer(players.get(currentPlayerIndex));
-    updateTurn();
+    updateTurn(true);
     return "Player moved successfully";
   }
 
@@ -372,7 +373,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     Item choosenItem = items.get(itemId);
     players.get(currentPlayerIndex).addItem(choosenItem);
     room.deleteItem(choosenItem);
-    updateTurn();
+    updateTurn(true);
     return "Item is picked successfully!";
   }
 
@@ -380,24 +381,24 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   public String lookAround() {
     int roomIndex = this.players.get(currentPlayerIndex).getRoomIndex();
     Room currentRoom = rooms.get(roomIndex);
-    List<Integer> neighboursIndex = currentRoom.getNeighbours();
+    List<Room> neighbours = currentRoom.getNeighbours();
 
     StringBuilder sb = new StringBuilder();
     sb.append(currentRoom.displayRoomDescription()).append("\n");
-    if (!neighboursIndex.isEmpty()) {
+    if (!neighbours.isEmpty()) {
       sb.append("Details on neighbor rooms of player are: \n").append("--------------------\n");
-      for (int neighborIndex : neighboursIndex) {
-        sb.append(rooms.get(neighborIndex).displayRoomDescription());
+      for (Room neighbor : neighbours) {
+        sb.append(neighbor.displayRoomDescription());
         sb.append("\n--------------------\n");
       }
     } else {
       sb.append("No neighbors for this space. \n");
     }
-    updateTurn();
+    updateTurn(true);
     return sb.toString();
   }
 
-  void updateTurn() {
+  void updateTurn(boolean movePet) {
     currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
     if (rooms.size() > 1) {
       moveTarget();
@@ -405,6 +406,13 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     currentTurn++;
     if (currentTurn > maxTurns) {
       programState = ProgramState.FINALIZING;
+    }
+    if (movePet) {
+      // move pet
+      Room nextRoom;
+      if ((nextRoom = graph.getNextRoom()) != null) {
+        pet.updateRoom(nextRoom.getIndex());
+      }
     }
   }
 
@@ -503,5 +511,22 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     sb.append("Current turn: ").append(currentPlayer.getPlayerName()).append("\n");
     sb.append(displayRoomDescription(currentPlayer.getRoomIndex()));
     return sb.toString();
+  }
+
+  @Override
+  public void setPet(PetImpl pet) {
+    this.pet = pet;
+  }
+
+  @Override
+  public String movePet(int roomIndex) {
+    if (roomIndex < 0 || roomIndex >= rooms.size()) {
+      throw new IllegalArgumentException("Invalid room index!");
+    }
+    Room room = rooms.get(roomIndex);
+    pet.updateRoom(roomIndex);
+    graph.setStartingRoom(room);
+    updateTurn(false);
+    return "Pet moved to room " + roomIndex;
   }
 }

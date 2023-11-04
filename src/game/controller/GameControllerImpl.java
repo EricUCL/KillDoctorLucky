@@ -12,10 +12,12 @@ import game.controller.command.DisplayRoomInfoByIndex;
 import game.controller.command.DisplayTargetInfo;
 import game.controller.command.DisplayWorldInfo;
 import game.controller.command.LookAround;
+import game.controller.command.MovePet;
 import game.controller.command.MovePlayer;
 import game.controller.command.PickItem;
 import game.controller.command.StartGame;
 import game.model.KillDoctorLucky;
+import game.model.PetImpl;
 import game.model.Player;
 import game.model.RoomImpl;
 import game.model.TargetImpl;
@@ -153,6 +155,7 @@ public class GameControllerImpl implements GameController {
         new DisplayPlayerDescription("4", killDoctorLucky));
     commandRegistry.registerCommand(ProgramState.RUNNING,
         new DisplayTargetInfo("5", killDoctorLucky));
+    commandRegistry.registerCommand(ProgramState.RUNNING, new MovePet("6", killDoctorLucky));
   }
 
   /**
@@ -177,14 +180,20 @@ public class GameControllerImpl implements GameController {
       int targetHealth = Integer.parseInt(targetInfo[0]);
       String targetName = line.substring(targetInfo[0].length() + 1);
       if (targetHealth <= 0) {
-        throw new IllegalArgumentException("Target health can't be negative");
+        throw new IllegalArgumentException("Target health can not be negative!");
       }
-      killDoctorLucky.setTarget(new TargetImpl(targetName, targetHealth, 0));
+      int defaultTargetRoomIndex = 0;
+      killDoctorLucky.setTarget(new TargetImpl(targetName, targetHealth, defaultTargetRoomIndex));
+
+      // Pet Name
+      line = br.readLine();
+      String petName = line.trim();
+      killDoctorLucky.setPet(new PetImpl(petName, defaultTargetRoomIndex));
 
       // check numRooms not null or empty
       int numRooms = Integer.parseInt(br.readLine());
       if (numRooms <= 0) {
-        throw new IllegalArgumentException("No rooms in the world");
+        throw new IllegalArgumentException("No rooms in the world!");
       }
       for (int i = 0; i < numRooms; i++) {
         line = br.readLine();

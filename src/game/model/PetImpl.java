@@ -5,6 +5,9 @@ public class PetImpl implements Pet {
   int roomIndex;
 
   public PetImpl(String name, int roomIndex) {
+    if (name == null || name.isEmpty()) {
+      throw new IllegalArgumentException("Name can not be empty!");
+    }
     this.name = name;
     this.roomIndex = roomIndex;
   }
@@ -20,7 +23,10 @@ public class PetImpl implements Pet {
   }
 
   @Override
-  public void updateRoomIndex(int roomIndex) {
+  public void updateRoom(int roomIndex) {
+    if (roomIndex < 0) {
+      throw new IllegalArgumentException("Room index can not be negative!");
+    }
     this.roomIndex = roomIndex;
   }
 }

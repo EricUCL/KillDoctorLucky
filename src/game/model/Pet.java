@@ -5,5 +5,5 @@ public interface Pet {
 
   int getRoomIndex();
 
-  void updateRoomIndex(int roomIndex);
+  void updateRoom(int roomIndex);
 }

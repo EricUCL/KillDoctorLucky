@@ -14,7 +14,7 @@ public interface Room {
    *
    * @return List of rooms which are sharing the "wall" with the calling room object.
    */
-  List<Integer> getNeighbours();
+  List<Room> getNeighbours();
 
   /**
    * Getter, which is used in the calculating neighbor function, which returns the index of the
@@ -72,7 +72,7 @@ public interface Room {
    *
    * @param neighborRooms List of rooms which are sharing the "wall" with the calling room object.
    */
-  void setNeighborRooms(List<Integer> neighborRooms);
+  void setNeighborRooms(List<Room> neighborRooms);
 
   /**
    * Function for adding item to the calling room object.
