@@ -255,7 +255,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
-  public String addPlayer(String playerName, int roomIndex, int maxItemsLimit,
+  public String addPlayer(String playerName, int maxItemsLimit,
       PlayerType playerType) {
 
     if (players.size() >= maxPlayerLimit) {
@@ -265,6 +265,8 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     if (maxItemsLimit < 0) {
       throw new IllegalArgumentException("Max item limit can not be negative!");
     }
+
+    int roomIndex = randomGenerator.getRandomNumberInRange(0, rooms.size() - 1);
 
     validateRoomIndex(roomIndex);
     validatePlayer(playerName);

@@ -147,12 +147,11 @@ public interface KillDoctorLucky {
    * Registers a new player to the game world.
    *
    * @param playerName    The name of the player.
-   * @param spaceIndex    The initial position or room index for the player.
    * @param maxItemsLimit The maximum number of items the player can carry.
    * @param playerType    The type of the player (e.g., Human, Computer).
    * @return A message or status after adding the player.
    */
-  String addPlayer(String playerName, int spaceIndex, int maxItemsLimit, PlayerType playerType);
+  String addPlayer(String playerName, int maxItemsLimit, PlayerType playerType);
 
   /**
    * Moves a player to a specified room.

@@ -30,7 +30,7 @@ public class AddPlayer implements Command {
   public CommandResult execute(Map<String, String> params) {
     try {
       return new CommandResult(
-          model.addPlayer(params.get("playerName"), Integer.parseInt(params.get("roomIndex")),
+          model.addPlayer(params.get("playerName"),
               Integer.parseInt(params.get("maxItemsLimit")), PlayerType.HUMAN), false);
     } catch (IllegalArgumentException e) {
       return new CommandResult(e.getMessage(), true);
@@ -41,7 +41,6 @@ public class AddPlayer implements Command {
   public List<ParameterRequest> requiredParameters() {
     List<ParameterRequest> requests = new ArrayList<>();
     requests.add(new ParameterRequest("playerName", "Enter the player name: "));
-    requests.add(new ParameterRequest("roomIndex", "Enter the room index: "));
     requests.add(new ParameterRequest("maxItemsLimit", "Enter the max items limit:"));
     return requests;
   }

@@ -13,17 +13,13 @@ import java.util.List;
 public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
   private List<Item> items;
   private List<Room> rooms;
-  private int numRows;
-  private int numColumns;
   private final int maxTurns;
-  private String worldName;
   private Target target;
   private final List<Player> players;
   private final int maxPlayerLimit;
-  private int currentPlayerIndex;
-  private int currentTurn;
+  private final int currentPlayerIndex;
+  private final int currentTurn;
   private ProgramState programState;
-  private RandomGenerator randomGenerator;
 
   /**
    * Constructor for the KillDoctorLuckyImpl class.
@@ -45,7 +41,6 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
     programState = ProgramState.RUNNING;
     currentTurn = 1;
     currentPlayerIndex = 0;
-    this.randomGenerator = randomGenerator;
     this.rooms = new ArrayList<>();
   }
 
@@ -170,17 +165,14 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public void setNumRows(int numRows) {
-    this.numRows = numRows;
   }
 
   @Override
   public void setNumCols(int numColumns) {
-    this.numColumns = numColumns;
   }
 
   @Override
   public void setWorldName(String worldName) {
-    this.worldName = worldName;
   }
 
   @Override
@@ -202,7 +194,7 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
-  public String addPlayer(String playerName, int roomIndex, int maxItemsLimit,
+  public String addPlayer(String playerName, int maxItemsLimit,
       PlayerType playerType) {
     programState = ProgramState.FINALIZING;
     return "Player added successfully!";
