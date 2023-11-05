@@ -116,4 +116,11 @@ public interface Room {
    * @return A string containing a detailed description of the room.
    */
   String displayRoomDescription();
+
+  /**
+   * Function for getting players of the calling room object.
+   *
+   * @return Returns list of players which are present in the calling room object.
+   */
+  List<Player> getPlayers();
 }

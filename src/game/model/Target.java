@@ -25,7 +25,7 @@ public interface Target {
    *
    * @return Returns the space object where the target is.
    */
-  int getRoomIdx();
+  int getRoomIndex();
 
   /**
    * Returns the health of the target, which is necessary for game continuation.
@@ -37,7 +37,7 @@ public interface Target {
   /**
    * Reduces the target health, upon being attacked by the player.
    *
-   * @param damage weapons strength which is used on the target.
+   * @param health weapons strength which is used on the target.
    */
-  void reduceHealth(int damage);
+  void updateHealth(int health);
 }

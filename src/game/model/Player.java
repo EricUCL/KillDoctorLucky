@@ -66,4 +66,12 @@ public interface Player {
    * @return A string containing a detailed description of the player.
    */
   String displayPlayerDescription();
+
+  /**
+   * Removes an item from the player's inventory.
+   *
+   * @param item The item to be removed.
+   * @return A string message indicating the result of the action.
+   */
+  String removeItem(Item item);
 }

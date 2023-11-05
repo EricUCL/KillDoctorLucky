@@ -143,7 +143,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public int getLocationOfTarget() {
-    return this.target.getRoomIdx();
+    return this.target.getRoomIndex();
   }
 
   @Override
@@ -198,8 +198,8 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public String moveTarget() {
-    this.target.setRoom((this.target.getRoomIdx() + 1) % this.rooms.size());
-    return "Target moved to room " + this.target.getRoomIdx();
+    this.target.setRoom((this.target.getRoomIndex() + 1) % this.rooms.size());
+    return "Target moved to room " + this.target.getRoomIndex();
   }
 
   @Override
@@ -270,7 +270,20 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     int roomIndex = randomGenerator.getRandomNumberInRange(0, rooms.size() - 1);
 
     validateRoomIndex(roomIndex);
-    validatePlayer(playerName);
+
+    if (playerName == null || playerName.isEmpty()) {
+      throw new IllegalArgumentException("Player name can't be null!");
+    }
+
+    if (playerName.equals(target.getName())) {
+      throw new IllegalArgumentException("Player name can't be same as target name!");
+    }
+
+    for (Player player : players) {
+      if (player.getPlayerName().equals(playerName)) {
+        throw new IllegalArgumentException("Player name already exists!");
+      }
+    }
 
     Player player = new PlayerImpl(playerName, roomIndex, maxItemsLimit, playerType);
     this.players.add(player);
@@ -295,22 +308,6 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   private void validateRoomIndex(int roomIndex) {
     if (roomIndex < 0 || roomIndex > rooms.size()) {
       throw new IllegalArgumentException("Invalid room index!");
-    }
-  }
-
-  private void validatePlayer(String playerName) {
-    if (playerName == null || playerName.isEmpty()) {
-      throw new IllegalArgumentException("Player name can't be null!");
-    }
-
-    if (playerName.equals(target.getName())) {
-      throw new IllegalArgumentException("Player name can't be same as target name!");
-    }
-
-    for (Player player : players) {
-      if (player.getPlayerName().equals(playerName)) {
-        throw new IllegalArgumentException("Player name already exists!");
-      }
     }
   }
 
@@ -405,6 +402,9 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     }
     currentTurn++;
     if (currentTurn > maxTurns) {
+      programState = ProgramState.FINALIZING;
+    }
+    if (target.getHealth() == 0) {
       programState = ProgramState.FINALIZING;
     }
     if (movePet) {
@@ -528,5 +528,32 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     graph.setStartingRoom(room);
     updateTurn(false);
     return "Pet moved to room " + roomIndex;
+  }
+
+  @Override
+  public String attackTarget(int itemId) {
+    if (itemId < 0 || itemId >= items.size()) {
+      throw new IllegalArgumentException("Invalid item index!");
+    }
+    Room currentRoom = rooms.get(getCurrentPlayer().getRoomIndex());
+    if (currentRoom.getIndex() != target.getRoomIndex()) {
+      throw new IllegalArgumentException("Target is not in the same room!");
+    }
+    // check if attack successfully
+    if (currentRoom.getPlayers().size() > 1) {
+      return "Target is not alone in the room!";
+    } else if (this.pet.getRoomIndex() == currentRoom.getIndex()) {
+      return "Pet in the room!";
+    }
+    for (Room neighbor : currentRoom.getNeighbours()) {
+      if (!neighbor.getPlayers().isEmpty()) {
+        return "Can be seen in the neighbor room!";
+      }
+    }
+    Item item = items.get(itemId);
+    target.updateHealth(target.getHealth() - item.getDamage());
+    getCurrentPlayer().removeItem(item);
+    updateTurn(true);
+    return "Target health is updated to " + target.getHealth();
   }
 }

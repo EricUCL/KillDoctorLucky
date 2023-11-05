@@ -54,7 +54,7 @@ public class TargetImpl implements Target {
    * @return Returns the space object where the target is.
    */
   @Override
-  public int getRoomIdx() {
+  public int getRoomIndex() {
     return this.roomIdx;
   }
 
@@ -71,14 +71,14 @@ public class TargetImpl implements Target {
   /**
    * Reduces the target health, upon being attacked by the player.
    *
-   * @param damage weapons strength which is used on the target.
+   * @param health weapons strength which is used on the target.
    */
   @Override
-  public void reduceHealth(int damage) {
-    if (damage < 0) {
-      throw new IllegalArgumentException("Damage can't be negative!");
+  public void updateHealth(int health) {
+    if (health < 0) {
+      this.health = 0;
     }
-    this.health -= damage;
+    this.health = health;
   }
 
   @Override

@@ -22,7 +22,6 @@ public class ItemImpl implements Item {
     }
     this.damage = damage;
     this.name = name;
-    //    this.roomIdx = itemRoomIndex;
     this.id = id;
   }
 

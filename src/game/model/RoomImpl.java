@@ -198,4 +198,9 @@ public class RoomImpl implements Room {
     }
     return sb.toString();
   }
+
+  @Override
+  public List<Player> getPlayers() {
+    return this.players;
+  }
 }

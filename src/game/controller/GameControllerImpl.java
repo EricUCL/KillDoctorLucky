@@ -4,6 +4,7 @@ import game.constants.PlayerType;
 import game.constants.ProgramState;
 import game.controller.command.AddComputerPlayer;
 import game.controller.command.AddPlayer;
+import game.controller.command.AttackTarget;
 import game.controller.command.Command;
 import game.controller.command.CreateWorldImage;
 import game.controller.command.DisplayItemInfoByIndex;
@@ -85,6 +86,7 @@ public class GameControllerImpl implements GameController {
       if (killDoctorLucky.getProgramState() == ProgramState.RUNNING) {
         view.displayMessage(killDoctorLucky.displayPrepareMessage());
         Player currentPlayer = killDoctorLucky.getCurrentPlayer();
+        // check if it is computer player
         if (currentPlayer.getPlayerType() == PlayerType.COMPUTER) {
           view.prompt("----------------- Start ----------------");
           view.displayMessage("Computer player " + currentPlayer.getPlayerName() + " is playing");
@@ -156,6 +158,7 @@ public class GameControllerImpl implements GameController {
     commandRegistry.registerCommand(ProgramState.RUNNING,
         new DisplayTargetInfo("5", killDoctorLucky));
     commandRegistry.registerCommand(ProgramState.RUNNING, new MovePet("6", killDoctorLucky));
+    commandRegistry.registerCommand(ProgramState.RUNNING, new AttackTarget("7", killDoctorLucky));
   }
 
   /**

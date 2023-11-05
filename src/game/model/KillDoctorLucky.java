@@ -276,4 +276,12 @@ public interface KillDoctorLucky {
    * @return A message or status after moving the pet.
    */
   String movePet(int roomIndex);
+
+  /**
+   * Allows the current player to attack target.
+   *
+   * @param itemId The index of the item to be attacked.
+   * @return A string message indicating the result of the action.
+   */
+  String attackTarget(int itemId);
 }

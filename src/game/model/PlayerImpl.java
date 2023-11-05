@@ -101,4 +101,14 @@ public class PlayerImpl implements Player {
     sb.append(String.format("MaxItems: %d", maxItems));
     return sb.toString();
   }
+
+  @Override
+  public String removeItem(Item item) {
+    if (itemsList.contains(item)) {
+      itemsList.remove(item);
+      return "Item removed successfully.";
+    } else {
+      return "Item not found.";
+    }
+  }
 }
