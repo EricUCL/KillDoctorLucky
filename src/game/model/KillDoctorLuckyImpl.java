@@ -63,22 +63,21 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public void initialMap() {
-    for (Room room1 : rooms) {
-      //        System.out.println(room1);
+    for (Room currentRoom : rooms) {
       List<Room> neighbors = new ArrayList<>();
-      for (Room room2 : rooms) {
-        if (room1.equals(room2)) {
+      for (Room otherRoom : rooms) {
+        if (currentRoom.equals(otherRoom)) {
           continue;
         }
-        if (overlaps(room1, room2)) {
+        if (overlaps(currentRoom, otherRoom)) {
           throw new IllegalArgumentException(
-              "Rooms overlap: " + room1.getName() + " conflicts with " + room2.getName());
+              "Rooms overlap: " + currentRoom.getName() + " conflicts with " + otherRoom.getName());
         }
-        if (isNeighbor(room1, room2)) {
-          neighbors.add(room2);
+        if (isNeighbor(currentRoom, otherRoom)) {
+          neighbors.add(otherRoom);
         }
       }
-      room1.setNeighborRooms(neighbors);
+      currentRoom.setNeighborRooms(neighbors);
     }
   }
 
@@ -109,28 +108,23 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     int otherUpperLeftRow = other.getUpperLeftRow();
     int otherUpperLeftCol = other.getUpperLeftCol();
 
-    boolean rowNeighbor = (currentLowerRightRow + 1 == otherUpperLeftRow
+    boolean isRowNeighbor = (currentLowerRightRow + 1 == otherUpperLeftRow
         && currentLowerRightCol + 1 >= otherUpperLeftCol
         && currentUpperLeftCol - 1 <= otherLowerRightCol) || (
         currentUpperLeftRow - 1 == otherLowerRightRow
             && currentLowerRightCol + 1 >= otherUpperLeftCol
             && currentUpperLeftCol - 1 <= otherLowerRightCol);
 
-    boolean colNeighbor = (currentLowerRightCol + 1 == otherUpperLeftCol
+    boolean isColNeighbor = (currentLowerRightCol + 1 == otherUpperLeftCol
         && currentLowerRightRow + 1 >= otherUpperLeftRow
         && currentUpperLeftRow - 1 <= otherLowerRightRow) || (
         currentUpperLeftCol - 1 == otherLowerRightCol
             && currentLowerRightRow + 1 >= otherUpperLeftRow
             && currentUpperLeftRow - 1 <= otherLowerRightRow);
 
-    return rowNeighbor || colNeighbor;
+    return isRowNeighbor || isColNeighbor;
   }
 
-  /**
-   * Getter for the max player limit.
-   *
-   * @return max player limit
-   */
   @Override
   public int getMaxPlayerLimit() {
     return maxPlayerLimit;
@@ -159,30 +153,30 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     int height = numRows * (scale + 10);
 
     BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-    Graphics2D g = image.createGraphics();
+    Graphics2D graphics = image.createGraphics();
 
-    g.setColor(Color.WHITE); // set background to white
-    g.fillRect(0, 0, width, height);
-    g.setStroke(new BasicStroke(2));
-    g.setColor(Color.BLACK); // set color to black
+    graphics.setColor(Color.WHITE); // set background to white
+    graphics.fillRect(0, 0, width, height);
+    graphics.setStroke(new BasicStroke(2));
+    graphics.setColor(Color.BLACK); // set color to black
 
     for (Room room : rooms) {
       int scaledY1 = room.getUpperLeftRow() * scale;
       int scaledX1 = room.getUpperLeftCol() * scale;
       int rectangleWidth = (room.getLowerRightCol() - room.getUpperLeftCol() + 1) * scale;
       int rectangleHeight = (room.getLowerRightRow() - room.getUpperLeftRow() + 1) * scale;
-      g.drawRect(scaledX1, scaledY1, rectangleWidth, rectangleHeight);
+      graphics.drawRect(scaledX1, scaledY1, rectangleWidth, rectangleHeight);
 
-      final String text = String.format("%s-%s", room.getIndex(), room.getName());
+      String text = room.getIndex() + "-" + room.getName();
       int fontSize = 14;
       FontMetrics metrics;
-      g.setFont(g.getFont().deriveFont((float) fontSize));
-      metrics = g.getFontMetrics(g.getFont());
+      graphics.setFont(graphics.getFont().deriveFont((float) fontSize));
+      metrics = graphics.getFontMetrics(graphics.getFont());
 
-      final int x = scaledX1 + (rectangleWidth - metrics.stringWidth(text) + 3) / 2;
-      final int y = scaledY1 + ((rectangleHeight - metrics.getHeight()) / 2) + metrics.getAscent();
-      g.setFont(new Font("", Font.PLAIN, 15));
-      g.drawString(text, x, y);
+      int x = scaledX1 + (rectangleWidth - metrics.stringWidth(text) + 3) / 2;
+      int y = scaledY1 + ((rectangleHeight - metrics.getHeight()) / 2) + metrics.getAscent();
+      graphics.setFont(new Font("", Font.PLAIN, 15));
+      graphics.drawString(text, x, y);
     }
 
     String outputPath = "./image.png";
@@ -193,7 +187,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
       throw new IllegalArgumentException("Failed to write image");
     }
 
-    return "Successfully generate to " + outputPath;
+    return "Successfully generated image: " + outputPath;
   }
 
   @Override
@@ -258,25 +252,23 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public String addPlayer(String playerName, int maxItemsLimit, PlayerType playerType) {
-
     if (players.size() >= maxPlayerLimit) {
       return "Max players limit reached!";
     }
 
     if (maxItemsLimit < 0) {
-      throw new IllegalArgumentException("Max item limit can not be negative!");
+      throw new IllegalArgumentException("Max item limit cannot be negative!");
     }
 
     int roomIndex = randomGenerator.getRandomNumberInRange(0, rooms.size() - 1);
-
     validateRoomIndex(roomIndex);
 
     if (playerName == null || playerName.isEmpty()) {
-      throw new IllegalArgumentException("Player name can't be null!");
+      throw new IllegalArgumentException("Player name cannot be null!");
     }
 
     if (playerName.equals(target.getName())) {
-      throw new IllegalArgumentException("Player name can't be same as target name!");
+      throw new IllegalArgumentException("Player name cannot be the same as target name!");
     }
 
     for (Player player : players) {
@@ -286,9 +278,10 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     }
 
     Player player = new PlayerImpl(playerName, roomIndex, maxItemsLimit, playerType);
-    this.players.add(player);
+    players.add(player);
     Room room = rooms.get(roomIndex);
     room.addPlayer(player);
+
     return "Player added successfully!";
   }
 
@@ -313,22 +306,25 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public String movePlayer(int roomIndex) {
-    Player player = players.get(currentPlayerIndex);
-    // check if roomIndex is in neighbors
-    if (!getNeighboursOfRoom(player.getRoomIndex()).contains(roomIndex)) {
-      throw new IllegalArgumentException("Please give neighbor room index!");
+    Player currentPlayer = players.get(currentPlayerIndex);
+    List<Integer> neighborRooms = getNeighboursOfRoom(currentPlayer.getRoomIndex());
+
+    if (!neighborRooms.contains(roomIndex)) {
+      throw new IllegalArgumentException("Please provide a valid neighbor room index!");
     }
+
     validateRoomIndex(roomIndex);
 
-    // remove player from the current room
-    Room originRoom = rooms.get(player.getRoomIndex());
-    originRoom.removePlayer(player);
-    // update player's room index
-    player.setRoomIndex(roomIndex);
-    // add player to new room
-    Room room = rooms.get(roomIndex);
-    room.addPlayer(players.get(currentPlayerIndex));
+    Room currentRoom = rooms.get(currentPlayer.getRoomIndex());
+    currentRoom.removePlayer(currentPlayer);
+
+    currentPlayer.setRoomIndex(roomIndex);
+
+    Room newRoom = rooms.get(roomIndex);
+    newRoom.addPlayer(currentPlayer);
+
     updateTurn(true);
+
     return "Player moved successfully";
   }
 
@@ -358,32 +354,38 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public String pickItem(int itemId) {
-    int roomIndex = players.get(currentPlayerIndex).getRoomIndex();
-    Room room = rooms.get(roomIndex);
-    List<Integer> itemsIndex = new ArrayList<>();
-    for (Item item : room.getItems()) {
-      itemsIndex.add(item.getId());
+    Player currentPlayer = players.get(currentPlayerIndex);
+    int roomIndex = currentPlayer.getRoomIndex();
+    Room currentRoom = rooms.get(roomIndex);
+
+    List<Integer> itemIds = currentRoom.getItems().stream().map(Item::getId)
+        .collect(Collectors.toList());
+
+    if (!itemIds.contains(itemId)) {
+      throw new IllegalArgumentException("Please select a valid item ID!");
     }
-    if (!itemsIndex.contains(itemId)) {
-      throw new IllegalArgumentException("Please select a valid index!");
-    }
-    Item choosenItem = items.get(itemId);
-    players.get(currentPlayerIndex).addItem(choosenItem);
-    room.deleteItem(choosenItem);
+
+    Item chosenItem = items.get(itemId);
+    currentPlayer.addItem(chosenItem);
+    currentRoom.deleteItem(chosenItem);
+
     updateTurn(true);
-    return "Item is picked successfully!";
+
+    return "Item picked successfully!";
   }
 
   @Override
   public String lookAround() {
-    int roomIndex = this.players.get(currentPlayerIndex).getRoomIndex();
-    Room currentRoom = rooms.get(roomIndex);
+    Player currentPlayer = players.get(currentPlayerIndex);
+    Room currentRoom = rooms.get(currentPlayer.getRoomIndex());
     List<Room> neighbours = currentRoom.getNeighbours();
 
     StringBuilder sb = new StringBuilder();
     sb.append(currentRoom.displayRoomDescription()).append("\n");
+
     if (!neighbours.isEmpty()) {
       sb.append("Details on neighbor rooms of player are: \n").append("--------------------\n");
+
       for (Room neighbor : neighbours) {
         sb.append(neighbor.displayRoomDescription());
         sb.append("\n--------------------\n");
@@ -391,26 +393,28 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     } else {
       sb.append("No neighbors for this space. \n");
     }
+
     updateTurn(true);
     return sb.toString();
   }
 
   void updateTurn(boolean movePet) {
     currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+
     if (rooms.size() > 1) {
       moveTarget();
     }
+
     currentTurn++;
-    if (currentTurn > maxTurns) {
+
+    if (currentTurn > maxTurns || target.getHealth() == 0) {
       programState = ProgramState.FINALIZING;
     }
-    if (target.getHealth() == 0) {
-      programState = ProgramState.FINALIZING;
-    }
+
     if (movePet) {
       // move pet
-      Room nextRoom;
-      if ((nextRoom = graph.getNextRoom()) != null) {
+      Room nextRoom = graph.getNextRoom();
+      if (nextRoom != null) {
         pet.updateRoom(nextRoom.getIndex());
       }
     }
@@ -437,22 +441,26 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     Room currentRoom = rooms.get(roomIndex);
     List<Item> items = currentRoom.getItems();
     StringBuilder sb = new StringBuilder();
+
     if (items.isEmpty()) {
       sb.append("No items in current room!");
       return sb.toString();
     }
+
     sb.append("Items in current room are: \n");
+
     for (Item item : items) {
       sb.append(item);
       sb.append("\n--------------------\n");
     }
+
     return sb.toString();
   }
 
   @Override
   public List<Player> getPlayers() {
     List<Player> playersCopy = new ArrayList<>();
-    for (Player player : this.players) {
+    for (Player player : players) {
       playersCopy.add(
           new PlayerImpl(player.getPlayerName(), player.getRoomIndex(), player.getItemLimit(),
               player.getPlayerType()));
@@ -473,7 +481,6 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
       int randomOperateIndex = randomGenerator.getRandomNumberInRange(0, 2);
       switch (randomOperateIndex) {
         case 0:
-          // Picking up an item from the space they are currently occupying.
           Room currentRoom = rooms.get(player.getRoomIndex());
           if (currentRoom.getItems().isEmpty()) {
             return computerPlayerTurn();
@@ -484,10 +491,8 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
           pickItem(pickedItem.getId());
           return "Computer player picked item " + pickedItem.getName();
         case 1:
-          // Look around the space they are currently occupying.
           return "Computer player looked around\n\n" + lookAround();
         case 2:
-          // Moving to a neighboring space.
           List<Integer> neighbors = getNeighboursOfRoom(player.getRoomIndex());
           if (neighbors.isEmpty()) {
             return computerPlayerTurn();
@@ -504,13 +509,13 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public String displayPrepareMessage() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("\nTurn Counter: ").append(getTurnCount()).append("\n");
-    sb.append("Max Turn: ").append(getMaxTurns()).append("\n");
+    StringBuilder message = new StringBuilder();
+    message.append("\nTurn Counter: ").append(getTurnCount()).append("\n");
+    message.append("Max Turn: ").append(getMaxTurns()).append("\n");
     Player currentPlayer = getCurrentPlayer();
-    sb.append("Current turn: ").append(currentPlayer.getPlayerName()).append("\n");
-    sb.append(displayRoomDescription(currentPlayer.getRoomIndex()));
-    return sb.toString();
+    message.append("Current turn: ").append(currentPlayer.getPlayerName()).append("\n");
+    message.append(displayRoomDescription(currentPlayer.getRoomIndex()));
+    return message.toString();
   }
 
   @Override
@@ -523,10 +528,12 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     if (roomIndex < 0 || roomIndex >= rooms.size()) {
       throw new IllegalArgumentException("Invalid room index!");
     }
+
     Room room = rooms.get(roomIndex);
     pet.updateRoom(roomIndex);
     graph.setStartingRoom(room);
     updateTurn(false);
+
     return "Pet moved to room " + roomIndex;
   }
 
@@ -535,25 +542,33 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     if (itemId < 0 || itemId >= items.size()) {
       throw new IllegalArgumentException("Invalid item index!");
     }
+
     Room currentRoom = rooms.get(getCurrentPlayer().getRoomIndex());
-    if (currentRoom.getIndex() != target.getRoomIndex()) {
+    Room targetRoom = rooms.get(target.getRoomIndex());
+
+    if (currentRoom != targetRoom) {
       throw new IllegalArgumentException("Target is not in the same room!");
     }
-    // check if attack successfully
+
     if (currentRoom.getPlayers().size() > 1) {
       return "Target is not alone in the room!";
-    } else if (this.pet.getRoomIndex() == currentRoom.getIndex()) {
+    }
+
+    if (this.pet.getRoomIndex() == currentRoom.getIndex()) {
       return "Pet in the room!";
     }
+
     for (Room neighbor : currentRoom.getNeighbours()) {
       if (!neighbor.getPlayers().isEmpty()) {
         return "Can be seen in the neighbor room!";
       }
     }
+
     Item item = items.get(itemId);
     target.updateHealth(target.getHealth() - item.getDamage());
     getCurrentPlayer().removeItem(item);
     updateTurn(true);
+
     return "Target health is updated to " + target.getHealth();
   }
 }

@@ -74,7 +74,8 @@ public class GameControllerImpl implements GameController {
     if (fileReader == null) {
       throw new IllegalArgumentException("FileReader cannot be null");
     }
-    this.readFile(fileReader);
+
+    readFile(fileReader);
     commandRegistry();
 
     while (true) {
@@ -86,7 +87,7 @@ public class GameControllerImpl implements GameController {
       if (killDoctorLucky.getProgramState() == ProgramState.RUNNING) {
         view.displayMessage(killDoctorLucky.displayPrepareMessage());
         Player currentPlayer = killDoctorLucky.getCurrentPlayer();
-        // check if it is computer player
+
         if (currentPlayer.getPlayerType() == PlayerType.COMPUTER) {
           view.prompt("----------------- Start ----------------");
           view.displayMessage("Computer player " + currentPlayer.getPlayerName() + " is playing");
@@ -119,7 +120,7 @@ public class GameControllerImpl implements GameController {
       for (ParameterRequest paramRequest : matchedCommand.requiredParameters()) {
         view.prompt(paramRequest.getPromptMessage());
         params.put(paramRequest.getParamName(), in.nextLine());
-        // check if the input is not empty
+
         if (params.get(paramRequest.getParamName()).isEmpty()) {
           view.displayError("Invalid input");
           break;
@@ -168,24 +169,25 @@ public class GameControllerImpl implements GameController {
    * @throws IllegalArgumentException if file isn't found
    */
   private void readFile(Readable fileReader) throws IOException {
-    try {
-      String line;
-      BufferedReader br = new BufferedReader((Reader) fileReader);
-      line = br.readLine();
-
+    try (BufferedReader br = new BufferedReader((Reader) fileReader)) {
+      String line = br.readLine();
       String[] worldInfo = line.trim().split("\\s+");
-      killDoctorLucky.setNumCols(Integer.parseInt(worldInfo[0]));
-      killDoctorLucky.setNumRows(Integer.parseInt(worldInfo[1]));
-      killDoctorLucky.setWorldName(
-          line.substring(worldInfo[0].length() + worldInfo[1].length() + 2));
+      int numCols = Integer.parseInt(worldInfo[0]);
+      int numRows = Integer.parseInt(worldInfo[1]);
+      String worldName = line.substring(worldInfo[0].length() + worldInfo[1].length() + 2);
       line = br.readLine();
       String[] targetInfo = line.trim().split("\\s+");
       int targetHealth = Integer.parseInt(targetInfo[0]);
       String targetName = line.substring(targetInfo[0].length() + 1);
+
       if (targetHealth <= 0) {
         throw new IllegalArgumentException("Target health can not be negative!");
       }
+
       int defaultTargetRoomIndex = 0;
+      killDoctorLucky.setNumCols(numCols);
+      killDoctorLucky.setNumRows(numRows);
+      killDoctorLucky.setWorldName(worldName);
       killDoctorLucky.setTarget(new TargetImpl(targetName, targetHealth, defaultTargetRoomIndex));
 
       // Pet Name
@@ -198,6 +200,7 @@ public class GameControllerImpl implements GameController {
       if (numRooms <= 0) {
         throw new IllegalArgumentException("No rooms in the world!");
       }
+
       for (int i = 0; i < numRooms; i++) {
         line = br.readLine();
         String[] roomInfo = line.trim().split("\\s+");
@@ -206,33 +209,39 @@ public class GameControllerImpl implements GameController {
         int lowerRightRow = Integer.parseInt(roomInfo[2]);
         int lowerRightCol = Integer.parseInt(roomInfo[3]);
         StringBuilder roomNameBuilder = new StringBuilder();
+
         for (int j = 4; j < roomInfo.length; j++) {
           roomNameBuilder.append(roomInfo[j]);
           if (j < roomInfo.length - 1) {
             roomNameBuilder.append(" ");
           }
         }
+
         String roomName = roomNameBuilder.toString();
         killDoctorLucky.addRooms(
             new RoomImpl(i, roomName, upperLeftRow, upperLeftCol, lowerRightRow, lowerRightCol));
       }
 
       int numItems = Integer.parseInt(br.readLine());
+
       for (int i = 0; i < numItems; i++) {
         line = br.readLine();
         String[] itemInfo = line.trim().split("\\s+");
         int itemRoomIndex = Integer.parseInt(itemInfo[0]);
         int itemDamage = Integer.parseInt(itemInfo[1]);
         StringBuilder itemNameBuilder = new StringBuilder();
+
         for (int j = 2; j < itemInfo.length; j++) {
           itemNameBuilder.append(itemInfo[j]);
           if (j < itemInfo.length - 1) {
             itemNameBuilder.append(" ");
           }
         }
+
         String itemName = itemNameBuilder.toString();
         killDoctorLucky.addItems(i, itemDamage, itemName, itemRoomIndex);
       }
+
       killDoctorLucky.initialMap();
     } catch (FileNotFoundException e) {
       throw new IllegalArgumentException("File not found");

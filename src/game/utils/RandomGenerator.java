@@ -42,19 +42,16 @@ public class RandomGenerator {
   }
 
   /**
-   * Retrieves a random number within the specified range. If there are predefined numbers
-   * available, it returns the next number from the sequence. Otherwise, it generates a truly random
-   * number.
+   * Retrieves a random number within the specified range.
    *
    * @param min The lower bound (inclusive) of the random number to be generated.
    * @param max The upper bound (inclusive) of the random number to be generated.
    * @return A random number between the specified range.
    */
   public int getRandomNumberInRange(int min, int max) {
-    if (predefinedNumbers == null || predefinedNumbers.isEmpty()) {
+    if (predefinedNumbers.isEmpty()) {
       return random.nextInt((max - min) + 1) + min;
-    } else {
-      return predefinedNumbers.poll();
     }
+    return predefinedNumbers.poll();
   }
 }

@@ -4,11 +4,11 @@ import game.model.Room;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 public class DfsGraphImpl implements Graph {
-  private Stack<Room> stack;
-  private Set<Room> visited;
-  private Room startRoom;
+  private final Stack<Room> stack;
+  private final Set<Room> visited;
 
   public DfsGraphImpl() {
     stack = new Stack<>();
@@ -17,10 +17,9 @@ public class DfsGraphImpl implements Graph {
 
   @Override
   public void setStartingRoom(Room room) {
-    startRoom = room;
     visited.clear();
     stack.clear();
-    stack.push(startRoom);
+    stack.push(room);
   }
 
   @Override
@@ -32,11 +31,9 @@ public class DfsGraphImpl implements Graph {
     Room currentRoom = stack.pop();
     visited.add(currentRoom);
 
-    for (Room neighbor : currentRoom.getNeighbours()) {
-      if (!visited.contains(neighbor)) {
-        stack.push(neighbor);
-      }
-    }
+    stack.addAll(
+        currentRoom.getNeighbours().stream().filter(neighbor -> !visited.contains(neighbor))
+            .collect(Collectors.toList()));
 
     return currentRoom;
   }
