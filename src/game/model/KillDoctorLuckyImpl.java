@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.imageio.ImageIO;
@@ -70,7 +71,11 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
         if (currentRoom.equals(otherRoom)) {
           continue;
         }
-        if (overlaps(currentRoom, otherRoom)) {
+        boolean isOverlaps = currentRoom.getUpperLeftRow() <= otherRoom.getLowerRightRow()
+            && currentRoom.getLowerRightRow() >= otherRoom.getUpperLeftRow()
+            && currentRoom.getUpperLeftCol() <= otherRoom.getLowerRightCol()
+            && currentRoom.getLowerRightCol() >= otherRoom.getUpperLeftCol();
+        if (isOverlaps) {
           throw new IllegalArgumentException(
               "Rooms overlap: " + currentRoom.getName() + " conflicts with " + otherRoom.getName());
         }
@@ -80,17 +85,6 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
       }
       currentRoom.setNeighborRooms(neighbors);
     }
-  }
-
-  @Override
-  public boolean overlaps(Room current, Room other) {
-    if (current == null || other == null) {
-      throw new IllegalArgumentException("Room object can't be null");
-    }
-    return current.getUpperLeftRow() <= other.getLowerRightRow()
-        && current.getLowerRightRow() >= other.getUpperLeftRow()
-        && current.getUpperLeftCol() <= other.getLowerRightCol()
-        && current.getLowerRightCol() >= other.getUpperLeftCol();
   }
 
   @Override
@@ -127,18 +121,8 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
-  public int getMaxPlayerLimit() {
-    return maxPlayerLimit;
-  }
-
-  @Override
   public String displayRoomDescription(int roomIdx) {
     return rooms.get(roomIdx).displayRoomDescription();
-  }
-
-  @Override
-  public int getLocationOfTarget() {
-    return this.target.getRoomIndex();
   }
 
   @Override
@@ -538,10 +522,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
-  public String attackTarget(int itemId) {
-    if (itemId < 0 || itemId >= items.size()) {
-      throw new IllegalArgumentException("Invalid item index!");
-    }
+  public String attackTarget(String chosenItem) {
 
     Room currentRoom = rooms.get(getCurrentPlayer().getRoomIndex());
     Room targetRoom = rooms.get(target.getRoomIndex());
@@ -563,12 +544,18 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
         return "Can be seen in the neighbor room!";
       }
     }
-
-    Item item = items.get(itemId);
-    target.updateHealth(target.getHealth() - item.getDamage());
-    getCurrentPlayer().removeItem(item);
+    if (Objects.equals(chosenItem, "p")) {
+      target.updateHealth(target.getHealth() - 1);
+    } else {
+      int itemId = Integer.parseInt(chosenItem);
+      if (itemId < 0 || itemId >= items.size()) {
+        throw new IllegalArgumentException("Invalid item index!");
+      }
+      Item item = items.get(itemId);
+      target.updateHealth(target.getHealth() - item.getDamage());
+      getCurrentPlayer().removeItem(item);
+    }
     updateTurn(true);
-
     return "Target health is updated to " + target.getHealth();
   }
 

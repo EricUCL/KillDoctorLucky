@@ -28,7 +28,8 @@ public class AttackTarget implements Command {
   @Override
   public CommandResult execute(Map<String, String> params) {
     try {
-      return new CommandResult(model.pickItem(Integer.parseInt(params.get("itemIndex"))), false);
+      return new CommandResult(model.attackTarget(params.get("itemIndex")),
+          false);
     } catch (IllegalArgumentException e) {
       return new CommandResult(e.getMessage(), true);
     }
@@ -37,8 +38,9 @@ public class AttackTarget implements Command {
   @Override
   public List<ParameterRequest> requiredParameters() {
     List<ParameterRequest> requests = new ArrayList<>();
-    String promptMessage =
-        model.getItemsByCurrentPlayer() + "\nEnter the item index you want to use: ";
+    String promptMessage = model.getItemsByCurrentPlayer()
+        + "\nEnter the item index you want to use or enter \"p\" for "
+        + "poking the target in the eye which does 1 point of damage: ";
     requests.add(new ParameterRequest("itemIndex", promptMessage));
     return requests;
   }

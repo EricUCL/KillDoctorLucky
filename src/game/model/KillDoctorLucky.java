@@ -26,14 +26,6 @@ public interface KillDoctorLucky {
   String displayRoomDescription(int roomIdx);
 
   /**
-   * Returns the room index where the Target is located, which is used to display before every
-   * player's turn.
-   *
-   * @return the {@link Target}s room index of the target's location.
-   */
-  int getLocationOfTarget();
-
-  /**
    * Function for getting neighbours for a specified room with index.
    *
    * @param index Index of the room for which we have get neighbors
@@ -72,15 +64,6 @@ public interface KillDoctorLucky {
    * @return target name, room index and health.
    */
   String displayTargetInfo();
-
-  /**
-   * Function for checking if two rooms are overlapping or not.
-   *
-   * @param current current room object
-   * @param other   other room object
-   * @return true if they are overlapping, false otherwise.
-   */
-  boolean overlaps(Room current, Room other);
 
   /**
    * Function for checking if two rooms are neighbors or not.
@@ -125,8 +108,6 @@ public interface KillDoctorLucky {
    * @param room The {@link Room} instance to be added.
    */
   void addRooms(Room room);
-
-  int getMaxPlayerLimit();
 
   /**
    * Initializes the game's map with default or initial settings.
@@ -283,7 +264,7 @@ public interface KillDoctorLucky {
    * @param itemId The index of the item to be attacked.
    * @return A string message indicating the result of the action.
    */
-  String attackTarget(int itemId);
+  String attackTarget(String itemId);
 
   String getItemsByCurrentPlayer();
 }
