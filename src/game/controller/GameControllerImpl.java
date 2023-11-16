@@ -79,15 +79,14 @@ public class GameControllerImpl implements GameController {
     commandRegistry();
 
     while (true) {
-      if (killDoctorLucky.getProgramState() == ProgramState.FINALIZING) {
+      ProgramState programState = killDoctorLucky.getProgramState();
+      if (programState == ProgramState.FINALIZING) {
         view.displayMessage("Game Over");
         return;
       }
 
-      if (killDoctorLucky.getProgramState() == ProgramState.RUNNING) {
-        view.displayMessage(killDoctorLucky.displayPrepareMessage());
+      if (programState == ProgramState.RUNNING) {
         Player currentPlayer = killDoctorLucky.getCurrentPlayer();
-
         if (currentPlayer.getPlayerType() == PlayerType.COMPUTER) {
           view.prompt("----------------- Start ----------------");
           view.displayMessage("Computer player " + currentPlayer.getPlayerName() + " is playing");
@@ -95,9 +94,11 @@ public class GameControllerImpl implements GameController {
           view.prompt("------------------ End -----------------");
           continue;
         }
+
+        view.displayMessage(killDoctorLucky.displayPrepareMessage());
       }
 
-      view.displayOptions(commandRegistry.getCommands(killDoctorLucky.getProgramState()));
+      view.displayOptions(commandRegistry.getCommands(programState));
       String input = in.nextLine();
 
       if ("q".equalsIgnoreCase(input) || "quit".equalsIgnoreCase(input)) {
@@ -114,19 +115,26 @@ public class GameControllerImpl implements GameController {
         continue;
       }
 
-      view.prompt("----------------- Start ----------------");
       Command matchedCommand = matchedCommandOpt.get();
       Map<String, String> params = new HashMap<>();
-      for (ParameterRequest paramRequest : matchedCommand.requiredParameters()) {
-        view.prompt(paramRequest.getPromptMessage());
-        params.put(paramRequest.getParamName(), in.nextLine());
+      try {
+        for (ParameterRequest paramRequest : matchedCommand.requiredParameters()) {
 
-        if (params.get(paramRequest.getParamName()).isEmpty()) {
-          view.displayError("Invalid input");
-          break;
+          view.prompt(paramRequest.getPromptMessage());
+
+          params.put(paramRequest.getParamName(), in.nextLine());
+
+          if (params.get(paramRequest.getParamName()).isEmpty()) {
+            view.displayError("Invalid input");
+            break;
+          }
         }
+      } catch (IllegalArgumentException e) {
+        view.displayError(e.getMessage());
+        continue;
       }
 
+      view.prompt("----------------- Start ----------------");
       CommandResult result = matchedCommand.execute(params);
       if (result.isError()) {
         view.displayError(result.getMessage());

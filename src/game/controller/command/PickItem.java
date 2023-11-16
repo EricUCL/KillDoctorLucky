@@ -37,15 +37,15 @@ public class PickItem implements Command {
   @Override
   public List<ParameterRequest> requiredParameters() {
     List<ParameterRequest> requests = new ArrayList<>();
-    String promptMessage =
-        model.getItemsInCurrentRoom() + "\nEnter the item index you want to pick up: ";
+    String promptMessage = model.getItemsInCurrentRoom();
+    promptMessage += "\nEnter the item index you want to pick up: ";
     requests.add(new ParameterRequest("itemIndex", promptMessage));
     return requests;
   }
 
   @Override
   public String getDescription() {
-    return "Pick up Item";
+    return "Pick Up Item";
   }
 
   @Override

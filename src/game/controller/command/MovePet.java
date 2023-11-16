@@ -34,8 +34,7 @@ public class MovePet implements Command {
   @Override
   public List<ParameterRequest> requiredParameters() {
     List<ParameterRequest> requests = new ArrayList<>();
-    String promptMessage =
-        model.getItemsInCurrentRoom() + "\nEnter the room index you want the pet move to: ";
+    String promptMessage = "\nEnter the room index you want the pet move to: ";
     requests.add(new ParameterRequest("roomIndex", promptMessage));
     return requests;
   }

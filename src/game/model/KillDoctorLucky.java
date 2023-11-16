@@ -284,4 +284,6 @@ public interface KillDoctorLucky {
    * @return A string message indicating the result of the action.
    */
   String attackTarget(int itemId);
+
+  String getItemsByCurrentPlayer();
 }

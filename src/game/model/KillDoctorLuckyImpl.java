@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import javax.imageio.ImageIO;
 
 /**
@@ -443,8 +444,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     StringBuilder sb = new StringBuilder();
 
     if (items.isEmpty()) {
-      sb.append("No items in current room!");
-      return sb.toString();
+      throw new IllegalArgumentException("No items in current room!");
     }
 
     sb.append("Items in current room are: \n");
@@ -570,5 +570,14 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     updateTurn(true);
 
     return "Target health is updated to " + target.getHealth();
+  }
+
+  @Override
+  public String getItemsByCurrentPlayer() {
+    Player player = getCurrentPlayer();
+    List<Item> items = player.getItemsList();
+    return IntStream.range(0, items.size())
+        .mapToObj(i -> i + ": " + items.get(i).getName() + " damage: " + items.get(i).getDamage())
+        .collect(Collectors.joining("\n"));
   }
 }

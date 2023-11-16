@@ -38,7 +38,7 @@ public class AttackTarget implements Command {
   public List<ParameterRequest> requiredParameters() {
     List<ParameterRequest> requests = new ArrayList<>();
     String promptMessage =
-        model.getItemsInCurrentRoom() + "\nEnter the item index you want to use: ";
+        model.getItemsByCurrentPlayer() + "\nEnter the item index you want to use: ";
     requests.add(new ParameterRequest("itemIndex", promptMessage));
     return requests;
   }

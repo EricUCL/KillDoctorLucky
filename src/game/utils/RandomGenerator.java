@@ -19,13 +19,14 @@ public class RandomGenerator {
   private final Random random;
 
   /** Queue of predefined numbers to be returned in sequence. */
-  private Queue<Integer> predefinedNumbers = null;
+  private final Queue<Integer> predefinedNumbers;
 
   /**
    * Default constructor which initializes a truly random number generator.
    */
   public RandomGenerator() {
     random = new Random();
+    predefinedNumbers = new LinkedList<>();
   }
 
   /**
