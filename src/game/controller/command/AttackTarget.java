@@ -37,7 +37,7 @@ public class AttackTarget implements Command {
   @Override
   public List<ParameterRequest> requiredParameters() {
     List<ParameterRequest> requests = new ArrayList<>();
-    String promptMessage = model.getItemsByCurrentPlayer()
+    String promptMessage = "Items in inventory: \n" + model.displayItemsByCurrentPlayer()
         + "\nEnter the item index you want to use or enter \"p\" for "
         + "poking the target in the eye which does 1 point of damage: ";
     requests.add(new ParameterRequest("itemIndex", promptMessage));

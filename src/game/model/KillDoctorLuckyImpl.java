@@ -23,7 +23,6 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import javax.imageio.ImageIO;
 
 /**
@@ -378,14 +377,13 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     List<Room> neighbours = currentRoom.getNeighbours();
 
     StringBuilder sb = new StringBuilder();
-    sb.append(currentRoom.displayRoomDescription()).append("\n");
+//    sb.append(currentRoom.displayRoomDescription()).append("\n");
 
     if (!neighbours.isEmpty()) {
       sb.append("Details on neighbor rooms of player are: \n").append("--------------------\n");
-
       for (Room neighbor : neighbours) {
         sb.append(neighbor.displayRoomDescription());
-        sb.append("\n--------------------\n");
+        sb.append("--------------------\n");
       }
     } else {
       sb.append("No neighbors for this space. \n");
@@ -486,6 +484,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
         return "Computer player attacked target. " + result.getDetails();
       }
     }
+
     int randomOperateIndex = randomGenerator.getRandomNumberInRange(0, 2);
     switch (randomOperateIndex) {
       case 0:
@@ -505,7 +504,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
         }
       case 1:
         // look around
-        //        return "Computer player looked around\n\n" + lookAround();
+        return "Computer player looked around\n\n" + lookAround();
       case 2:
         // move
         List<Integer> neighbors = getNeighboursOfRoom(player.getRoomIndex());
@@ -522,13 +521,36 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public String displayPrepareMessage() {
-    StringBuilder message = new StringBuilder();
-    message.append("\nNumber of remaining turns: ").append(getMaxTurns() - getTurnCount())
-        .append("\n");
-    Player currentPlayer = getCurrentPlayer();
-    message.append("Current turn: ").append(currentPlayer.getPlayerName()).append("\n");
-    message.append(displayRoomDescription(currentPlayer.getRoomIndex()));
-    return message.toString();
+    int remainingTurns = getMaxTurns() - getTurnCount();
+    String playerName = getCurrentPlayer().getPlayerName();
+
+    Room currentRoom = rooms.get(getCurrentPlayer().getRoomIndex());
+    StringBuilder sb = new StringBuilder();
+    sb.append("Current Room Name: ").append(currentRoom.getName()).append("\n");
+    sb.append("Current Room Index: ").append(currentRoom.getIndex()).append("\n");
+
+    List<Item> items = currentRoom.getItems();
+    if (!items.isEmpty()) {
+      sb.append(currentRoom.displayItems()).append("\n");
+    } else {
+      sb.append("No items in this room\n");
+    }
+
+    List<Player> players = currentRoom.getPlayers();
+    if (players.size() > 1) {
+      sb.append("Other Players in this Room: ");
+      for (Player player : players) {
+        if (player != getCurrentPlayer()) {
+          sb.append(player.getPlayerName()).append(" ");
+        }
+      }
+      sb.append("\n");
+    } else {
+      sb.append("No other players in this room.\n");
+    }
+
+    return String.format("\nNumber of remaining turns: %d\nCurrent turn: %s\n%s", remainingTurns,
+        playerName, sb);
   }
 
   @Override
@@ -552,7 +574,6 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public OperationResult attackTarget(String chosenItem) {
-
     Room currentRoom = rooms.get(getCurrentPlayer().getRoomIndex());
     Room targetRoom = rooms.get(target.getRoomIndex());
 
@@ -568,41 +589,44 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
       return new OperationResult(false, "Pet in the room!");
     }
 
-    for (Room neighbor : currentRoom.getNeighbours()) {
-      if (!neighbor.getPlayers().isEmpty()) {
-        return new OperationResult(false, "Can be seen in the neighbor room!");
+    if (currentRoom.getNeighbours().stream().allMatch(room -> room.getPlayers().isEmpty())) {
+      if (Objects.equals(chosenItem, "p")) {
+        target.updateHealth(target.getHealth() - 1);
+      } else {
+        int itemId = Integer.parseInt(chosenItem);
+        if (itemId < 0 || itemId >= items.size()) {
+          throw new IllegalArgumentException("Invalid item index!");
+        }
+        Item item = items.get(itemId);
+        target.updateHealth(target.getHealth() - item.getDamage());
+        getCurrentPlayer().removeItem(item);
       }
+      updateTurn(true);
+      return new OperationResult(true, "Target health is updated to " + target.getHealth());
     }
-    if (Objects.equals(chosenItem, "p")) {
-      target.updateHealth(target.getHealth() - 1);
-    } else {
-      int itemId = Integer.parseInt(chosenItem);
-      if (itemId < 0 || itemId >= items.size()) {
-        throw new IllegalArgumentException("Invalid item index!");
-      }
-      Item item = items.get(itemId);
-      target.updateHealth(target.getHealth() - item.getDamage());
-      getCurrentPlayer().removeItem(item);
-    }
-    updateTurn(true);
-    return new OperationResult(true, "Target health is updated to " + target.getHealth());
+
+    return new OperationResult(false, "Can be seen in the neighbor room!");
   }
 
   @Override
-  public String getItemsByCurrentPlayer() {
+  public String displayItemsByCurrentPlayer() {
     Player player = getCurrentPlayer();
     List<Item> items = player.getItemsList();
-    return IntStream.range(0, items.size())
-        .mapToObj(i -> i + ": " + items.get(i).getName() + " damage: " + items.get(i).getDamage())
-        .collect(Collectors.joining("\n"));
+
+    StringBuilder result = new StringBuilder();
+    for (int i = 0; i < items.size(); i++) {
+      Item item = items.get(i);
+      result.append("ID: ").append(i).append(" Name: ").append(item.getName()).append(" Damage: ")
+          .append(item.getDamage()).append("\n");
+    }
+
+    return result.toString();
   }
 
   @Override
   public String displayFinalMessage() {
-    if (target.getHealth() > 0) {
-      return "Game over. Tie game!";
-    } else {
-      return "Game over. " + getCurrentPlayer().getPlayerName() + " wins!";
-    }
+    return "Game over. " + (target.getHealth() > 0
+        ? "Tie game!"
+        : getCurrentPlayer().getPlayerName() + " wins!");
   }
 }

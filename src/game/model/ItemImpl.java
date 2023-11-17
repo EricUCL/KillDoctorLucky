@@ -37,7 +37,7 @@ public class ItemImpl implements Item {
 
   @Override
   public String toString() {
-    return "Id: " + id + ", Name: " + name + ", Damage: " + damage;
+    return "ID: " + id + ", Name: " + name + ", Damage: " + damage;
   }
 
   @Override

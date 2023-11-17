@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -65,15 +66,9 @@ public class GameControllerImpl implements GameController {
 
   @Override
   public void startGame() throws IOException {
-    if (killDoctorLucky == null) {
-      throw new IllegalArgumentException("Model cannot be null");
-    }
-    if (view == null) {
-      throw new IllegalArgumentException("View cannot be null");
-    }
-    if (fileReader == null) {
-      throw new IllegalArgumentException("FileReader cannot be null");
-    }
+    Objects.requireNonNull(killDoctorLucky, "Model cannot be null");
+    Objects.requireNonNull(view, "View cannot be null");
+    Objects.requireNonNull(fileReader, "FileReader cannot be null");
 
     readFile(fileReader);
     commandRegistry();
@@ -106,8 +101,7 @@ public class GameControllerImpl implements GameController {
         return;
       }
 
-      Optional<Command> matchedCommandOpt = commandRegistry.getCommands(
-              killDoctorLucky.getProgramState()).stream()
+      Optional<Command> matchedCommandOpt = commandRegistry.getCommands(programState).stream()
           .filter(cmd -> cmd.getIdentifier().equals(input)).findFirst();
 
       if (matchedCommandOpt.isEmpty()) {
@@ -119,15 +113,15 @@ public class GameControllerImpl implements GameController {
       Map<String, String> params = new HashMap<>();
       try {
         for (ParameterRequest paramRequest : matchedCommand.requiredParameters()) {
-
           view.prompt(paramRequest.getPromptMessage());
+          String paramValue = in.nextLine();
 
-          params.put(paramRequest.getParamName(), in.nextLine());
-
-          if (params.get(paramRequest.getParamName()).isEmpty()) {
+          if (paramValue.isEmpty()) {
             view.displayError("Invalid input");
             break;
           }
+
+          params.put(paramRequest.getParamName(), paramValue);
         }
       } catch (IllegalArgumentException e) {
         view.displayError(e.getMessage());

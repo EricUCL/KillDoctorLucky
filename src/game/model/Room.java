@@ -8,8 +8,7 @@ import java.util.List;
 public interface Room {
 
   /**
-   * Function for getting neighbors of the room object.
-   * GameWorld is using this to show neighbors
+   * Function for getting neighbors of the room object. GameWorld is using this to show neighbors
    * info.
    *
    * @return List of rooms which are sharing the "wall" with the calling room object.
@@ -123,4 +122,11 @@ public interface Room {
    * @return Returns list of players which are present in the calling room object.
    */
   List<Player> getPlayers();
+
+  /**
+   * Function for getting items of the calling room object.
+   *
+   * @return Returns list of items which are present in the calling room object.
+   */
+  String displayItems();
 }

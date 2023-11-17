@@ -272,7 +272,7 @@ public interface KillDoctorLucky {
    *
    * @return A string representation of items in the current player's inventory.
    */
-  String getItemsByCurrentPlayer();
+  String displayItemsByCurrentPlayer();
 
   /**
    * Provides final message after the game is over.

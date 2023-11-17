@@ -3,6 +3,7 @@ package game.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * This class represents the RoomImpl class. It implements the Room interface and has all the
@@ -181,20 +182,20 @@ public class RoomImpl implements Room {
     StringBuilder sb = new StringBuilder();
     sb.append("Room Name: ").append(this.name).append("\n");
     sb.append("Room Index: ").append(this.id).append("\n");
-    if (!this.items.isEmpty()) {
-      sb.append("Room Items: ").append(this.items).append("\n");
+    if (!items.isEmpty()) {
+      sb.append(this.displayItems()).append("\n");
     } else {
-      sb.append("No items in this room" + "\n");
+      sb.append("No items in this room\n");
     }
-    sb.append("Room Neighbors index: ").append(this.neighborRooms).append("\n");
-    if (!this.players.isEmpty()) {
-      sb.append("Players in Room: ");
-      for (Player player : this.players) {
-        sb.append(player.getPlayerName());
-        sb.append(" ");
+
+    if (!players.isEmpty()) {
+      sb.append("Players in this Room: ");
+      for (Player player : players) {
+        sb.append(player.getPlayerName()).append(" ");
       }
+      sb.append("\n");
     } else {
-      sb.append("No players in this room");
+      sb.append("No players in this room.\n");
     }
     return sb.toString();
   }
@@ -202,5 +203,10 @@ public class RoomImpl implements Room {
   @Override
   public List<Player> getPlayers() {
     return this.players;
+  }
+
+  @Override
+  public String displayItems() {
+    return "Room Items: \n" + items.stream().map(Item::toString).collect(Collectors.joining("\n"));
   }
 }
