@@ -17,3 +17,7 @@ java -jar KillDoctorLucky.jar mansion.txt 10
 
 ### To be improved
 The program has not yet completed the development of all features, such as attacking Target. The program does not implement a GUI; the readability of the program's command line interface could be improved.
+
+### Reference
+https://boardgamegeek.com/boardgame/257/kill-doctor-lucky
+https://www.baeldung.com/java-depth-first-search

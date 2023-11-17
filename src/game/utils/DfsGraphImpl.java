@@ -1,6 +1,5 @@
 package game.utils;
 
-import game.model.KillDoctorLuckyImpl;
 import game.model.Room;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,9 +34,9 @@ public class DfsGraphImpl implements Graph {
     Room currentRoom = stack.pop();
     visited.add(currentRoom);
 
-    stack.addAll(
-        currentRoom.getNeighbours().stream().filter(neighbor -> !visited.contains(neighbor)&&!stack.contains(neighbor))
-            .collect(Collectors.toList()));
+    stack.addAll(currentRoom.getNeighbours().stream()
+        .filter(neighbor -> !visited.contains(neighbor) && !stack.contains(neighbor))
+        .collect(Collectors.toList()));
     return currentRoom;
   }
 }

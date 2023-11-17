@@ -14,8 +14,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -471,34 +473,43 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   @Override
   public String computerPlayerTurn() {
     Player player = getCurrentPlayer();
-    if (player.getPlayerType() == PlayerType.COMPUTER) {
-      int randomOperateIndex = randomGenerator.getRandomNumberInRange(0, 2);
-      switch (randomOperateIndex) {
-        case 0:
-          Room currentRoom = rooms.get(player.getRoomIndex());
-          if (currentRoom.getItems().isEmpty()) {
-            return computerPlayerTurn();
-          }
-          int randomItemIndex = randomGenerator.getRandomNumberInRange(0,
-              currentRoom.getItems().size() - 1);
-          Item pickedItem = currentRoom.getItems().get(randomItemIndex);
-          pickItem(pickedItem.getId());
-          return "Computer player picked item " + pickedItem.getName();
-        case 1:
-          return "Computer player looked around\n\n" + lookAround();
-        case 2:
-          List<Integer> neighbors = getNeighboursOfRoom(player.getRoomIndex());
-          if (neighbors.isEmpty()) {
-            return computerPlayerTurn();
-          }
-          int randomNeighborIndex = randomGenerator.getRandomNumberInRange(0, neighbors.size() - 1);
-          movePlayer(neighbors.get(randomNeighborIndex));
-          return "Computer player moved to room " + neighbors.get(randomNeighborIndex);
-        default:
-          return "Invalid operation";
+    if (target.getRoomIndex() == player.getRoomIndex()) {
+      Optional<Item> highestDamageItem = player.getItemsList().stream()
+          .max(Comparator.comparingInt(Item::getDamage));
+      if (highestDamageItem.isPresent()) {
+        return attackTarget(highestDamageItem.get().getName());
+      } else {
+        return attackTarget("p");
       }
     }
-    return "Current player is not computer player";
+    int randomOperateIndex = randomGenerator.getRandomNumberInRange(0, 2);
+    switch (randomOperateIndex) {
+      case 0:
+        // pick item
+        Room currentRoom = rooms.get(player.getRoomIndex());
+        if (currentRoom.getItems().isEmpty()) {
+          return computerPlayerTurn();
+        }
+        int randomItemIndex = randomGenerator.getRandomNumberInRange(0,
+            currentRoom.getItems().size() - 1);
+        Item pickedItem = currentRoom.getItems().get(randomItemIndex);
+        pickItem(pickedItem.getId());
+        return "Computer player picked item " + pickedItem.getName();
+      case 1:
+        // look around
+        return "Computer player looked around\n\n" + lookAround();
+      case 2:
+        // move
+        List<Integer> neighbors = getNeighboursOfRoom(player.getRoomIndex());
+        if (neighbors.isEmpty()) {
+          return computerPlayerTurn();
+        }
+        int randomNeighborIndex = randomGenerator.getRandomNumberInRange(0, neighbors.size() - 1);
+        movePlayer(neighbors.get(randomNeighborIndex));
+        return "Computer player moved to room " + neighbors.get(randomNeighborIndex);
+      default:
+        return "Invalid operation";
+    }
   }
 
   @Override
@@ -542,16 +553,16 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     }
 
     if (currentRoom.getPlayers().size() > 1) {
-      return "Target is not alone in the room!";
+      throw new IllegalArgumentException("Target is not alone in the room!");
     }
 
     if (this.pet.getRoomIndex() == currentRoom.getIndex()) {
-      return "Pet in the room!";
+      throw new IllegalArgumentException("Pet in the room!");
     }
 
     for (Room neighbor : currentRoom.getNeighbours()) {
       if (!neighbor.getPlayers().isEmpty()) {
-        return "Can be seen in the neighbor room!";
+        throw new IllegalArgumentException("Can be seen in the neighbor room!");
       }
     }
     if (Objects.equals(chosenItem, "p")) {
