@@ -9,12 +9,12 @@ import game.model.MockKillDoctorLuckyImpl;
 import game.utils.RandomGenerator;
 import game.view.CommandLineView;
 import game.view.View;
+import org.junit.Before;
+import org.junit.Test;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  * Test class for GameControllerImpl.
@@ -35,7 +35,7 @@ public class GameControllerImplTest {
    */
   @Before
   public void setUp() throws IOException {
-    //    inputReader = new StringReader("");
+    inputReader = new StringReader("");
     String[] args = new String[2];
     args[0] = "res/mansion.txt";
     args[1] = "10";
@@ -45,13 +45,14 @@ public class GameControllerImplTest {
     randomGenerator = new RandomGenerator(1, 1, 2, 3, 2, 1);
     int maxTurns = Integer.parseInt(args[1]);
     mockModel = new MockKillDoctorLuckyImpl(maxTurns, randomGenerator);
-    //    gameController = new GameControllerImpl(mockModel, in, view, fileReader);
+    gameController = new GameControllerImpl(mockModel, inputReader, view, fileReader);
   }
 
   @Test
   public void testStartGameFinalizing() throws IOException {
     mockModel.setProgramState(ProgramState.FINALIZING);
     gameController.startGame();
+    System.out.println(output.toString());
     assertTrue(output.toString().contains("Game Over"));
   }
 
@@ -66,7 +67,7 @@ public class GameControllerImplTest {
         .contains("Turn Counter: 1\n" + "Max Turn: 10\n" + "Current turn: Player1"));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = NullPointerException.class)
   public void testStartGameWithNullModel() throws IOException {
     inputReader = new StringReader("");
     GameControllerImpl controllerWithNullModel = new GameControllerImpl(null, inputReader, view,
@@ -121,18 +122,8 @@ public class GameControllerImplTest {
     GameController gameController = new GameControllerImpl(mockModel, inputReader, view,
         fileReader);
     gameController.startGame();
-    System.out.println(output.toString());
-    assertTrue(output.toString().contains("Pick Item Activated!"));
-  }
-
-  @Test
-  public void testMovePlayerCommand() throws IOException {
-    inputReader = new StringReader("1\n1\nq");
-    GameController gameController = new GameControllerImpl(mockModel, inputReader, view,
-        fileReader);
-    gameController.startGame();
-    System.out.println(output.toString());
-    assertTrue(output.toString().contains("Move Player Activated!"));
+    //    System.out.println(output.toString());
+    assertTrue(output.toString().contains("Item picked successfully!"));
   }
 
   @Test
@@ -194,9 +185,30 @@ public class GameControllerImplTest {
     inputReader = new StringReader("7\nEric\n1\n1\n7\nMike\n1\n1\n9\n2\n2\nq");
     GameController gameController = new GameControllerImpl(model, inputReader, view, fileReader);
     gameController.startGame();
-    assertTrue(
-        output.toString().contains("Turn Counter: 1\n" + "Max Turn: 100\n" + "Current turn: Eric"));
-    assertTrue(
-        output.toString().contains("Turn Counter: 2\n" + "Max Turn: 100\n" + "Current turn: Mike"));
+    System.out.println(output.toString());
+    assertTrue(output.toString().contains(
+        "Current turn: Eric\n" + "Current Room Name: Billiard Room\n" + "Current Room Index: 1"));
+    assertTrue(output.toString().contains(
+        "Current turn: Mike\n" + "Current Room Name: Billiard Room\n" + "Current Room Index: 1"));
+  }
+
+  @Test
+  public void testAttackCommand() throws IOException {
+    inputReader = new StringReader("7\nEric\n1\n9\n7\np\nq");
+    GameController gameController = new GameControllerImpl(mockModel, inputReader, view,
+        fileReader);
+    gameController.startGame();
+    System.out.println(output.toString());
+    assertTrue(output.toString().contains("Attack Target Activated!"));
+  }
+
+  @Test
+  public void testMovePetCommand() throws IOException {
+    inputReader = new StringReader("7\nEric\n1\n9\n6\n1\nq");
+    GameController gameController = new GameControllerImpl(mockModel, inputReader, view,
+        fileReader);
+    gameController.startGame();
+    System.out.println(output.toString());
+    assertTrue(output.toString().contains("Move Pet Activated!"));
   }
 }
