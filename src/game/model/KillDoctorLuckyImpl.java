@@ -46,6 +46,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   private Pet pet;
   Graph graph;
   public static final Logger logger = Logger.getLogger(KillDoctorLuckyImpl.class.getName());
+  private final List<Item> evidence;
 
   /**
    * Constructor for the KillDoctorLuckyImpl class.
@@ -61,12 +62,13 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     this.items = new ArrayList<>();
     this.maxTurns = maxTurns;
     this.players = new ArrayList<>();
-    this.maxPlayerLimit = 10;
-    programState = ProgramState.INIT;
-    currentTurn = 1;
-    currentPlayerIndex = 0;
+    this.maxPlayerLimit = 20;
+    this.programState = ProgramState.INIT;
+    this.currentTurn = 1;
+    this.currentPlayerIndex = 0;
     this.randomGenerator = randomGenerator;
-    graph = new DfsGraphImpl();
+    this.graph = new DfsGraphImpl();
+    this.evidence = new ArrayList<>();
 
     FileHandler fileHandler = new FileHandler("./logs/myapp_%u_%g.log");
     fileHandler.setFormatter(new SimpleFormatter());
@@ -601,6 +603,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
         Item item = items.get(itemId);
         target.updateHealth(target.getHealth() - item.getDamage());
         getCurrentPlayer().removeItem(item);
+        this.evidence.add(item);
       }
       updateTurn(true);
       return new OperationResult(true, "Target health is updated to " + target.getHealth());
