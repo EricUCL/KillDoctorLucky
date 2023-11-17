@@ -377,11 +377,15 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     List<Room> neighbours = currentRoom.getNeighbours();
 
     StringBuilder sb = new StringBuilder();
-//    sb.append(currentRoom.displayRoomDescription()).append("\n");
 
     if (!neighbours.isEmpty()) {
-      sb.append("Details on neighbor rooms of player are: \n").append("--------------------\n");
+      sb.append("Details on neighbor rooms of you are: \n").append("--------------------\n");
       for (Room neighbor : neighbours) {
+        if (neighbor.getIndex() == pet.getRoomIndex()) {
+          sb.append("Room Name: ").append(neighbor.getName()).append("\n");
+          sb.append("Room Index: ").append(neighbor.getIndex()).append("\n");
+          sb.append("Occupied by the pet!").append("\n");
+        }
         sb.append(neighbor.displayRoomDescription());
         sb.append("--------------------\n");
       }
