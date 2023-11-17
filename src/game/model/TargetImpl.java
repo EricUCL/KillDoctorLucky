@@ -75,10 +75,7 @@ public class TargetImpl implements Target {
    */
   @Override
   public void updateHealth(int health) {
-    if (health < 0) {
-      this.health = 0;
-    }
-    this.health = health;
+    this.health = Math.max(health, 0);
   }
 
   @Override

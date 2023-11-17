@@ -28,7 +28,8 @@ public class PickItem implements Command {
   @Override
   public CommandResult execute(Map<String, String> params) {
     try {
-      return new CommandResult(model.pickItem(Integer.parseInt(params.get("itemIndex"))), false);
+      return new CommandResult(
+          (model.pickItem(Integer.parseInt(params.get("itemIndex")))).getDetails(), false);
     } catch (IllegalArgumentException e) {
       return new CommandResult(e.getMessage(), true);
     }

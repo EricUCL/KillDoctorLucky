@@ -4,6 +4,7 @@ import game.constants.PlayerType;
 import game.constants.ProgramState;
 import game.utils.DfsGraphImpl;
 import game.utils.Graph;
+import game.utils.OperationResult;
 import game.utils.RandomGenerator;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -349,7 +350,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
-  public String pickItem(int itemId) {
+  public OperationResult pickItem(int itemId) {
     Player currentPlayer = players.get(currentPlayerIndex);
     int roomIndex = currentPlayer.getRoomIndex();
     Room currentRoom = rooms.get(roomIndex);
@@ -367,7 +368,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
 
     updateTurn(true);
 
-    return "Item picked successfully!";
+    return new OperationResult(true, "Item picked successfully!");
   }
 
   @Override
@@ -395,17 +396,16 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   private void updateTurn(boolean movePet) {
-    currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+    if (currentTurn > maxTurns || target.getHealth() <= 0) {
+      programState = ProgramState.FINALIZING;
+      return;
+    }
 
+    currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
     if (rooms.size() > 1) {
       moveTarget();
     }
-
     currentTurn++;
-
-    if (currentTurn > maxTurns || target.getHealth() == 0) {
-      programState = ProgramState.FINALIZING;
-    }
 
     if (movePet) {
       // move pet
@@ -476,10 +476,14 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     if (target.getRoomIndex() == player.getRoomIndex()) {
       Optional<Item> highestDamageItem = player.getItemsList().stream()
           .max(Comparator.comparingInt(Item::getDamage));
+      OperationResult result;
       if (highestDamageItem.isPresent()) {
-        return attackTarget(highestDamageItem.get().getName());
+        result = attackTarget(String.valueOf(highestDamageItem.get().getId()));
       } else {
-        return attackTarget("p");
+        result = attackTarget("p");
+      }
+      if (result.isSuccess()) {
+        return "Computer player attacked target. " + result.getDetails();
       }
     }
     int randomOperateIndex = randomGenerator.getRandomNumberInRange(0, 2);
@@ -493,11 +497,15 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
         int randomItemIndex = randomGenerator.getRandomNumberInRange(0,
             currentRoom.getItems().size() - 1);
         Item pickedItem = currentRoom.getItems().get(randomItemIndex);
-        pickItem(pickedItem.getId());
-        return "Computer player picked item " + pickedItem.getName();
+        OperationResult result = pickItem(pickedItem.getId());
+        if (result.isSuccess()) {
+          return "Computer player picked item " + pickedItem.getName();
+        } else {
+          return computerPlayerTurn();
+        }
       case 1:
         // look around
-        return "Computer player looked around\n\n" + lookAround();
+        //        return "Computer player looked around\n\n" + lookAround();
       case 2:
         // move
         List<Integer> neighbors = getNeighboursOfRoom(player.getRoomIndex());
@@ -543,7 +551,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
-  public String attackTarget(String chosenItem) {
+  public OperationResult attackTarget(String chosenItem) {
 
     Room currentRoom = rooms.get(getCurrentPlayer().getRoomIndex());
     Room targetRoom = rooms.get(target.getRoomIndex());
@@ -553,16 +561,16 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     }
 
     if (currentRoom.getPlayers().size() > 1) {
-      throw new IllegalArgumentException("Target is not alone in the room!");
+      return new OperationResult(false, "Target is not alone in the room!");
     }
 
     if (this.pet.getRoomIndex() == currentRoom.getIndex()) {
-      throw new IllegalArgumentException("Pet in the room!");
+      return new OperationResult(false, "Pet in the room!");
     }
 
     for (Room neighbor : currentRoom.getNeighbours()) {
       if (!neighbor.getPlayers().isEmpty()) {
-        throw new IllegalArgumentException("Can be seen in the neighbor room!");
+        return new OperationResult(false, "Can be seen in the neighbor room!");
       }
     }
     if (Objects.equals(chosenItem, "p")) {
@@ -577,7 +585,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
       getCurrentPlayer().removeItem(item);
     }
     updateTurn(true);
-    return "Target health is updated to " + target.getHealth();
+    return new OperationResult(true, "Target health is updated to " + target.getHealth());
   }
 
   @Override
@@ -587,5 +595,14 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     return IntStream.range(0, items.size())
         .mapToObj(i -> i + ": " + items.get(i).getName() + " damage: " + items.get(i).getDamage())
         .collect(Collectors.joining("\n"));
+  }
+
+  @Override
+  public String displayFinalMessage() {
+    if (target.getHealth() > 0) {
+      return "Game over. Tie game!";
+    } else {
+      return "Game over. " + getCurrentPlayer().getPlayerName() + " wins!";
+    }
   }
 }

@@ -81,7 +81,7 @@ public class GameControllerImpl implements GameController {
     while (true) {
       ProgramState programState = killDoctorLucky.getProgramState();
       if (programState == ProgramState.FINALIZING) {
-        view.displayMessage("Game Over");
+        view.displayMessage(killDoctorLucky.displayFinalMessage());
         return;
       }
 
@@ -91,7 +91,7 @@ public class GameControllerImpl implements GameController {
           view.prompt("----------------- Start ----------------");
           view.displayMessage("Computer player " + currentPlayer.getPlayerName() + " is playing");
           view.displayMessage(killDoctorLucky.computerPlayerTurn());
-          view.prompt("------------------ End -----------------");
+          view.prompt("------------------ End -----------------\n");
           continue;
         }
 

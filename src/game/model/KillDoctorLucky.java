@@ -2,6 +2,7 @@ package game.model;
 
 import game.constants.PlayerType;
 import game.constants.ProgramState;
+import game.utils.OperationResult;
 import java.util.List;
 
 /**
@@ -177,7 +178,7 @@ public interface KillDoctorLucky {
    * @param itemId The index of the item to be picked up.
    * @return A string message indicating the result of the action.
    */
-  String pickItem(int itemId);
+  OperationResult pickItem(int itemId);
 
   /**
    * Allows the current player to survey their surroundings.
@@ -264,7 +265,19 @@ public interface KillDoctorLucky {
    * @param itemId The index of the item to be attacked.
    * @return A string message indicating the result of the action.
    */
-  String attackTarget(String itemId);
+  OperationResult attackTarget(String itemId);
 
+  /**
+   * Lists items available in the current player's inventory.
+   *
+   * @return A string representation of items in the current player's inventory.
+   */
   String getItemsByCurrentPlayer();
+
+  /**
+   * Provides final message after the game is over.
+   *
+   * @return A string message indicating the end of the game.
+   */
+  String displayFinalMessage();
 }

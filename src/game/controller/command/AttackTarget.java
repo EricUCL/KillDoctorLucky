@@ -28,8 +28,7 @@ public class AttackTarget implements Command {
   @Override
   public CommandResult execute(Map<String, String> params) {
     try {
-      return new CommandResult(model.attackTarget(params.get("itemIndex")),
-          false);
+      return new CommandResult((model.attackTarget(params.get("itemIndex")).getDetails()), false);
     } catch (IllegalArgumentException e) {
       return new CommandResult(e.getMessage(), true);
     }
