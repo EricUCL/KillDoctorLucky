@@ -382,17 +382,14 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
       sb.append("Details on neighbor rooms of you are: \n").append("--------------------\n");
       for (Room neighbor : neighbours) {
         if (neighbor.getIndex() == pet.getRoomIndex()) {
-          sb.append("Room Name: ").append(neighbor.getName()).append("\n");
-          sb.append("Room Index: ").append(neighbor.getIndex()).append("\n");
-          sb.append("Occupied by the pet!").append("\n");
+          sb.append("Room Name: ").append(neighbor.getName()).append("\n").append("Room Index: ")
+              .append(neighbor.getIndex()).append("\n").append("Occupied by the pet!").append("\n");
         }
-        sb.append(neighbor.displayRoomDescription());
-        sb.append("--------------------\n");
+        sb.append(neighbor.displayRoomDescription()).append("--------------------\n");
       }
     } else {
       sb.append("No neighbors for this space. \n");
     }
-
     updateTurn(true);
     return sb.toString();
   }
