@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.imageio.ImageIO;
@@ -40,6 +43,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   private final RandomGenerator randomGenerator;
   private Pet pet;
   Graph graph;
+  public static final Logger logger = Logger.getLogger(KillDoctorLuckyImpl.class.getName());
 
   /**
    * Constructor for the KillDoctorLuckyImpl class.
@@ -47,7 +51,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
    * @param maxTurns        maximum number of turns
    * @param randomGenerator random generator
    */
-  public KillDoctorLuckyImpl(int maxTurns, RandomGenerator randomGenerator) {
+  public KillDoctorLuckyImpl(int maxTurns, RandomGenerator randomGenerator) throws IOException {
     if (maxTurns < 0) {
       throw new IllegalArgumentException("Max turns can't be negative");
     }
@@ -61,6 +65,10 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     currentPlayerIndex = 0;
     this.randomGenerator = randomGenerator;
     graph = new DfsGraphImpl();
+
+    FileHandler fileHandler = new FileHandler("./logs/myapp_%u_%g.log");
+    fileHandler.setFormatter(new SimpleFormatter());
+    logger.addHandler(fileHandler);
   }
 
   @Override
@@ -334,6 +342,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
       throw new IllegalArgumentException("Please add Players!");
     }
     programState = ProgramState.RUNNING;
+    graph.setStartingRoom(this.rooms.get(0));
     return "Start game successfully!";
   }
 
@@ -383,7 +392,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     return sb.toString();
   }
 
-  void updateTurn(boolean movePet) {
+  private void updateTurn(boolean movePet) {
     currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
 
     if (rooms.size() > 1) {
@@ -402,6 +411,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
       if (nextRoom != null) {
         pet.updateRoom(nextRoom.getIndex());
       }
+      logger.info("pet: " + pet.getRoomIndex());
     }
   }
 
@@ -494,8 +504,8 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   @Override
   public String displayPrepareMessage() {
     StringBuilder message = new StringBuilder();
-    message.append("\nTurn Counter: ").append(getTurnCount()).append("\n");
-    message.append("Max Turn: ").append(getMaxTurns()).append("\n");
+    message.append("\nNumber of remaining turns: ").append(getMaxTurns() - getTurnCount())
+        .append("\n");
     Player currentPlayer = getCurrentPlayer();
     message.append("Current turn: ").append(currentPlayer.getPlayerName()).append("\n");
     message.append(displayRoomDescription(currentPlayer.getRoomIndex()));

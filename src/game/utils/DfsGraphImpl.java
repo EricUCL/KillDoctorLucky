@@ -1,11 +1,15 @@
 package game.utils;
 
+import game.model.KillDoctorLuckyImpl;
 import game.model.Room;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
+/**
+ * Graph implementation for DFS.
+ */
 public class DfsGraphImpl implements Graph {
   private final Stack<Room> stack;
   private final Set<Room> visited;
@@ -32,9 +36,8 @@ public class DfsGraphImpl implements Graph {
     visited.add(currentRoom);
 
     stack.addAll(
-        currentRoom.getNeighbours().stream().filter(neighbor -> !visited.contains(neighbor))
+        currentRoom.getNeighbours().stream().filter(neighbor -> !visited.contains(neighbor)&&!stack.contains(neighbor))
             .collect(Collectors.toList()));
-
     return currentRoom;
   }
 }
