@@ -170,7 +170,7 @@ public class GameControllerImpl implements GameController {
    * @param fileReader path of the file
    * @throws IllegalArgumentException if file isn't found
    */
-  private void readFile(Readable fileReader) throws IOException {
+  public void readFile(Readable fileReader) throws IOException {
     try (BufferedReader br = new BufferedReader((Reader) fileReader)) {
       String line = br.readLine();
       String[] worldInfo = line.trim().split("\\s+");

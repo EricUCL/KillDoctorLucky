@@ -280,4 +280,10 @@ public interface KillDoctorLucky {
    * @return A string message indicating the end of the game.
    */
   String displayFinalMessage();
+
+  /**
+   * Retrieves a list of all rooms in the game.
+   * @return
+   */
+  List<Room> getRooms();
 }

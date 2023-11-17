@@ -188,6 +188,11 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
+  public List<Room> getRooms() {
+    return rooms;
+  }
+
+  @Override
   public String moveTarget() {
     this.target.setRoom((this.target.getRoomIndex() + 1) % this.rooms.size());
     return "Target moved to room " + this.target.getRoomIndex();
@@ -396,7 +401,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     return sb.toString();
   }
 
-  private void updateTurn(boolean movePet) {
+  void updateTurn(boolean movePet) {
     if (currentTurn > maxTurns || target.getHealth() <= 0) {
       programState = ProgramState.FINALIZING;
       return;
@@ -581,7 +586,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     Room targetRoom = rooms.get(target.getRoomIndex());
 
     if (currentRoom != targetRoom) {
-      throw new IllegalArgumentException("Target is not in the same room!");
+      return new OperationResult(false, "Target is not in the same room!");
     }
 
     if (currentRoom.getPlayers().size() > 1) {

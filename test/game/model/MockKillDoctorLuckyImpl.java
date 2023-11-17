@@ -47,6 +47,11 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
+  public List<Room> getRooms() {
+    return rooms;
+  }
+
+  @Override
   public void initialMap() {
     for (Room currentRoom : rooms) {
       List<Room> neighbors = new ArrayList<>();
