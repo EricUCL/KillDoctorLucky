@@ -572,6 +572,9 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
       throw new IllegalArgumentException("Invalid room index!");
     }
 
+    if (getProgramState() != ProgramState.RUNNING) {
+      throw new IllegalStateException("Game is not running!");
+    }
     Room room = rooms.get(roomIndex);
     pet.updateRoom(roomIndex);
     graph.setStartingRoom(room);
@@ -590,11 +593,8 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     }
 
     if (currentRoom.getPlayers().size() > 1) {
+      updateTurn(true);
       return new OperationResult(false, "Target is not alone in the room!");
-    }
-
-    if (this.pet.getRoomIndex() == currentRoom.getIndex()) {
-      return new OperationResult(false, "Pet in the room!");
     }
 
     if (currentRoom.getNeighbours().stream().allMatch(room -> room.getPlayers().isEmpty())) {
@@ -613,7 +613,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
       updateTurn(true);
       return new OperationResult(true, "Target health is updated to " + target.getHealth());
     }
-
+    updateTurn(true);
     return new OperationResult(false, "Can be seen in the neighbor room!");
   }
 

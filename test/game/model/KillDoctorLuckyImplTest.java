@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import game.constants.PlayerType;
 import game.constants.ProgramState;
+import game.utils.OperationResult;
 import game.utils.RandomGenerator;
 import org.junit.Before;
 import org.junit.Test;
@@ -435,12 +436,78 @@ public class KillDoctorLuckyImplTest {
     readFile(game);
     game.addPlayer("John", 0, PlayerType.HUMAN);
     game.startGame();
-    game.setTarget(new TargetImpl("p",1,0));
+    game.setTarget(new TargetImpl("p", 1, 0));
     for (int i = 0; i < 50; i++) {
       game.attackTarget("p");
       game.lookAround();
     }
     assertEquals(ProgramState.FINALIZING, game.getProgramState());
-    assertEquals(game.displayFinalMessage(),"Game over. John wins!");
+    assertEquals(game.displayFinalMessage(), "Game over. John wins!");
+  }
+
+  /**
+   * Move Pet after game is over.
+   */
+  @Test(expected = IllegalStateException.class)
+  public void testMovePetAfterGameOver() {
+    game.addPlayer("John", 0, PlayerType.HUMAN);
+    game.startGame();
+    for (int i = 0; i < 51; i++) {
+      game.updateTurn(true);
+    }
+    String result = game.movePet(8);
+  }
+
+  @Test
+  public void movePetToNeighbor() {
+    game.addPlayer("John", 0, PlayerType.HUMAN);
+    game.startGame();
+    String result = game.movePet(1);
+    assertEquals("Pet moved to room 1", result);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void movePetWithNegativeIndex() {
+    game.addPlayer("John", 0, PlayerType.HUMAN);
+    game.startGame();
+    game.movePet(-1);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void movePetWithHighRoomIndex() {
+    game.addPlayer("John", 0, PlayerType.HUMAN);
+    game.startGame();
+    game.movePet(999);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testAttackTargetWithAlreadyDroppedWeapon() {
+    game.addPlayer("John", 0, PlayerType.HUMAN);
+    game.startGame();
+    game.pickItem(8);
+    for(int i = 0; i < 50; i++) {
+      game.attackTarget("8");
+      game.lookAround();
+    }
+  }
+
+  @Test
+  public void testAttackTargetWithOtherPlayer() {
+    game.addPlayer("John", 0, PlayerType.HUMAN);
+    game.addPlayer("Mike", 0, PlayerType.HUMAN);
+    game.startGame();
+    game.setTarget(new TargetImpl("p", 1, 1));
+    OperationResult result = game.attackTarget("p");
+    assertEquals(result.getDetails(), "Target is not alone in the room!");
+  }
+
+  @Test
+  public void testAttackTargetWithPet() {
+    game.addPlayer("John", 0, PlayerType.HUMAN);
+    game.addPlayer("Mike", 0, PlayerType.HUMAN);
+    game.startGame();
+    game.setTarget(new TargetImpl("p", 1, 1));
+    OperationResult result = game.attackTarget("p");
+    assertEquals(result.getDetails(), "Target is not alone in the room!");
   }
 }
