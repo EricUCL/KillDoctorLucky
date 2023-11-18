@@ -9,7 +9,7 @@ This repo represents the coursework for CS 5010.
 ## How to Run
 To run the jar file please use below, where args represent map text file
 
-In your working directory run this script:
+In your working directory ~/KillDoctorLucky run this script:
 ```bash
 java -jar res/KillDoctorLucky.jar res/mansion.txt 10
 ```
