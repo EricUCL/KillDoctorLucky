@@ -428,7 +428,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
       if (nextRoom != null) {
         pet.updateRoom(nextRoom.getIndex());
       }
-      logger.info("pet: " + pet.getRoomIndex());
+      // logger.info("pet: " + pet.getRoomIndex());
     }
   }
 
