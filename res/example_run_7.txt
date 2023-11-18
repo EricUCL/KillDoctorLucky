@@ -1,0 +1,401 @@
+java -jar res/KillDoctorLucky.jar res/test_mansion_low_target_health.txt 5
+Available commands:
+1 - Displaying world info
+2 - Display Room Info By Index
+3 - Display Item Info By Index
+4 - Create World Image
+5 - Display Target Info
+7 - Add Player
+8 - Add Computer Player
+9 - Start Game
+7
+Enter the player name:
+Eric
+Enter the max items limit:
+1
+----------------- Start ----------------
+Player added successfully!
+------------------ End -----------------
+Available commands:
+1 - Displaying world info
+2 - Display Room Info By Index
+3 - Display Item Info By Index
+4 - Create World Image
+5 - Display Target Info
+7 - Add Player
+8 - Add Computer Player
+9 - Start Game
+9
+----------------- Start ----------------
+Start game successfully!
+------------------ End -----------------
+
+Number of remaining turns: 4
+Current turn: Eric
+Current Room Name: Dining Hall
+Current Room Index: 1
+Room Items:
+ID: 8, Name: Billiard Cue, Damage: 2
+ID: 10, Name: Trowel, Damage: 2
+No other players in this room.
+
+Available commands:
+1 - Move Player
+2 - Look Around
+3 - Pick Up Item
+4 - Display Player Description
+5 - Display Target Info
+6 - Move Pet
+7 - Attack Target
+2
+----------------- Start ----------------
+Details on neighbor rooms of you are:
+--------------------
+Room Name: Billiard Room
+Room Index: 0
+Occupied by the pet!
+Room Name: Kitchen
+Room Index: 2
+Room Items:
+ID: 0, Name: Crepe Pan, Damage: 3
+ID: 2, Name: Shoe Horn, Damage: 2
+ID: 3, Name: Sharp Knife, Damage: 3
+ID: 6, Name: Chain Saw, Damage: 4
+ID: 11, Name: Big Red Hammer, Damage: 4
+ID: 16, Name: Tight Hat, Damage: 2
+No players in this room.
+--------------------
+Room Name: Parlor
+Room Index: 3
+Room Items:
+ID: 5, Name: Civil War Cannon, Damage: 3
+ID: 12, Name: Pinking Shears, Damage: 2
+ID: 19, Name: Loud Noise, Damage: 2
+No players in this room.
+--------------------
+Room Name: Tennessee Room
+Room Index: 4
+Room Items:
+ID: 1, Name: Letter Opener, Damage: 2
+ID: 7, Name: Broom Stick, Damage: 2
+ID: 14, Name: Bad Cream, Damage: 2
+ID: 17, Name: Piece of Rope, Damage: 2
+No players in this room.
+--------------------
+Room Name: Trophy Room
+Room Index: 5
+Room Items:
+ID: 9, Name: Rat Poison, Damage: 2
+ID: 15, Name: Monkey Hand, Damage: 2
+No players in this room.
+--------------------
+
+------------------ End -----------------
+
+Number of remaining turns: 3
+Current turn: Eric
+Current Room Name: Dining Hall
+Current Room Index: 1
+Room Items:
+ID: 8, Name: Billiard Cue, Damage: 2
+ID: 10, Name: Trowel, Damage: 2
+No other players in this room.
+
+Available commands:
+1 - Move Player
+2 - Look Around
+3 - Pick Up Item
+4 - Display Player Description
+5 - Display Target Info
+6 - Move Pet
+7 - Attack Target
+2
+----------------- Start ----------------
+Details on neighbor rooms of you are:
+--------------------
+Room Name: Billiard Room
+Room Index: 0
+Occupied by the pet!
+Room Name: Kitchen
+Room Index: 2
+Room Items:
+ID: 0, Name: Crepe Pan, Damage: 3
+ID: 2, Name: Shoe Horn, Damage: 2
+ID: 3, Name: Sharp Knife, Damage: 3
+ID: 6, Name: Chain Saw, Damage: 4
+ID: 11, Name: Big Red Hammer, Damage: 4
+ID: 16, Name: Tight Hat, Damage: 2
+No players in this room.
+--------------------
+Room Name: Parlor
+Room Index: 3
+Room Items:
+ID: 5, Name: Civil War Cannon, Damage: 3
+ID: 12, Name: Pinking Shears, Damage: 2
+ID: 19, Name: Loud Noise, Damage: 2
+No players in this room.
+--------------------
+Room Name: Tennessee Room
+Room Index: 4
+Room Items:
+ID: 1, Name: Letter Opener, Damage: 2
+ID: 7, Name: Broom Stick, Damage: 2
+ID: 14, Name: Bad Cream, Damage: 2
+ID: 17, Name: Piece of Rope, Damage: 2
+No players in this room.
+--------------------
+Room Name: Trophy Room
+Room Index: 5
+Room Items:
+ID: 9, Name: Rat Poison, Damage: 2
+ID: 15, Name: Monkey Hand, Damage: 2
+No players in this room.
+--------------------
+
+------------------ End -----------------
+
+Number of remaining turns: 2
+Current turn: Eric
+Current Room Name: Dining Hall
+Current Room Index: 1
+Room Items:
+ID: 8, Name: Billiard Cue, Damage: 2
+ID: 10, Name: Trowel, Damage: 2
+No other players in this room.
+
+Available commands:
+1 - Move Player
+2 - Look Around
+3 - Pick Up Item
+4 - Display Player Description
+5 - Display Target Info
+6 - Move Pet
+7 - Attack Target
+2
+----------------- Start ----------------
+Details on neighbor rooms of you are:
+--------------------
+Room Name: Billiard Room
+Room Index: 0
+Room Items:
+ID: 4, Name: Revolver, Damage: 3
+ID: 13, Name: Duck Decoy, Damage: 3
+ID: 18, Name: Silken Cord, Damage: 3
+No players in this room.
+--------------------
+Room Name: Kitchen
+Room Index: 2
+Room Items:
+ID: 0, Name: Crepe Pan, Damage: 3
+ID: 2, Name: Shoe Horn, Damage: 2
+ID: 3, Name: Sharp Knife, Damage: 3
+ID: 6, Name: Chain Saw, Damage: 4
+ID: 11, Name: Big Red Hammer, Damage: 4
+ID: 16, Name: Tight Hat, Damage: 2
+No players in this room.
+--------------------
+Room Name: Parlor
+Room Index: 3
+Room Items:
+ID: 5, Name: Civil War Cannon, Damage: 3
+ID: 12, Name: Pinking Shears, Damage: 2
+ID: 19, Name: Loud Noise, Damage: 2
+No players in this room.
+--------------------
+Room Name: Tennessee Room
+Room Index: 4
+Room Items:
+ID: 1, Name: Letter Opener, Damage: 2
+ID: 7, Name: Broom Stick, Damage: 2
+ID: 14, Name: Bad Cream, Damage: 2
+ID: 17, Name: Piece of Rope, Damage: 2
+No players in this room.
+--------------------
+Room Name: Trophy Room
+Room Index: 5
+Occupied by the pet!
+
+------------------ End -----------------
+
+Number of remaining turns: 1
+Current turn: Eric
+Current Room Name: Dining Hall
+Current Room Index: 1
+Room Items:
+ID: 8, Name: Billiard Cue, Damage: 2
+ID: 10, Name: Trowel, Damage: 2
+No other players in this room.
+
+Available commands:
+1 - Move Player
+2 - Look Around
+3 - Pick Up Item
+4 - Display Player Description
+5 - Display Target Info
+6 - Move Pet
+7 - Attack Target
+2
+----------------- Start ----------------
+Details on neighbor rooms of you are:
+--------------------
+Room Name: Billiard Room
+Room Index: 0
+Room Items:
+ID: 4, Name: Revolver, Damage: 3
+ID: 13, Name: Duck Decoy, Damage: 3
+ID: 18, Name: Silken Cord, Damage: 3
+No players in this room.
+--------------------
+Room Name: Kitchen
+Room Index: 2
+Room Items:
+ID: 0, Name: Crepe Pan, Damage: 3
+ID: 2, Name: Shoe Horn, Damage: 2
+ID: 3, Name: Sharp Knife, Damage: 3
+ID: 6, Name: Chain Saw, Damage: 4
+ID: 11, Name: Big Red Hammer, Damage: 4
+ID: 16, Name: Tight Hat, Damage: 2
+No players in this room.
+--------------------
+Room Name: Parlor
+Room Index: 3
+Room Items:
+ID: 5, Name: Civil War Cannon, Damage: 3
+ID: 12, Name: Pinking Shears, Damage: 2
+ID: 19, Name: Loud Noise, Damage: 2
+No players in this room.
+--------------------
+Room Name: Tennessee Room
+Room Index: 4
+Occupied by the pet!
+Room Name: Trophy Room
+Room Index: 5
+Room Items:
+ID: 9, Name: Rat Poison, Damage: 2
+ID: 15, Name: Monkey Hand, Damage: 2
+No players in this room.
+--------------------
+
+------------------ End -----------------
+
+Number of remaining turns: 0
+Current turn: Eric
+Current Room Name: Dining Hall
+Current Room Index: 1
+Room Items:
+ID: 8, Name: Billiard Cue, Damage: 2
+ID: 10, Name: Trowel, Damage: 2
+No other players in this room.
+
+Available commands:
+1 - Move Player
+2 - Look Around
+3 - Pick Up Item
+4 - Display Player Description
+5 - Display Target Info
+6 - Move Pet
+7 - Attack Target
+2
+----------------- Start ----------------
+Details on neighbor rooms of you are:
+--------------------
+Room Name: Billiard Room
+Room Index: 0
+Room Items:
+ID: 4, Name: Revolver, Damage: 3
+ID: 13, Name: Duck Decoy, Damage: 3
+ID: 18, Name: Silken Cord, Damage: 3
+No players in this room.
+--------------------
+Room Name: Kitchen
+Room Index: 2
+Room Items:
+ID: 0, Name: Crepe Pan, Damage: 3
+ID: 2, Name: Shoe Horn, Damage: 2
+ID: 3, Name: Sharp Knife, Damage: 3
+ID: 6, Name: Chain Saw, Damage: 4
+ID: 11, Name: Big Red Hammer, Damage: 4
+ID: 16, Name: Tight Hat, Damage: 2
+No players in this room.
+--------------------
+Room Name: Parlor
+Room Index: 3
+Occupied by the pet!
+Room Name: Tennessee Room
+Room Index: 4
+Room Items:
+ID: 1, Name: Letter Opener, Damage: 2
+ID: 7, Name: Broom Stick, Damage: 2
+ID: 14, Name: Bad Cream, Damage: 2
+ID: 17, Name: Piece of Rope, Damage: 2
+No players in this room.
+--------------------
+Room Name: Trophy Room
+Room Index: 5
+Room Items:
+ID: 9, Name: Rat Poison, Damage: 2
+ID: 15, Name: Monkey Hand, Damage: 2
+No players in this room.
+--------------------
+
+------------------ End -----------------
+
+Number of remaining turns: -1
+Current turn: Eric
+Current Room Name: Dining Hall
+Current Room Index: 1
+Room Items:
+ID: 8, Name: Billiard Cue, Damage: 2
+ID: 10, Name: Trowel, Damage: 2
+No other players in this room.
+
+Available commands:
+1 - Move Player
+2 - Look Around
+3 - Pick Up Item
+4 - Display Player Description
+5 - Display Target Info
+6 - Move Pet
+7 - Attack Target
+2
+----------------- Start ----------------
+Details on neighbor rooms of you are:
+--------------------
+Room Name: Billiard Room
+Room Index: 0
+Room Items:
+ID: 4, Name: Revolver, Damage: 3
+ID: 13, Name: Duck Decoy, Damage: 3
+ID: 18, Name: Silken Cord, Damage: 3
+No players in this room.
+--------------------
+Room Name: Kitchen
+Room Index: 2
+Occupied by the pet!
+Room Name: Parlor
+Room Index: 3
+Room Items:
+ID: 5, Name: Civil War Cannon, Damage: 3
+ID: 12, Name: Pinking Shears, Damage: 2
+ID: 19, Name: Loud Noise, Damage: 2
+No players in this room.
+--------------------
+Room Name: Tennessee Room
+Room Index: 4
+Room Items:
+ID: 1, Name: Letter Opener, Damage: 2
+ID: 7, Name: Broom Stick, Damage: 2
+ID: 14, Name: Bad Cream, Damage: 2
+ID: 17, Name: Piece of Rope, Damage: 2
+No players in this room.
+--------------------
+Room Name: Trophy Room
+Room Index: 5
+Room Items:
+ID: 9, Name: Rat Poison, Damage: 2
+ID: 15, Name: Monkey Hand, Damage: 2
+No players in this room.
+--------------------
+
+------------------ End -----------------
+Game over. Tie game!

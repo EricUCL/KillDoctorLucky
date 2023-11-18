@@ -549,4 +549,12 @@ public class KillDoctorLuckyImplTest {
     String result = game.computerPlayerTurn();
     assertEquals("Computer player attacked target. Target health is updated to 0", result);
   }
+
+  @Test
+  public void testPetMakeRoomInvisible() {
+    game.addPlayer("John", 1, PlayerType.HUMAN);
+    game.startGame();
+    String result = game.lookAround();
+    assertTrue(result.contains("Occupied by the pet!"));
+  }
 }

@@ -1,0 +1,33 @@
+java -jar res/KillDoctorLucky.jar res/test_mansion_low_target_health.txt 30
+Available commands:
+1 - Displaying world info
+2 - Display Room Info By Index
+3 - Display Item Info By Index
+4 - Create World Image
+5 - Display Target Info
+7 - Add Player
+8 - Add Computer Player
+9 - Start Game
+8
+----------------- Start ----------------
+Computer Player added successfully
+------------------ End -----------------
+Available commands:
+1 - Displaying world info
+2 - Display Room Info By Index
+3 - Display Item Info By Index
+4 - Create World Image
+5 - Display Target Info
+7 - Add Player
+8 - Add Computer Player
+9 - Start Game
+9
+----------------- Start ----------------
+Start game successfully!
+------------------ End -----------------
+----------------- Start ----------------
+Computer player ComputerPlayer0 is playing
+Computer player attacked target. Target health is updated to 0
+------------------ End -----------------
+
+Game over. ComputerPlayer0 wins!

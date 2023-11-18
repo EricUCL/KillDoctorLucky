@@ -70,6 +70,11 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     this.graph = new DfsGraphImpl();
     this.evidence = new ArrayList<>();
 
+    File logsDir = new File("./logs");
+    if (!logsDir.exists()) {
+      logsDir.mkdirs();
+    }
+
     FileHandler fileHandler = new FileHandler("./logs/myapp_%u_%g.log");
     fileHandler.setFormatter(new SimpleFormatter());
     logger.addHandler(fileHandler);
@@ -391,8 +396,9 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
         if (neighbor.getIndex() == pet.getRoomIndex()) {
           sb.append("Room Name: ").append(neighbor.getName()).append("\n").append("Room Index: ")
               .append(neighbor.getIndex()).append("\n").append("Occupied by the pet!").append("\n");
+        } else {
+          sb.append(neighbor.displayRoomDescription()).append("--------------------\n");
         }
-        sb.append(neighbor.displayRoomDescription()).append("--------------------\n");
       }
     } else {
       sb.append("No neighbors for this space. \n");
@@ -402,7 +408,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   void updateTurn(boolean movePet) {
-    if (currentTurn > maxTurns || target.getHealth() <= 0) {
+    if (currentTurn >= maxTurns || target.getHealth() <= 0) {
       programState = ProgramState.FINALIZING;
       return;
     }

@@ -1,0 +1,74 @@
+java -jar res/KillDoctorLucky.jar res/mansion.txt 10
+Available commands:
+1 - Displaying world info
+2 - Display Room Info By Index
+3 - Display Item Info By Index
+4 - Create World Image
+5 - Display Target Info
+7 - Add Player
+8 - Add Computer Player
+9 - Start Game
+7
+Enter the player name:
+eric
+Enter the max items limit:
+1
+----------------- Start ----------------
+Player added successfully!
+------------------ End -----------------
+Available commands:
+1 - Displaying world info
+2 - Display Room Info By Index
+3 - Display Item Info By Index
+4 - Create World Image
+5 - Display Target Info
+7 - Add Player
+8 - Add Computer Player
+9 - Start Game
+9
+----------------- Start ----------------
+Start game successfully!
+------------------ End -----------------
+
+Number of remaining turns: 9
+Current turn: eric
+Current Room Name: Lilac Room
+Current Room Index: 11
+Room Items:
+ID: 16, Name: Tight Hat, Damage: 2
+No other players in this room.
+
+Available commands:
+1 - Move Player
+2 - Look Around
+3 - Pick Up Item
+4 - Display Player Description
+5 - Display Target Info
+6 - Move Pet
+7 - Attack Target
+6
+
+Enter the room index you want the pet move to:
+4
+----------------- Start ----------------
+Pet moved to room 4
+------------------ End -----------------
+
+Number of remaining turns: 8
+Current turn: eric
+Current Room Name: Lilac Room
+Current Room Index: 11
+Room Items:
+ID: 16, Name: Tight Hat, Damage: 2
+No other players in this room.
+
+Available commands:
+1 - Move Player
+2 - Look Around
+3 - Pick Up Item
+4 - Display Player Description
+5 - Display Target Info
+6 - Move Pet
+7 - Attack Target
+q
+Exiting...

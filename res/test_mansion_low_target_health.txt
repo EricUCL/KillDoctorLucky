@@ -1,0 +1,31 @@
+36 30 Doctor Lucky's Mansion
+1 Doctor Lucky
+Fortune the Cat
+6
+16 21 21 28 Billiard Room
+12 11 21 20 Dining Hall
+16  3 21 10 Kitchen
+10  5 15 10 Parlor
+ 8 11 11 20 Tennessee Room
+10 21 15 26 Trophy Room
+20
+2 3 Crepe Pan
+4 2 Letter Opener
+2 2 Shoe Horn
+2 3 Sharp Knife
+0 3 Revolver
+3 3 Civil War Cannon
+2 4 Chain Saw
+4 2 Broom Stick
+1 2 Billiard Cue
+5 2 Rat Poison
+1 2 Trowel
+2 4 Big Red Hammer
+3 2 Pinking Shears
+0 3 Duck Decoy
+4 2 Bad Cream
+5 2 Monkey Hand
+2 2 Tight Hat
+4 2 Piece of Rope
+0 3 Silken Cord
+3 2 Loud Noise

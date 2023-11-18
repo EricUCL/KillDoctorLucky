@@ -1,0 +1,149 @@
+java -jar res/KillDoctorLucky.jar res/testMansion.txt 10
+Available commands:
+1 - Displaying world info
+2 - Display Room Info By Index
+3 - Display Item Info By Index
+4 - Create World Image
+5 - Display Target Info
+7 - Add Player
+8 - Add Computer Player
+9 - Start Game
+8
+----------------- Start ----------------
+Computer Player added successfully
+------------------ End -----------------
+Available commands:
+1 - Displaying world info
+2 - Display Room Info By Index
+3 - Display Item Info By Index
+4 - Create World Image
+5 - Display Target Info
+7 - Add Player
+8 - Add Computer Player
+9 - Start Game
+9
+----------------- Start ----------------
+Start game successfully!
+------------------ End -----------------
+----------------- Start ----------------
+Computer player ComputerPlayer0 is playing
+Computer player attacked target. Target health is updated to 9
+------------------ End -----------------
+
+----------------- Start ----------------
+Computer player ComputerPlayer0 is playing
+Computer player looked around
+
+Details on neighbor rooms of you are:
+--------------------
+Room Name: Dining Hall
+Room Index: 1
+Room Items:
+ID: 8, Name: Billiard Cue, Damage: 2
+ID: 10, Name: Trowel, Damage: 2
+No players in this room.
+--------------------
+Room Name: Trophy Room
+Room Index: 5
+Room Items:
+ID: 9, Name: Rat Poison, Damage: 2
+ID: 15, Name: Monkey Hand, Damage: 2
+No players in this room.
+--------------------
+
+------------------ End -----------------
+
+----------------- Start ----------------
+Computer player ComputerPlayer0 is playing
+Computer player picked item Duck Decoy
+------------------ End -----------------
+
+----------------- Start ----------------
+Computer player ComputerPlayer0 is playing
+Computer player moved to room 5
+------------------ End -----------------
+
+----------------- Start ----------------
+Computer player ComputerPlayer0 is playing
+Computer player moved to room 4
+------------------ End -----------------
+
+----------------- Start ----------------
+Computer player ComputerPlayer0 is playing
+Computer player looked around
+
+Details on neighbor rooms of you are:
+--------------------
+Room Name: Dining Hall
+Room Index: 1
+Room Items:
+ID: 8, Name: Billiard Cue, Damage: 2
+ID: 10, Name: Trowel, Damage: 2
+No players in this room.
+--------------------
+Room Name: Parlor
+Room Index: 3
+Room Items:
+ID: 5, Name: Civil War Cannon, Damage: 3
+ID: 12, Name: Pinking Shears, Damage: 2
+ID: 19, Name: Loud Noise, Damage: 2
+No players in this room.
+--------------------
+Room Name: Trophy Room
+Room Index: 5
+Room Items:
+ID: 9, Name: Rat Poison, Damage: 2
+ID: 15, Name: Monkey Hand, Damage: 2
+No players in this room.
+--------------------
+
+------------------ End -----------------
+
+----------------- Start ----------------
+Computer player ComputerPlayer0 is playing
+Computer player looked around
+
+Details on neighbor rooms of you are:
+--------------------
+Room Name: Dining Hall
+Room Index: 1
+Occupied by the pet!
+Room Name: Parlor
+Room Index: 3
+Room Items:
+ID: 5, Name: Civil War Cannon, Damage: 3
+ID: 12, Name: Pinking Shears, Damage: 2
+ID: 19, Name: Loud Noise, Damage: 2
+No players in this room.
+--------------------
+Room Name: Trophy Room
+Room Index: 5
+Room Items:
+ID: 9, Name: Rat Poison, Damage: 2
+ID: 15, Name: Monkey Hand, Damage: 2
+No players in this room.
+--------------------
+
+------------------ End -----------------
+
+----------------- Start ----------------
+Computer player ComputerPlayer0 is playing
+Computer player picked item Letter Opener
+------------------ End -----------------
+
+----------------- Start ----------------
+Computer player ComputerPlayer0 is playing
+Computer player moved to room 5
+------------------ End -----------------
+
+----------------- Start ----------------
+Computer player ComputerPlayer0 is playing
+Computer player moved to room 1
+------------------ End -----------------
+
+----------------- Start ----------------
+Computer player ComputerPlayer0 is playing
+Computer player picked item Trowel
+------------------ End -----------------
+
+Game over. Tie game!
