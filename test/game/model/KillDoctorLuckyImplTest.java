@@ -411,6 +411,7 @@ public class KillDoctorLuckyImplTest {
   @Test
   public void testMovePet() {
     game.addPlayer("John", 0, PlayerType.HUMAN);
+    game.startGame();
     String result = game.movePet(8);
     assertEquals("Pet moved to room 8", result);
   }
@@ -441,6 +442,18 @@ public class KillDoctorLuckyImplTest {
       game.attackTarget("p");
       game.lookAround();
     }
+    assertEquals(ProgramState.FINALIZING, game.getProgramState());
+    assertEquals(game.displayFinalMessage(), "Game over. John wins!");
+  }
+
+  @Test
+  public void testGameOverWithComputerWinner() throws IOException {
+    game = new KillDoctorLuckyImpl(50, randomGenerator);
+    readFile(game);
+    game.addPlayer("John", 0, PlayerType.COMPUTER);
+    game.startGame();
+    game.setTarget(new TargetImpl("p", 1, 1));
+    game.attackTarget("p");
     assertEquals(ProgramState.FINALIZING, game.getProgramState());
     assertEquals(game.displayFinalMessage(), "Game over. John wins!");
   }
@@ -485,7 +498,7 @@ public class KillDoctorLuckyImplTest {
     game.addPlayer("John", 0, PlayerType.HUMAN);
     game.startGame();
     game.pickItem(8);
-    for(int i = 0; i < 50; i++) {
+    for (int i = 0; i < 50; i++) {
       game.attackTarget("8");
       game.lookAround();
     }
@@ -502,12 +515,38 @@ public class KillDoctorLuckyImplTest {
   }
 
   @Test
-  public void testAttackTargetWithPet() {
+  public void testAttackTargetWithDifferentRoom() {
     game.addPlayer("John", 0, PlayerType.HUMAN);
-    game.addPlayer("Mike", 0, PlayerType.HUMAN);
+    game.startGame();
+    game.setTarget(new TargetImpl("p", 1, 2));
+    OperationResult result = game.attackTarget("p");
+    assertEquals(result.getDetails(), "Target is not in the same room!");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testAttackTargetWithInvalidItem() {
+    game.addPlayer("John", 0, PlayerType.HUMAN);
     game.startGame();
     game.setTarget(new TargetImpl("p", 1, 1));
-    OperationResult result = game.attackTarget("p");
-    assertEquals(result.getDetails(), "Target is not alone in the room!");
+    OperationResult result = game.attackTarget("q");
+  }
+
+  @Test
+  public void testComputerPlayerAttackWithPoke() {
+    game.addPlayer("John", 0, PlayerType.COMPUTER);
+    game.setTarget(new TargetImpl("p", 2, 1));
+    game.startGame();
+    String result = game.computerPlayerTurn();
+    assertEquals("Computer player attacked target. Target health is updated to 1", result);
+  }
+
+  @Test
+  public void testComputerPlayerAttackWithItem() {
+    game.addPlayer("John", 1, PlayerType.COMPUTER);
+    game.pickItem(8);
+    game.setTarget(new TargetImpl("p", 2, 1));
+    game.startGame();
+    String result = game.computerPlayerTurn();
+    assertEquals("Computer player attacked target. Target health is updated to 0", result);
   }
 }

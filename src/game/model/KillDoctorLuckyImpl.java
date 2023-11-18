@@ -601,14 +601,18 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
       if (Objects.equals(chosenItem, "p")) {
         target.updateHealth(target.getHealth() - 1);
       } else {
-        int itemId = Integer.parseInt(chosenItem);
-        if (itemId < 0 || itemId >= items.size()) {
+        try {
+          int itemId = Integer.parseInt(chosenItem);
+          if (itemId < 0 || itemId >= items.size()) {
+            throw new IllegalArgumentException("Invalid item index!");
+          }
+          Item item = items.get(itemId);
+          target.updateHealth(target.getHealth() - item.getDamage());
+          getCurrentPlayer().removeItem(item);
+          this.evidence.add(item);
+        } catch (NumberFormatException e) {
           throw new IllegalArgumentException("Invalid item index!");
         }
-        Item item = items.get(itemId);
-        target.updateHealth(target.getHealth() - item.getDamage());
-        getCurrentPlayer().removeItem(item);
-        this.evidence.add(item);
       }
       updateTurn(true);
       return new OperationResult(true, "Target health is updated to " + target.getHealth());
