@@ -75,7 +75,6 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
     }
   }
 
-
   @Override
   public boolean isNeighbor(Room current, Room other) {
     if (current == null || other == null) {
@@ -130,7 +129,6 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
     return "Create World Image Activated!";
   }
 
-
   @Override
   public String displayItemInfo(int itemIdx) {
     if (itemIdx < 0 || itemIdx >= items.size()) {
@@ -180,8 +178,7 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
-  public String addPlayer(String playerName, int maxItemsLimit,
-      PlayerType playerType) {
+  public String addPlayer(String playerName, int maxItemsLimit, PlayerType playerType) {
     programState = ProgramState.FINALIZING;
     return "Player added successfully!";
   }
@@ -258,10 +255,6 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
   @Override
   public String lookAround() {
     return "Look Around Activated!";
-  }
-
-  void updateTurn() {
-
   }
 
   @Override

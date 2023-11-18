@@ -30,6 +30,7 @@ import javax.imageio.ImageIO;
  * and has all the methods which are required for the game to be played.
  */
 public class KillDoctorLuckyImpl implements KillDoctorLucky {
+  public static final Logger logger = Logger.getLogger(KillDoctorLuckyImpl.class.getName());
   private final List<Item> items;
   private final List<Room> rooms;
   private int numRows;
@@ -44,8 +45,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   private ProgramState programState;
   private final RandomGenerator randomGenerator;
   private Pet pet;
-  Graph graph;
-  public static final Logger logger = Logger.getLogger(KillDoctorLuckyImpl.class.getName());
+  private final Graph graph;
   private final List<Item> evidence;
 
   /**
@@ -407,6 +407,9 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
     return sb.toString();
   }
 
+  /**
+   * This method is used to increment the turn.
+   */
   void updateTurn(boolean movePet) {
     if (currentTurn >= maxTurns || target.getHealth() <= 0) {
       programState = ProgramState.FINALIZING;

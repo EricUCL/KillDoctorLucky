@@ -13,6 +13,9 @@ public class DfsGraphImpl implements Graph {
   private final Stack<Room> stack;
   private final Set<Room> visited;
 
+  /**
+   * Constructor for the dfs implementation.
+   */
   public DfsGraphImpl() {
     stack = new Stack<>();
     visited = new HashSet<>();

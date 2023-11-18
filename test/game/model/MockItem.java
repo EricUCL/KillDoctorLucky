@@ -6,6 +6,11 @@ package game.model;
 class MockItem implements Item {
   private final String name;
 
+  /**
+   * Constructor for the mock item.
+   *
+   * @param name name of the item.
+   */
   public MockItem(String name) {
     this.name = name;
   }

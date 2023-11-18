@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents the command to move pet.
+ */
 public class MovePet implements Command {
   private final String identifier;
   private final KillDoctorLucky model;

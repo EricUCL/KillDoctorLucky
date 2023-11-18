@@ -9,12 +9,12 @@ import game.model.MockKillDoctorLuckyImpl;
 import game.utils.RandomGenerator;
 import game.view.CommandLineView;
 import game.view.View;
-import org.junit.Before;
-import org.junit.Test;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for GameControllerImpl.

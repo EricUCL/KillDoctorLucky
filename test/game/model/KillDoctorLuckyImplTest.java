@@ -8,8 +8,6 @@ import game.constants.PlayerType;
 import game.constants.ProgramState;
 import game.utils.OperationResult;
 import game.utils.RandomGenerator;
-import org.junit.Before;
-import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,6 +16,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test for KillDoctorLuckyImpl class.
@@ -39,6 +39,9 @@ public class KillDoctorLuckyImplTest {
     readFile(game);
   }
 
+  /**
+   * Read file and initialize the game.
+   */
   void readFile(KillDoctorLucky killDoctorLucky) {
     try {
       String line;

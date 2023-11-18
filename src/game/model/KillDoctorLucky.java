@@ -283,7 +283,8 @@ public interface KillDoctorLucky {
 
   /**
    * Retrieves a list of all rooms in the game.
-   * @return
+   *
+   * @return A list of all rooms.
    */
   List<Room> getRooms();
 }
