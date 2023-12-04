@@ -198,6 +198,16 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
+  public int getNumRows() {
+    return numRows;
+  }
+
+  @Override
+  public int getNumCols() {
+    return numColumns;
+  }
+
+  @Override
   public String moveTarget() {
     this.target.setRoom((this.target.getRoomIndex() + 1) % this.rooms.size());
     return "Target moved to room " + this.target.getRoomIndex();
@@ -545,7 +555,12 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   public String displayPrepareMessage() {
     int remainingTurns = getMaxTurns() - getTurnCount();
     String playerName = getCurrentPlayer().getPlayerName();
+    return String.format("\nNumber of remaining turns: %d\nCurrent turn: %s\n%s", remainingTurns,
+        playerName, getTurnInfo());
+  }
 
+  @Override
+  public String getTurnInfo() {
     Room currentRoom = rooms.get(getCurrentPlayer().getRoomIndex());
     StringBuilder sb = new StringBuilder();
     sb.append("Current Room Name: ").append(currentRoom.getName()).append("\n");
@@ -571,8 +586,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
       sb.append("No other players in this room.\n");
     }
 
-    return String.format("\nNumber of remaining turns: %d\nCurrent turn: %s\n%s", remainingTurns,
-        playerName, sb);
+    return String.format(String.valueOf(sb));
   }
 
   @Override

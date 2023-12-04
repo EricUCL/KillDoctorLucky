@@ -2,25 +2,19 @@ package game.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import game.model.KillDoctorLucky;
+import game.view.panels.GameMapPanel;
 
 public class GuiView extends JFrame {
   KillDoctorLucky model;
@@ -28,22 +22,13 @@ public class GuiView extends JFrame {
   //  private JButton showWorldDescriptionButton;
   private JButton addPlayerButton;
   private JButton startGameButton;
-  private JTextArea infoArea;
-  private JSplitPane splitPaneH;
+  private JTextArea turnsCountArea;
+  private JTextArea targetInfoArea;
+  private JTextArea turnInformationArea;
+  private JTextArea commandsInformationArea;
+  private JSplitPane splitPane;
 
-  private JPanel informationPanel;
-  private Box targetBox;
-  private GridBagConstraints gbc;
-  private Box turnInformationBox;
-  private Box turnsCountBox;
-  private Box commandsBox;
-  private JPanel imagePanel;
-  private JPanel topPanel;
-
-  private JLabel turnsCount;
-  private JLabel turnInformation;
-  private JLabel targetInfo;
-  private JLabel commandsInformation;
+  private JPanel gameMapPanel;
 
   public GuiView(KillDoctorLucky model) {
     super("Kill Doctor Lucky");
@@ -67,6 +52,12 @@ public class GuiView extends JFrame {
     JPanel buttonPanel = new JPanel();
     buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
     buttonPanel.add(setMapButton);
+    buttonPanel.add(addPlayerButton);
+    buttonPanel.add(startGameButton);
+    addPlayerButton.setEnabled(false);
+    startGameButton.setEnabled(false);
+
+    splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
     add(buttonPanel);
     pack();
@@ -76,105 +67,92 @@ public class GuiView extends JFrame {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   }
 
+  public void enableButtons() {
+    addPlayerButton.setEnabled(true);
+    if (!model.getPlayers().isEmpty()) {
+      startGameButton.setEnabled(true);
+    }
+  }
+
   public void addActionListener(ActionListener actionListener) {
-    System.out.println("Adding action listener to buttons");
     setMapButton.addActionListener(actionListener);
-    //    showWorldDescriptionButton.addActionListener(actionListener);
     addPlayerButton.addActionListener(actionListener);
     startGameButton.addActionListener(actionListener);
   }
 
-  public void resetFocus() {
-    this.setFocusable(true);
-    this.requestFocus();
-  }
+  public void initialComponents() {
 
-  public void showGameBoard1() {
     this.getContentPane().removeAll();
-    informationPanel = new JPanel();
-    informationPanel.setPreferredSize(new Dimension(400, 300));
-    informationPanel.setLayout(new GridBagLayout());
-    gbc = new GridBagConstraints();
-    gbc.gridwidth = GridBagConstraints.REMAINDER;
-    gbc.fill = GridBagConstraints.BOTH;
+    this.setLayout(new BorderLayout());
+
+    JPanel informationPanel = new JPanel(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.gridwidth = GridBagConstraints.REMAINDER; // 单列
     gbc.weightx = 1;
     gbc.weighty = 1;
-    gbc.insets = new Insets(5, 0, 5, 0);
+    gbc.fill = GridBagConstraints.BOTH; // 水平垂直扩展
 
-    imagePanel = new JPanel();
-//    preGameImage = null;
-//    scrollPane = new JScrollPane(preGameImage);
-//    imagePanel.add(scrollPane);
-    splitPaneH = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-    topPanel = new JPanel();
-    getContentPane().add(topPanel);
-    topPanel.add(splitPaneH, BorderLayout.CENTER);
+    turnsCountArea = new JTextArea("Turns Count");
+    targetInfoArea = new JTextArea("Target Info");
+    turnInformationArea = new JTextArea("Turn Information");
+    commandsInformationArea = new JTextArea("Commands Information");
 
-    turnsCountBox = Box.createHorizontalBox();
-    turnsCountBox.setBorder(BorderFactory.createLineBorder(Color.white));
-    turnsCount = new JLabel("");
+    turnsCountArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    informationPanel.add(turnsCountArea, gbc);
 
-    targetBox = Box.createVerticalBox();
-    targetBox.setBorder(BorderFactory.createLineBorder(Color.white));
-    targetInfo = new JLabel("");
+    targetInfoArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    informationPanel.add(targetInfoArea, gbc);
 
-    turnInformationBox = Box.createVerticalBox();
-    turnInformationBox.setBorder(BorderFactory.createLineBorder(Color.white));
-    turnInformation = new JLabel("");
+    turnInformationArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    informationPanel.add(turnInformationArea, gbc);
 
-    commandsBox = Box.createVerticalBox();
-    commandsBox.setBorder(BorderFactory.createLineBorder(Color.white));
-    commandsInformation = new JLabel("");
+    commandsInformationArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    informationPanel.add(commandsInformationArea, gbc);
 
-    informationPanel.setBackground(Color.black);
-    informationPanel.add(turnsCountBox, gbc);
-    informationPanel.add(targetBox, gbc);
-    informationPanel.add(turnInformationBox, gbc);
-    informationPanel.add(commandsBox, gbc);
+    splitPane.setLeftComponent(informationPanel);
+    splitPane.setRightComponent(gameMapPanel);
 
-    splitPaneH.setLeftComponent(informationPanel);
-    splitPaneH.setRightComponent(imagePanel);
+    this.add(splitPane, BorderLayout.CENTER);
 
-    setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize()));
-    pack();
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    splitPane.setDividerLocation(200);
 
+    this.validate();
+    this.repaint();
+
+    this.pack();
+    this.setSize(800, 600);
+    //    this.setVisible(true);
   }
 
-  public void showGameBoard() {
-    this.getContentPane().removeAll();
+  public void updateView() {
 
-    // 左侧信息面板
-    JPanel informationPanel = new JPanel();
-    informationPanel.setLayout(new BoxLayout(informationPanel, BoxLayout.Y_AXIS));
+    GameMapPanel newGameMapPanel = new GameMapPanel(model.getRooms(), model.getNumRows(),
+        model.getNumCols());
 
-    // 添加文本框或标签
-    JLabel turnsCountLabel = new JLabel("Turns Count");
-    JLabel targetInfoLabel = new JLabel("Target Info");
-    JLabel turnInformationLabel = new JLabel("Turn Information");
-    JLabel commandsInformationLabel = new JLabel("Commands Information");
+    if (this.gameMapPanel != null) {
+      this.remove(this.gameMapPanel);
+    }
 
-    // 将标签添加到信息面板
-    informationPanel.add(turnsCountLabel);
-    informationPanel.add(targetInfoLabel);
-    informationPanel.add(turnInformationLabel);
-    informationPanel.add(commandsInformationLabel);
+    // 设置新的游戏地图面板
+    this.gameMapPanel = newGameMapPanel;
+    splitPane.setRightComponent(gameMapPanel);
 
-    // 右侧游戏地图面板
-    JPanel gameMapPanel = new JPanel();
-    // TODO: 在这里添加游戏地图的实现
+    String turnInfo = model.getTurnInfo();
+    turnInformationArea.setText(turnInfo);
+    String targetInfo = model.displayTargetInfo();
+    targetInfoArea.setText(targetInfo);
+    String commandsInfo = "SELECT THE COMMAND YOU WANT TO PERFORM\n"
+        + "To Move Player - Click on the space you want to\n" + "To Pick Item - Press P\n"
+        + "To Perform Look Around - Press L\n" + "To Kill Target - Press K\n"
+        + "To Move Pet - Press M\n" + "To Get Space Information - Press S\n"
+        + "To Get Player Information - Click on the Player";
+    commandsInformationArea.setText(commandsInfo);
+    String turnsCount = model.displayPrepareMessage();
+    turnsCountArea.setText(turnsCount);
 
-    // 创建分割面板
-    JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, informationPanel, gameMapPanel);
-    splitPane.setDividerLocation(0.33); // 设置分割线位置为窗口的1/3
-
-    // 将分割面板添加到框架中
-    this.add(splitPane);
-
-    // 设置框架属性
-    setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize()));
-    pack();
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    // 重绘界面以显示新的地图
+    this.validate();
+    this.repaint();
   }
 
 }

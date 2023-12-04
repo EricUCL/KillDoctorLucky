@@ -1,9 +1,9 @@
 package game.model;
 
+import java.util.List;
 import game.constants.PlayerType;
 import game.constants.ProgramState;
 import game.utils.OperationResult;
-import java.util.List;
 
 /**
  * This interface represents the KillDoctorLucky game. It has all the methods which are required for
@@ -83,11 +83,25 @@ public interface KillDoctorLucky {
   void setNumRows(int numRows);
 
   /**
+   * Function for getting the number of rows in the world.
+   *
+   * @return number of rows
+   */
+  int getNumRows();
+
+  /**
    * Function for setting the number of columns in the world.
    *
    * @param numCols number of columns
    */
   void setNumCols(int numCols);
+
+  /**
+   * Function for getting the number of columns in the world.
+   *
+   * @return number of columns
+   */
+  int getNumCols();
 
   /**
    * Sets the name of the game world.
@@ -294,4 +308,11 @@ public interface KillDoctorLucky {
    * @return A list of all rooms.
    */
   List<Room> getRooms();
+
+  /**
+   * Retrieves Turn Information about the game.
+   *
+   * @return Turn Information.
+   */
+  String getTurnInfo();
 }

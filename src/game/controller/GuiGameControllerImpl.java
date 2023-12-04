@@ -12,20 +12,9 @@ import java.util.Map;
 import java.util.Objects;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import game.constants.ProgramState;
 import game.controller.command.AddComputerPlayer;
 import game.controller.command.AddPlayer;
-import game.controller.command.AttackTarget;
-import game.controller.command.CreateWorldImage;
-import game.controller.command.DisplayItemInfoByIndex;
-import game.controller.command.DisplayPlayerDescription;
-import game.controller.command.DisplayRoomInfoByIndex;
-import game.controller.command.DisplayTargetInfo;
 import game.controller.command.DisplayWorldInfo;
-import game.controller.command.LookAround;
-import game.controller.command.MovePet;
-import game.controller.command.MovePlayer;
-import game.controller.command.PickItem;
 import game.controller.command.StartGame;
 import game.model.KillDoctorLucky;
 import game.model.PetImpl;
@@ -145,7 +134,7 @@ public class GuiGameControllerImpl implements GameController {
     } catch (IOException e) {
       throw new RuntimeException(e);
     } catch (IllegalArgumentException e) {
-
+      throw new IllegalArgumentException(e);
     }
   }
 
@@ -156,7 +145,6 @@ public class GuiGameControllerImpl implements GameController {
     buttonClickedMap.put("Open Set Map Dialog", () -> {
       JFileChooser fileChooser = new JFileChooser();
       fileChooser.setDialogTitle("Choose Map File");
-      // 设置默认显示的文件夹为res文件夹
       fileChooser.setCurrentDirectory(new File("res"));
       int result = fileChooser.showOpenDialog(view);
       if (result == JFileChooser.APPROVE_OPTION) {
@@ -182,13 +170,13 @@ public class GuiGameControllerImpl implements GameController {
       }
       String message = new DisplayWorldInfo("displayWorldInfo", model).execute(null).getMessage();
       JOptionPane.showMessageDialog(null, message);
-      view.showGameBoard();
-      view.resetFocus();
+      view.enableButtons();
     });
 
     buttonClickedMap.put("Start Game Button", () -> {
-      String message = new StartGame("startGame", model).execute(null).getMessage();
-      JOptionPane.showMessageDialog(null, message);
+      new StartGame("startGame", model).execute(null);
+      view.initialComponents();
+      view.updateView();
     });
 
     buttonClickedMap.put("Add Player Button", () -> {
@@ -205,7 +193,9 @@ public class GuiGameControllerImpl implements GameController {
         Map<String, String> params = new HashMap<>();
         params.put("playerName", playerName);
         params.put("maxItemsLimit", maxItemsLimit);
-        new AddPlayer("addPlayer", model).execute(params);
+        String message = new AddPlayer("addPlayer", model).execute(params).getMessage();
+        JOptionPane.showMessageDialog(null, message);
+        view.enableButtons();
       }
     });
 
@@ -216,21 +206,4 @@ public class GuiGameControllerImpl implements GameController {
     this.view.addActionListener(buttonListener);
   }
 
-  private void commandRegistry() {
-    commandRegistry.registerCommand(ProgramState.INIT, new DisplayWorldInfo("1", model));
-    commandRegistry.registerCommand(ProgramState.INIT, new DisplayRoomInfoByIndex("2", model));
-    commandRegistry.registerCommand(ProgramState.INIT, new DisplayItemInfoByIndex("3", model));
-    commandRegistry.registerCommand(ProgramState.INIT, new CreateWorldImage("4", model));
-    commandRegistry.registerCommand(ProgramState.INIT, new DisplayTargetInfo("5", model));
-    commandRegistry.registerCommand(ProgramState.INIT, new AddPlayer("7", model));
-    commandRegistry.registerCommand(ProgramState.INIT, new AddComputerPlayer("8", model));
-    commandRegistry.registerCommand(ProgramState.INIT, new StartGame("9", model));
-    commandRegistry.registerCommand(ProgramState.RUNNING, new MovePlayer("1", model));
-    commandRegistry.registerCommand(ProgramState.RUNNING, new LookAround("2", model));
-    commandRegistry.registerCommand(ProgramState.RUNNING, new PickItem("3", model));
-    commandRegistry.registerCommand(ProgramState.RUNNING, new DisplayPlayerDescription("4", model));
-    commandRegistry.registerCommand(ProgramState.RUNNING, new DisplayTargetInfo("5", model));
-    commandRegistry.registerCommand(ProgramState.RUNNING, new MovePet("6", model));
-    commandRegistry.registerCommand(ProgramState.RUNNING, new AttackTarget("7", model));
-  }
 }
