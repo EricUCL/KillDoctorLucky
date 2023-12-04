@@ -1,11 +1,5 @@
 package game.model;
 
-import game.constants.PlayerType;
-import game.constants.ProgramState;
-import game.utils.DfsGraphImpl;
-import game.utils.Graph;
-import game.utils.OperationResult;
-import game.utils.RandomGenerator;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -24,6 +18,12 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
+import game.constants.PlayerType;
+import game.constants.ProgramState;
+import game.utils.DfsGraphImpl;
+import game.utils.Graph;
+import game.utils.OperationResult;
+import game.utils.RandomGenerator;
 
 /**
  * This class represents the KillDoctorLuckyImpl class. It implements the KillDoctorLucky interface
@@ -35,7 +35,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   private final List<Room> rooms;
   private int numRows;
   private int numColumns;
-  private final int maxTurns;
+  private int maxTurns;
   private String worldName;
   private Target target;
   private final List<Player> players;
@@ -440,6 +440,11 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   @Override
   public int getMaxTurns() {
     return maxTurns;
+  }
+
+  @Override
+  public void setMaxTurns(int maxTurns) {
+    this.maxTurns = maxTurns;
   }
 
   @Override

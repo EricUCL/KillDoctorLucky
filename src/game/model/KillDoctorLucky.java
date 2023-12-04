@@ -202,6 +202,13 @@ public interface KillDoctorLucky {
   int getMaxTurns();
 
   /**
+   * Sets the maximum allowed turns for the game.
+   *
+   * @param maxTurns The maximum number of turns.
+   */
+  void setMaxTurns(int maxTurns);
+
+  /**
    * Retrieves the current state of the game program.
    *
    * @return The current state of the program.
