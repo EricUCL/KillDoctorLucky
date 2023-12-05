@@ -6,15 +6,21 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import game.controller.GuiGameControllerImpl;
+import game.model.KillDoctorLucky;
 import game.model.Player;
 import game.model.Room;
+import game.model.Target;
 import game.view.listeners.MouseClickListener;
 
 /**
@@ -23,18 +29,27 @@ import game.view.listeners.MouseClickListener;
 public class GameMapPanel extends JPanel {
   private List<Room> rooms;
   private int numRows;
+  private Target target;
   private int numColumns;
   private Color[] playerColors = { Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE,
       Color.PINK, Color.CYAN };
   private Map<Ellipse2D, Player> playerShapes = new HashMap<>();
 
   private Map<Rectangle2D, Room> roomShapes = new HashMap<>();
+  private Image targetImage;
 
-  public GameMapPanel(List<Room> rooms, int numRows, int numColumns,
-      GuiGameControllerImpl controller) {
-    this.rooms = rooms;
-    this.numRows = numRows;
-    this.numColumns = numColumns;
+  public GameMapPanel(KillDoctorLucky model, GuiGameControllerImpl controller) {
+    this.rooms = model.getRooms();
+    this.numRows = model.getNumRows();
+    this.numColumns = model.getNumCols();
+    this.target = model.getTarget();
+
+    try {
+      targetImage = ImageIO.read(new File("res/target.png"));
+    } catch (IOException e) {
+      System.err.println("Error loading target image: " + e.getMessage());
+      targetImage = null;
+    }
 
     MouseClickListener clickListener = new MouseClickListener(playerShapes, roomShapes, controller);
     addMouseListener(clickListener);
@@ -45,6 +60,7 @@ public class GameMapPanel extends JPanel {
     super.paintComponent(g);
     Graphics2D graphics = (Graphics2D) g;
     playerShapes.clear();
+    roomShapes.clear();
 
     int scaleW = getWidth() / numColumns;
     int scaleH = getHeight() / numRows;
@@ -90,6 +106,20 @@ public class GameMapPanel extends JPanel {
 
         playerX += playerSize + 5;
       }
+    }
+
+    if (targetImage != null && target != null) {
+      Room targetRoom = rooms.get(target.getRoomIndex());
+      int targetX = targetRoom.getUpperLeftCol() * scale;
+      int targetY = targetRoom.getUpperLeftRow() * scale;
+
+      int targetSize = Math.max(scale / 4, 20);
+      Image scaledImage = targetImage.getScaledInstance(targetSize, targetSize, Image.SCALE_SMOOTH);
+
+      targetX += (scale - targetSize) / 2;
+      targetY += (scale - targetSize) / 2;
+
+      graphics.drawImage(scaledImage, targetX, targetY, this);
     }
   }
 

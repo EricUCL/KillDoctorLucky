@@ -315,4 +315,11 @@ public interface KillDoctorLucky {
    * @return Turn Information.
    */
   String getTurnInfo();
+
+  /**
+   * Retrieves the target of the game.
+   *
+   * @return The {@link Target} instance representing the target.
+   */
+  Target getTarget();
 }

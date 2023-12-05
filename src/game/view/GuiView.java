@@ -134,8 +134,7 @@ public class GuiView extends JFrame {
 
   public void updateView(GuiGameControllerImpl listener) {
 
-    GameMapPanel newGameMapPanel = new GameMapPanel(model.getRooms(), model.getNumRows(),
-        model.getNumCols(), listener);
+    GameMapPanel newGameMapPanel = new GameMapPanel(model, listener);
 
     if (this.gameMapPanel != null) {
       this.remove(this.gameMapPanel);

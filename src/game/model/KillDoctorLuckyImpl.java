@@ -208,6 +208,11 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
+  public Target getTarget() {
+    return target;
+  }
+
+  @Override
   public String moveTarget() {
     this.target.setRoom((this.target.getRoomIndex() + 1) % this.rooms.size());
     return "Target moved to room " + this.target.getRoomIndex();
