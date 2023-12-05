@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -13,7 +14,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import game.controller.GameController;
+import game.controller.GuiGameControllerImpl;
 import game.model.KillDoctorLucky;
+import game.view.listeners.MouseClickListener;
 import game.view.panels.GameMapPanel;
 
 public class GuiView extends JFrame {
@@ -80,6 +84,10 @@ public class GuiView extends JFrame {
     startGameButton.addActionListener(actionListener);
   }
 
+//  public void addClickListener(GuiGameControllerImpl controller) {
+//    gameMapPanel.addClickListener(controller);
+//  }
+
   public void initialComponents() {
 
     this.getContentPane().removeAll();
@@ -124,16 +132,15 @@ public class GuiView extends JFrame {
     //    this.setVisible(true);
   }
 
-  public void updateView() {
+  public void updateView(GuiGameControllerImpl listener) {
 
     GameMapPanel newGameMapPanel = new GameMapPanel(model.getRooms(), model.getNumRows(),
-        model.getNumCols());
+        model.getNumCols(), listener);
 
     if (this.gameMapPanel != null) {
       this.remove(this.gameMapPanel);
     }
 
-    // 设置新的游戏地图面板
     this.gameMapPanel = newGameMapPanel;
     splitPane.setRightComponent(gameMapPanel);
 
@@ -150,9 +157,12 @@ public class GuiView extends JFrame {
     String turnsCount = model.displayPrepareMessage();
     turnsCountArea.setText(turnsCount);
 
-    // 重绘界面以显示新的地图
     this.validate();
     this.repaint();
+  }
+
+  public void addClickListener(MouseClickListener clickListener) {
+    addMouseListener(clickListener);
   }
 
 }

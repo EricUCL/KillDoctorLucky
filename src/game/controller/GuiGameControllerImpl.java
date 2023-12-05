@@ -18,6 +18,8 @@ import game.controller.command.DisplayWorldInfo;
 import game.controller.command.StartGame;
 import game.model.KillDoctorLucky;
 import game.model.PetImpl;
+import game.model.Player;
+import game.model.Room;
 import game.model.RoomImpl;
 import game.model.TargetImpl;
 import game.view.GuiView;
@@ -45,6 +47,7 @@ public class GuiGameControllerImpl implements GameController {
     //    readFile(fileReader);
     //    commandRegistry();
     configureButtonListener();
+    //    configureMouseClickListener();
     //    new CreateWorldImage("createWorldImage", model).execute(null);
   }
 
@@ -176,7 +179,7 @@ public class GuiGameControllerImpl implements GameController {
     buttonClickedMap.put("Start Game Button", () -> {
       new StartGame("startGame", model).execute(null);
       view.initialComponents();
-      view.updateView();
+      view.updateView(this);
     });
 
     buttonClickedMap.put("Add Player Button", () -> {
@@ -184,6 +187,7 @@ public class GuiGameControllerImpl implements GameController {
       int playerType = JOptionPane.showOptionDialog(null, "Please select player type", "Add Player",
           JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
       if (playerType == 0) {
+        System.out.println("Computer Player");
         String message = new AddComputerPlayer("addComputerPlayer", model).execute(null)
             .getMessage();
         JOptionPane.showMessageDialog(null, message);
@@ -195,8 +199,8 @@ public class GuiGameControllerImpl implements GameController {
         params.put("maxItemsLimit", maxItemsLimit);
         String message = new AddPlayer("addPlayer", model).execute(params).getMessage();
         JOptionPane.showMessageDialog(null, message);
-        view.enableButtons();
       }
+      view.enableButtons();
     });
 
     buttonClickedMap.put("Exit Button", () -> System.exit(0));
@@ -204,6 +208,25 @@ public class GuiGameControllerImpl implements GameController {
     ButtonListener buttonListener = new ButtonListener();
     buttonListener.setButtonClickedActionMap(buttonClickedMap);
     this.view.addActionListener(buttonListener);
+  }
+
+  //  private void configureMouseClickListener() {
+  ////    MouseClickListener mouseClickListener = new MouseClickListener();
+  //
+  ////    this.view.addMouseListener(mouseClickListener);
+  //  }
+
+  // 在GuiGameControllerImpl类中
+  public void handlePlayerClick(Player player) {
+    // 这里是处理点击事件的逻辑
+    System.out.println("Player clicked: " + player.getPlayerName());
+    // 可以在这里更新模型或视图
+  }
+
+  public void handleRoomClick(Room room) {
+    // 处理房间点击事件
+    System.out.println("Room clicked: " + room.getName());
+    // 可以在这里更新模型或视图
   }
 
 }
