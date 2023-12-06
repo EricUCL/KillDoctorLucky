@@ -26,6 +26,7 @@ import game.controller.command.MovePlayer;
 import game.controller.command.PickItem;
 import game.controller.command.StartGame;
 import game.model.Item;
+import game.model.ItemImpl;
 import game.model.KillDoctorLucky;
 import game.model.PetImpl;
 import game.model.Player;
@@ -55,12 +56,8 @@ public class GuiGameControllerImpl implements GameController {
     Objects.requireNonNull(view, "View cannot be null");
     Objects.requireNonNull(fileReader, "FileReader cannot be null");
 
-    //    readFile(fileReader);
-    //    commandRegistry();
     configureButtonListener();
     configureKeyBoardListener();
-    //    configureMouseClickListener();
-    //    new CreateWorldImage("createWorldImage", model).execute(null);
   }
 
   /**
@@ -173,7 +170,9 @@ public class GuiGameControllerImpl implements GameController {
           throw new RuntimeException(e);
         }
       }
-      String maxTurnsString = JOptionPane.showInputDialog(view, "Enter Max Turns:");
+      String[] options = { "10", "50", "100" };
+      String maxTurnsString = (String) JOptionPane.showInputDialog(view, "Please select max turns",
+          "Max Turns", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
       if (maxTurnsString != null && !maxTurnsString.isEmpty()) {
         try {
           int maxTurns = Integer.parseInt(maxTurnsString);
@@ -205,7 +204,10 @@ public class GuiGameControllerImpl implements GameController {
         JOptionPane.showMessageDialog(null, message);
       } else {
         String playerName = JOptionPane.showInputDialog("Please input player name");
-        String maxItemsLimit = JOptionPane.showInputDialog("Please input max item limit");
+        String[] options1 = { "5", "10", "15" };
+        String maxItemsLimit = (String) JOptionPane.showInputDialog(view,
+            "Please select max items limit", "Max Items Limit", JOptionPane.QUESTION_MESSAGE, null,
+            options1, options1[0]);
         Map<String, String> params = new HashMap<>();
         params.put("playerName", playerName);
         params.put("maxItemsLimit", maxItemsLimit);
@@ -214,6 +216,11 @@ public class GuiGameControllerImpl implements GameController {
       }
       view.enableButtons();
     });
+
+    //    buttonClickedMap.put("New Game", () -> {
+    //      view = new GuiView(model);
+    //      view.addActionListener(this);
+    //    });
 
     buttonClickedMap.put("Exit Button", () -> System.exit(0));
 
@@ -278,9 +285,7 @@ public class GuiGameControllerImpl implements GameController {
         String message = new PickItem("pickItem", model).execute(params).getMessage();
         JOptionPane.showMessageDialog(null, message);
       }
-
       updateView();
-
     }
   }
 
@@ -293,16 +298,21 @@ public class GuiGameControllerImpl implements GameController {
   private void attackTarget() {
     if (model.getCurrentRoom().getIndex() == model.getTarget().getRoomIndex()) {
       List<Item> itemList = model.getCurrentPlayer().getItemsList();
+      itemList.add(new ItemImpl(999, 1, "Poke"));
       String[] itemNames = itemList.stream()
           .map(item -> item.getName() + " (Damage: " + item.getDamage() + ")")
           .toArray(String[]::new);
       String chosenItem = (String) JOptionPane.showInputDialog(view, "Choose an item:", "Pick Item",
           JOptionPane.QUESTION_MESSAGE, null, itemNames, itemNames[0]);
       if (chosenItem != null) {
-        int itemIndex = Arrays.asList(itemNames).indexOf(chosenItem);
-        itemIndex = itemList.get(itemIndex).getId();
         Map<String, String> params = new HashMap<>();
-        params.put("itemIndex", String.valueOf(itemIndex));
+        if (chosenItem.equals("Poke (Damage: 1)")) {
+          params.put("itemIndex", "p");
+        } else {
+          int itemIndex = Arrays.asList(itemNames).indexOf(chosenItem);
+          itemIndex = itemList.get(itemIndex).getId();
+          params.put("itemIndex", String.valueOf(itemIndex));
+        }
         String message = new AttackTarget("attackTarget", model).execute(params).getMessage();
         JOptionPane.showMessageDialog(null, message);
         updateView();
@@ -334,7 +344,6 @@ public class GuiGameControllerImpl implements GameController {
     if (programState == ProgramState.FINALIZING) {
       JOptionPane.showMessageDialog(view, model.displayFinalMessage(), "Game Over",
           JOptionPane.INFORMATION_MESSAGE);
-
     }
   }
 

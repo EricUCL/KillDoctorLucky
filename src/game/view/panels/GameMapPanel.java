@@ -31,8 +31,11 @@ public class GameMapPanel extends JPanel {
   private int numRows;
   private Target target;
   private int numColumns;
-  private Color[] playerColors = { Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE,
-      Color.PINK, Color.CYAN };
+  private Color[] playerColors = { Color.RED, Color.BLUE, Color.GREEN, Color.GRAY, Color.ORANGE,
+      Color.PINK, Color.CYAN, Color.MAGENTA, Color.DARK_GRAY, Color.LIGHT_GRAY };
+
+  private Map<Player, Color> playerColorMap = new HashMap<>();
+  private Player currentPlayer;
   private Map<Ellipse2D, Player> playerShapes = new HashMap<>();
 
   private Map<Rectangle2D, Room> roomShapes = new HashMap<>();
@@ -50,6 +53,13 @@ public class GameMapPanel extends JPanel {
       System.err.println("Error loading target image: " + e.getMessage());
       targetImage = null;
     }
+
+    List<Player> allPlayers = model.getPlayers();
+    for (int i = 0; i < allPlayers.size(); i++) {
+      playerColorMap.put(allPlayers.get(i), playerColors[i % playerColors.length]);
+    }
+
+    this.currentPlayer = model.getCurrentPlayer();
 
     MouseClickListener clickListener = new MouseClickListener(playerShapes, roomShapes, controller);
     addMouseListener(clickListener);
@@ -80,6 +90,7 @@ public class GameMapPanel extends JPanel {
       int rectangleHeight = (room.getLowerRightRow() - room.getUpperLeftRow() + 1) * scale;
 
       graphics.setColor(Color.BLACK);
+      graphics.setStroke(new BasicStroke(2));
       graphics.drawRect(scaledX1, scaledY1, rectangleWidth, rectangleHeight);
 
       String text = room.getIndex() + "-" + room.getName();
@@ -95,14 +106,18 @@ public class GameMapPanel extends JPanel {
       int playerX = scaledX1 + 5;
       int playerY = scaledY1 + rectangleHeight - playerSize - 5;
 
-      int playerIndex = 0;
       for (Player player : room.getPlayers()) {
         Ellipse2D shape = new Ellipse2D.Float(playerX, playerY, playerSize, playerSize);
         playerShapes.put(shape, player);
 
-        graphics.setColor(playerColors[playerIndex % playerColors.length]); // 使用玩家索引来获取颜色
+        Color playerColor = playerColorMap.get(player);
+        graphics.setColor(playerColor);
         graphics.fill(shape);
-        playerIndex++;
+        if (player.equals(currentPlayer)) {
+          graphics.setColor(Color.yellow);
+          graphics.setStroke(new BasicStroke(3));
+          graphics.draw(shape);
+        }
 
         playerX += playerSize + 5;
       }

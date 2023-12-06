@@ -6,11 +6,13 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
@@ -21,7 +23,6 @@ import game.view.panels.GameMapPanel;
 public class GuiView extends JFrame {
   KillDoctorLucky model;
   private JButton setMapButton;
-  //  private JButton showWorldDescriptionButton;
   private JButton addPlayerButton;
   private JButton startGameButton;
   private JTextArea turnsCountArea;
@@ -29,21 +30,18 @@ public class GuiView extends JFrame {
   private JTextArea turnInformationArea;
   private JTextArea commandsInformationArea;
   private JSplitPane splitPane;
-
   private JPanel gameMapPanel;
+  private JMenuItem newGameMenuItem;
 
   public GuiView(KillDoctorLucky model) {
     super("Kill Doctor Lucky");
 
     this.model = model;
-
+    this.getContentPane().removeAll();
     this.setLayout(new FlowLayout());
 
-    setMapButton = new JButton("Set Map");
+    this.setMapButton = new JButton("Set Map");
     setMapButton.setActionCommand("Open Set Map Dialog");
-
-    //    showWorldDescriptionButton = new JButton("Show World Description");
-    //    showWorldDescriptionButton.setActionCommand("Show World Description Button");
 
     startGameButton = new JButton("Start Game");
     startGameButton.setActionCommand("Start Game Button");
@@ -62,11 +60,44 @@ public class GuiView extends JFrame {
     splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
     add(buttonPanel);
+    createMenuBar();
     pack();
-    setSize(800, 600);
+    setSize(1200, 1000);
     this.setLocationRelativeTo(null);
     setVisible(true);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+  }
+
+  private void createMenuBar() {
+    JMenuBar menuBar = new JMenuBar();
+
+    JMenu optionsMenu = new JMenu("Options");
+
+    newGameMenuItem = new JMenuItem("New Game");
+    newGameMenuItem.setActionCommand("New Game");
+    JMenuItem quitMenuItem = new JMenuItem("Quit");
+
+    newGameMenuItem.addActionListener(e -> {
+      splitPane.setVisible(false);
+      startGameButton.setVisible(true);
+      startGameButton.setEnabled(false);
+      addPlayerButton.setVisible(true);
+      addPlayerButton.setEnabled(false);
+      setMapButton.setVisible(true);
+    });
+
+    quitMenuItem.addActionListener(e -> {
+      System.out.println("Quit clicked");
+      System.exit(0);
+    });
+
+    //    optionsMenu.add(newGameMenuItem);
+    optionsMenu.add(quitMenuItem);
+
+    menuBar.add(optionsMenu);
+
+    this.setJMenuBar(menuBar);
   }
 
   public void enableButtons() {
@@ -80,15 +111,14 @@ public class GuiView extends JFrame {
     setMapButton.addActionListener(actionListener);
     addPlayerButton.addActionListener(actionListener);
     startGameButton.addActionListener(actionListener);
+    newGameMenuItem.addActionListener(actionListener);
   }
 
-  //  public void addClickListener(GuiGameControllerImpl controller) {
-  //    gameMapPanel.addClickListener(controller);
-  //  }
-
   public void initialComponents() {
-
     this.getContentPane().removeAll();
+    addPlayerButton.setVisible(false);
+    startGameButton.setVisible(false);
+    setMapButton.setVisible(false);
     this.setLayout(new BorderLayout());
 
     JPanel informationPanel = new JPanel(new GridBagLayout());
@@ -135,8 +165,8 @@ public class GuiView extends JFrame {
     this.repaint();
 
     this.pack();
-    this.setSize(800, 600);
-    //    this.setVisible(true);
+    this.setSize(1200, 1000);
+    this.setVisible(true);
   }
 
   public void updateView(GuiGameControllerImpl listener) {
@@ -150,14 +180,16 @@ public class GuiView extends JFrame {
     this.gameMapPanel = newGameMapPanel;
     splitPane.setRightComponent(gameMapPanel);
 
-    String turnInfo = model.getTurnInfo();
+    String turnInfo = model.getMaxTurns() - model.getTurnCount() + " turns left";
     turnInformationArea.setText(turnInfo);
+
     String targetInfo = model.displayTargetInfo();
     targetInfoArea.setText(targetInfo);
-    String commandsInfo = "SELECT THE COMMAND YOU WANT TO PERFORM\n"
-        + "To Move Player - Click on the space you want to\n" + "To Pick Item - Press P\n"
-        + "To Perform Look Around - Press L\n" + "To Attack Target - Press A\n"
-        + "To Move Pet - Press M\n" + "To Get Player Information - Click on the Player";
+
+    String commandsInfo =
+        "To Move Player - Click on the space you want to\n" + "To Pick Item - Press P\n"
+            + "To Perform Look Around - Press L\n" + "To Attack Target - Press A\n"
+            + "To Move Pet - Press M\n" + "To Get Player Information - Click on the Player";
     commandsInformationArea.setText(commandsInfo);
     String turnsCount = model.displayPrepareMessage();
     turnsCountArea.setText(turnsCount);
