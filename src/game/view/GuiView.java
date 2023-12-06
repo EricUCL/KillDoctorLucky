@@ -180,8 +180,8 @@ public class GuiView extends JFrame {
     this.gameMapPanel = newGameMapPanel;
     splitPane.setRightComponent(gameMapPanel);
 
-    String turnInfo = model.getMaxTurns() - model.getTurnCount() + " turns left";
-    turnInformationArea.setText(turnInfo);
+    String turnCount = model.getMaxTurns() - model.getTurnCount() + " turns left";
+    turnsCountArea.setText(turnCount);
 
     String targetInfo = model.displayTargetInfo();
     targetInfoArea.setText(targetInfo);
@@ -191,8 +191,8 @@ public class GuiView extends JFrame {
             + "To Perform Look Around - Press L\n" + "To Attack Target - Press A\n"
             + "To Move Pet - Press M\n" + "To Get Player Information - Click on the Player";
     commandsInformationArea.setText(commandsInfo);
-    String turnsCount = model.displayPrepareMessage();
-    turnsCountArea.setText(turnsCount);
+    String turnsInfo = model.getTurnInfo();
+    turnInformationArea.setText(turnsInfo);
 
     this.validate();
     this.repaint();
