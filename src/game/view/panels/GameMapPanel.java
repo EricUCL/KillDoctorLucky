@@ -102,7 +102,7 @@ public class GameMapPanel extends JPanel {
       Rectangle2D rect = new Rectangle2D.Float(scaledX1, scaledY1, rectangleWidth, rectangleHeight);
       roomShapes.put(rect, room);
 
-      int playerSize = Math.max(scale / 4, 10);
+      int playerSize = Math.max(scale / 2, 20);
       int playerX = scaledX1 + 5;
       int playerY = scaledY1 + rectangleHeight - playerSize - 5;
 

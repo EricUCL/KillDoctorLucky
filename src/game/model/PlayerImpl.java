@@ -33,7 +33,8 @@ public class PlayerImpl implements Player {
 
   @Override
   public List<Item> getItemsList() {
-    return itemsList;
+    // return a copy of the list
+    return new ArrayList<>(itemsList);
   }
 
   @Override
