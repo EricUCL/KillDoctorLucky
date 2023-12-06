@@ -489,6 +489,11 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
   }
 
   @Override
+  public Room getCurrentRoom() {
+    return rooms.get(getCurrentPlayer().getRoomIndex());
+  }
+
+  @Override
   public List<Player> getPlayers() {
     List<Player> playersCopy = new ArrayList<>();
     for (Player player : players) {

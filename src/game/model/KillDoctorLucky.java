@@ -322,4 +322,11 @@ public interface KillDoctorLucky {
    * @return The {@link Target} instance representing the target.
    */
   Target getTarget();
+
+  /**
+   * Retrieves the current room of the game.
+   *
+   * @return The {@link Room} instance representing the current room.
+   */
+  Room getCurrentRoom();
 }

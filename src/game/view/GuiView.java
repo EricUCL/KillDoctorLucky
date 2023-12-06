@@ -14,10 +14,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import game.controller.GameController;
 import game.controller.GuiGameControllerImpl;
 import game.model.KillDoctorLucky;
-import game.view.listeners.MouseClickListener;
 import game.view.panels.GameMapPanel;
 
 public class GuiView extends JFrame {
@@ -84,9 +82,9 @@ public class GuiView extends JFrame {
     startGameButton.addActionListener(actionListener);
   }
 
-//  public void addClickListener(GuiGameControllerImpl controller) {
-//    gameMapPanel.addClickListener(controller);
-//  }
+  //  public void addClickListener(GuiGameControllerImpl controller) {
+  //    gameMapPanel.addClickListener(controller);
+  //  }
 
   public void initialComponents() {
 
@@ -104,6 +102,15 @@ public class GuiView extends JFrame {
     targetInfoArea = new JTextArea("Target Info");
     turnInformationArea = new JTextArea("Turn Information");
     commandsInformationArea = new JTextArea("Commands Information");
+
+    turnsCountArea.setEditable(false);
+    turnsCountArea.setFocusable(false);
+    targetInfoArea.setEditable(false);
+    targetInfoArea.setFocusable(false);
+    turnInformationArea.setEditable(false);
+    turnInformationArea.setFocusable(false);
+    commandsInformationArea.setEditable(false);
+    commandsInformationArea.setFocusable(false);
 
     turnsCountArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     informationPanel.add(turnsCountArea, gbc);
@@ -149,19 +156,14 @@ public class GuiView extends JFrame {
     targetInfoArea.setText(targetInfo);
     String commandsInfo = "SELECT THE COMMAND YOU WANT TO PERFORM\n"
         + "To Move Player - Click on the space you want to\n" + "To Pick Item - Press P\n"
-        + "To Perform Look Around - Press L\n" + "To Kill Target - Press K\n"
-        + "To Move Pet - Press M\n" + "To Get Space Information - Press S\n"
-        + "To Get Player Information - Click on the Player";
+        + "To Perform Look Around - Press L\n" + "To Attack Target - Press A\n"
+        + "To Move Pet - Press M\n" + "To Get Player Information - Click on the Player";
     commandsInformationArea.setText(commandsInfo);
     String turnsCount = model.displayPrepareMessage();
     turnsCountArea.setText(turnsCount);
 
     this.validate();
     this.repaint();
+    this.requestFocus();
   }
-
-  public void addClickListener(MouseClickListener clickListener) {
-    addMouseListener(clickListener);
-  }
-
 }

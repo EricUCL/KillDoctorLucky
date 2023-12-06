@@ -1,5 +1,6 @@
 package game.controller;
 
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,15 +8,24 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import game.constants.ProgramState;
 import game.controller.command.AddComputerPlayer;
 import game.controller.command.AddPlayer;
+import game.controller.command.AttackTarget;
+import game.controller.command.DisplayPlayerDescription;
 import game.controller.command.DisplayWorldInfo;
+import game.controller.command.LookAround;
+import game.controller.command.MovePlayer;
+import game.controller.command.PickItem;
 import game.controller.command.StartGame;
+import game.model.Item;
 import game.model.KillDoctorLucky;
 import game.model.PetImpl;
 import game.model.Player;
@@ -24,6 +34,7 @@ import game.model.RoomImpl;
 import game.model.TargetImpl;
 import game.view.GuiView;
 import game.view.listeners.ButtonListener;
+import game.view.listeners.KeyboardListener;
 
 public class GuiGameControllerImpl implements GameController {
   private KillDoctorLucky model;
@@ -47,6 +58,7 @@ public class GuiGameControllerImpl implements GameController {
     //    readFile(fileReader);
     //    commandRegistry();
     configureButtonListener();
+    configureKeyBoardListener();
     //    configureMouseClickListener();
     //    new CreateWorldImage("createWorldImage", model).execute(null);
   }
@@ -210,23 +222,120 @@ public class GuiGameControllerImpl implements GameController {
     this.view.addActionListener(buttonListener);
   }
 
-  //  private void configureMouseClickListener() {
-  ////    MouseClickListener mouseClickListener = new MouseClickListener();
-  //
-  ////    this.view.addMouseListener(mouseClickListener);
-  //  }
-
-  // 在GuiGameControllerImpl类中
   public void handlePlayerClick(Player player) {
-    // 这里是处理点击事件的逻辑
     System.out.println("Player clicked: " + player.getPlayerName());
-    // 可以在这里更新模型或视图
+    Map<String, String> params = new HashMap<>();
+    params.put("playerName", player.getPlayerName());
+    String message = new DisplayPlayerDescription("displayPlayerDescription", model).execute(params)
+        .getMessage();
+    JOptionPane.showMessageDialog(null, message);
   }
 
   public void handleRoomClick(Room room) {
-    // 处理房间点击事件
     System.out.println("Room clicked: " + room.getName());
-    // 可以在这里更新模型或视图
+    Map<String, String> params = new HashMap<>();
+    params.put("roomIndex", String.valueOf(room.getIndex()));
+    if (!new MovePlayer("movePlayer", model).execute(params).isError()) {
+      updateView();
+    }
+  }
+
+  private void configureKeyBoardListener() {
+    Map<Character, Runnable> keyTypes = new HashMap<>();
+    Map<Integer, Runnable> keyPresses = new HashMap<>();
+    Map<Integer, Runnable> keyReleases = new HashMap<>();
+
+    keyPresses.put(KeyEvent.VK_P, this::pickItem);
+    keyPresses.put(KeyEvent.VK_L, this::lookAround);
+    keyPresses.put(KeyEvent.VK_A, this::attackTarget);
+    keyPresses.put(KeyEvent.VK_M, this::movePet);
+
+    KeyboardListener kbd = new KeyboardListener();
+
+    kbd.setKeyTypedMap(keyTypes);
+    kbd.setKeyPressedMap(keyPresses);
+    kbd.setKeyReleasedMap(keyReleases);
+
+    view.addKeyListener(kbd);
+  }
+
+  private void pickItem() {
+    List<Item> itemList = model.getCurrentRoom().getItems();
+    if (itemList.isEmpty()) {
+      JOptionPane.showMessageDialog(view, "No items in current room", "Error",
+          JOptionPane.ERROR_MESSAGE);
+    } else {
+      String[] itemNames = itemList.stream()
+          .map(item -> item.getName() + " (Damage: " + item.getDamage() + ")")
+          .toArray(String[]::new);
+      String chosenItem = (String) JOptionPane.showInputDialog(view, "Choose an item:", "Pick Item",
+          JOptionPane.QUESTION_MESSAGE, null, itemNames, itemNames[0]);
+      if (chosenItem != null) {
+        int itemIndex = Arrays.asList(itemNames).indexOf(chosenItem);
+        itemIndex = itemList.get(itemIndex).getId();
+        Map<String, String> params = new HashMap<>();
+        params.put("itemIndex", String.valueOf(itemIndex));
+        String message = new PickItem("pickItem", model).execute(params).getMessage();
+        JOptionPane.showMessageDialog(null, message);
+      }
+
+      updateView();
+
+    }
+  }
+
+  private void lookAround() {
+    String message = new LookAround("lookAround", model).execute(null).getMessage();
+    JOptionPane.showMessageDialog(null, message);
+    updateView();
+  }
+
+  private void attackTarget() {
+    if (model.getCurrentRoom().getIndex() == model.getTarget().getRoomIndex()) {
+      List<Item> itemList = model.getCurrentPlayer().getItemsList();
+      String[] itemNames = itemList.stream()
+          .map(item -> item.getName() + " (Damage: " + item.getDamage() + ")")
+          .toArray(String[]::new);
+      String chosenItem = (String) JOptionPane.showInputDialog(view, "Choose an item:", "Pick Item",
+          JOptionPane.QUESTION_MESSAGE, null, itemNames, itemNames[0]);
+      if (chosenItem != null) {
+        int itemIndex = Arrays.asList(itemNames).indexOf(chosenItem);
+        itemIndex = itemList.get(itemIndex).getId();
+        Map<String, String> params = new HashMap<>();
+        params.put("itemIndex", String.valueOf(itemIndex));
+        String message = new AttackTarget("attackTarget", model).execute(params).getMessage();
+        JOptionPane.showMessageDialog(null, message);
+        updateView();
+      }
+    } else {
+      JOptionPane.showMessageDialog(view, "Target is not in current room", "Error",
+          JOptionPane.ERROR_MESSAGE);
+    }
+  }
+
+  private void movePet() {
+    String roomNumberString = JOptionPane.showInputDialog(view, "Enter pet's new room number:");
+    if (roomNumberString != null && !roomNumberString.isEmpty()) {
+      try {
+        int roomNumber = Integer.parseInt(roomNumberString);
+        String message = model.movePet(roomNumber);
+        JOptionPane.showMessageDialog(null, message);
+        updateView();
+      } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(view, "Invalid room number", "Error",
+            JOptionPane.ERROR_MESSAGE);
+      }
+    }
+  }
+
+  private void updateView() {
+    view.updateView(this);
+    ProgramState programState = model.getProgramState();
+    if (programState == ProgramState.FINALIZING) {
+      JOptionPane.showMessageDialog(view, model.displayFinalMessage(), "Game Over",
+          JOptionPane.INFORMATION_MESSAGE);
+
+    }
   }
 
 }
