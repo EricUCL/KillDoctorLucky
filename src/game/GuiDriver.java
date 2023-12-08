@@ -15,6 +15,11 @@ import javax.swing.SwingUtilities;
  * Driver class for the GUI version of the game.
  */
 public class GuiDriver {
+  /**
+   * Main method.
+   *
+   * @param args command line arguments
+   */
   public static void main(String[] args) {
     SwingUtilities.invokeLater(() -> {
       try {
