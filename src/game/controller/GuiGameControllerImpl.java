@@ -1,24 +1,5 @@
 package game.controller;
 
-import java.awt.Component;
-import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import javax.swing.JFileChooser;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import game.constants.PlayerType;
 import game.constants.ProgramState;
 import game.controller.command.AddComputerPlayer;
@@ -41,12 +22,41 @@ import game.model.TargetImpl;
 import game.view.GuiView;
 import game.view.listeners.ButtonListener;
 import game.view.listeners.KeyboardListener;
+import java.awt.Component;
+import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
+/**
+ * Controller class for the GUI version of the game.
+ */
 public class GuiGameControllerImpl implements GuiGameController {
   private final KillDoctorLucky model;
   private final GuiView view;
   private Readable fileReader;
 
+  /**
+   * Constructor for the controller.
+   *
+   * @param model      model
+   * @param view       view
+   * @param fileReader fileReader
+   */
   public GuiGameControllerImpl(KillDoctorLucky model, GuiView view, Readable fileReader) {
     this.model = model;
     this.view = view;
@@ -234,6 +244,7 @@ public class GuiGameControllerImpl implements GuiGameController {
     this.view.addActionListener(buttonListener);
   }
 
+  @Override
   public void handlePlayerClick(Player player) {
     System.out.println("Player clicked: " + player.getPlayerName());
     Map<String, String> params = new HashMap<>();
@@ -243,6 +254,7 @@ public class GuiGameControllerImpl implements GuiGameController {
     JOptionPane.showMessageDialog(null, message);
   }
 
+  @Override
   public void handleRoomClick(Room room) {
     System.out.println("Room clicked: " + room.getName());
     Map<String, String> params = new HashMap<>();
@@ -317,7 +329,7 @@ public class GuiGameControllerImpl implements GuiGameController {
           JOptionPane.QUESTION_MESSAGE, null, itemNames, itemNames[0]);
       if (chosenItem != null) {
         Map<String, String> params = new HashMap<>();
-        if (chosenItem.equals("Poke (Damage: 1)")) {
+        if ("Poke (Damage: 1)".equals(chosenItem)) {
           params.put("itemIndex", "p");
         } else {
           int itemIndex = Arrays.asList(itemNames).indexOf(chosenItem);

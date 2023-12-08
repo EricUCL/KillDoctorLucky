@@ -1,5 +1,10 @@
 package game.view;
 
+import game.controller.GuiGameController;
+import game.controller.command.Command;
+import game.model.KillDoctorLucky;
+import game.model.ReadonlyGameModel;
+import game.view.panels.GameMapPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -18,12 +23,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import game.controller.GuiGameController;
-import game.controller.command.Command;
-import game.model.KillDoctorLucky;
-import game.model.ReadonlyGameModel;
-import game.view.panels.GameMapPanel;
 
+/**
+ * Represents a GUI view for the game.
+ */
 public class GuiView extends JFrame implements View {
   private final ReadonlyGameModel model;
   private final JButton setMapButton;
@@ -37,6 +40,11 @@ public class GuiView extends JFrame implements View {
   private JPanel gameMapPanel;
   private JMenuItem newGameMenuItem;
 
+  /**
+   * Constructs a GuiView.
+   *
+   * @param model the model to use
+   */
   public GuiView(KillDoctorLucky model) {
     super("Kill Doctor Lucky");
 
@@ -103,6 +111,7 @@ public class GuiView extends JFrame implements View {
     this.setJMenuBar(menuBar);
   }
 
+  @Override
   public void enableButtons() {
     addPlayerButton.setEnabled(true);
     if (!model.getPlayers().isEmpty()) {
@@ -110,6 +119,7 @@ public class GuiView extends JFrame implements View {
     }
   }
 
+  @Override
   public void addActionListener(ActionListener actionListener) {
     setMapButton.addActionListener(actionListener);
     addPlayerButton.addActionListener(actionListener);
@@ -117,6 +127,7 @@ public class GuiView extends JFrame implements View {
     newGameMenuItem.addActionListener(actionListener);
   }
 
+  @Override
   public void initialComponents() {
     this.getContentPane().removeAll();
     addPlayerButton.setVisible(false);
@@ -172,6 +183,7 @@ public class GuiView extends JFrame implements View {
     this.setVisible(true);
   }
 
+  @Override
   public void updateView(GuiGameController listener) {
 
     GameMapPanel newGameMapPanel = new GameMapPanel(model, listener);

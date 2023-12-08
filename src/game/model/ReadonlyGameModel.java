@@ -1,8 +1,12 @@
 package game.model;
 
-import java.util.List;
 import game.constants.ProgramState;
+import java.util.List;
 
+/**
+ * ReadonlyGameModel interface provides methods to get information about the game world. This
+ * interface is being used by the GameWorld class to get information about the game world.
+ */
 public interface ReadonlyGameModel {
   /**
    * Return the description of the room.

@@ -1,5 +1,11 @@
 package game.model;
 
+import game.constants.PlayerType;
+import game.constants.ProgramState;
+import game.utils.DfsGraphImpl;
+import game.utils.Graph;
+import game.utils.OperationResult;
+import game.utils.RandomGenerator;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -18,12 +24,6 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
-import game.constants.PlayerType;
-import game.constants.ProgramState;
-import game.utils.DfsGraphImpl;
-import game.utils.Graph;
-import game.utils.OperationResult;
-import game.utils.RandomGenerator;
 
 /**
  * This class represents the KillDoctorLuckyImpl class. It implements the KillDoctorLucky interface

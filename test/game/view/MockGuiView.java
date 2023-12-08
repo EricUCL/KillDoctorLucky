@@ -1,11 +1,17 @@
 package game.view;
 
-import java.io.IOException;
-import java.util.List;
 import game.controller.GuiGameController;
 import game.controller.command.Command;
+import java.io.IOException;
+import java.util.List;
 
+/**
+ * Represents a view for the game.
+ */
 public class MockGuiView extends GuiView {
+  /**
+   * Constructs a command line view.
+   */
   public MockGuiView() {
     super(null);
 

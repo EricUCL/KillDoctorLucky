@@ -1,6 +1,8 @@
 package game.view;
 
+import game.controller.GuiGameController;
 import game.controller.command.Command;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.List;
 
@@ -10,6 +12,28 @@ import java.util.List;
  * implementations (e.g., console-based, GUI-based) to be plugged in as needed.
  */
 public interface View {
+
+  /**
+   * Enables the buttons in the view.
+   */
+  void enableButtons();
+
+  /**
+   * Add button Listeners in the view.
+   */
+  void addActionListener(ActionListener actionListener);
+
+  /**
+   * Initializes the components of the view.
+   */
+  void initialComponents();
+
+  /**
+   * Updates the view with the given listener.
+   *
+   * @param listener The listener to be updated.
+   */
+  void updateView(GuiGameController listener);
 
   /**
    * Displays a list of available commands to the user.

@@ -1,12 +1,12 @@
 package game.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import game.constants.PlayerType;
 import game.constants.ProgramState;
 import game.utils.OperationResult;
 import game.utils.RandomGenerator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class represents the KillDoctorLuckyImpl class. It implements the KillDoctorLucky interface
@@ -334,6 +334,11 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
     return message;
   }
 
+  /**
+   * Get message for testing.
+   *
+   * @return message
+   */
   public String getMessage() {
     return message;
   }

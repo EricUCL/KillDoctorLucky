@@ -1,5 +1,11 @@
 package game.view.panels;
 
+import game.controller.GuiGameController;
+import game.model.Player;
+import game.model.ReadonlyGameModel;
+import game.model.Room;
+import game.model.Target;
+import game.view.listeners.MouseClickListener;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -16,12 +22,6 @@ import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import game.controller.GuiGameController;
-import game.model.Player;
-import game.model.ReadonlyGameModel;
-import game.model.Room;
-import game.model.Target;
-import game.view.listeners.MouseClickListener;
 
 /**
  * Panel that displays the game board.
@@ -38,6 +38,12 @@ public class GameMapPanel extends JPanel {
   private final Map<Rectangle2D, Room> roomShapes = new HashMap<>();
   private Image targetImage;
 
+  /**
+   * Creates an object of type GameMapPanel.
+   *
+   * @param model      the model to use
+   * @param controller the controller to use
+   */
   public GameMapPanel(ReadonlyGameModel model, GuiGameController controller) {
     this.rooms = model.getRooms();
     this.numRows = model.getNumRows();

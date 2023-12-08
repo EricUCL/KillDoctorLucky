@@ -2,10 +2,6 @@ package game.controller;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
 import org.junit.Before;
 import org.junit.Test;
 import game.constants.PlayerType;
@@ -14,6 +10,10 @@ import game.model.PlayerImpl;
 import game.model.RoomImpl;
 import game.utils.RandomGenerator;
 import game.view.MockGuiView;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 
 /**
  * Test class for GameControllerImpl.
@@ -21,11 +21,9 @@ import game.view.MockGuiView;
 public class GuiGameControllerImplTest {
   private GuiGameController gameController;
   private MockKillDoctorLuckyImpl mockModel;
-  private final Appendable output = new StringBuilder();
   private Readable fileReader;
   private Readable inputReader;
   private MockGuiView view;
-  private RandomGenerator randomGenerator;
 
   /**
    * Set up the test.
@@ -39,7 +37,7 @@ public class GuiGameControllerImplTest {
     args[0] = "res/mansion.txt";
     args[1] = "10";
     fileReader = new InputStreamReader(new FileInputStream(args[0]));
-    randomGenerator = new RandomGenerator(1, 1, 2, 3, 2, 1);
+    RandomGenerator randomGenerator = new RandomGenerator(1, 1, 2, 3, 2, 1);
     int maxTurns = Integer.parseInt(args[1]);
     mockModel = new MockKillDoctorLuckyImpl(maxTurns, randomGenerator);
     view = new MockGuiView();
