@@ -1,5 +1,6 @@
 package game.controller;
 
+import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,7 +15,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import game.constants.PlayerType;
 import game.constants.ProgramState;
 import game.controller.command.AddComputerPlayer;
 import game.controller.command.AddPlayer;
@@ -41,13 +46,11 @@ public class GuiGameControllerImpl implements GameController {
   private KillDoctorLucky model;
   private GuiView view;
   private Readable fileReader;
-  private final CommandRegistry commandRegistry;
 
   public GuiGameControllerImpl(KillDoctorLucky model, GuiView view, Readable fileReader) {
     this.model = model;
     this.view = view;
     this.fileReader = fileReader;
-    commandRegistry = new CommandRegistry();
   }
 
   @Override
@@ -190,7 +193,9 @@ public class GuiGameControllerImpl implements GameController {
     buttonClickedMap.put("Start Game Button", () -> {
       new StartGame("startGame", model).execute(null);
       view.initialComponents();
-      view.updateView(this);
+      updateView();
+      checkComputerTurn();
+      checkGameOver();
     });
 
     buttonClickedMap.put("Add Player Button", () -> {
@@ -244,6 +249,8 @@ public class GuiGameControllerImpl implements GameController {
     params.put("roomIndex", String.valueOf(room.getIndex()));
     if (!new MovePlayer("movePlayer", model).execute(params).isError()) {
       updateView();
+      checkGameOver();
+      checkComputerTurn();
     }
   }
 
@@ -286,6 +293,8 @@ public class GuiGameControllerImpl implements GameController {
         JOptionPane.showMessageDialog(null, message);
       }
       updateView();
+      checkGameOver();
+      checkComputerTurn();
     }
   }
 
@@ -293,6 +302,8 @@ public class GuiGameControllerImpl implements GameController {
     String message = new LookAround("lookAround", model).execute(null).getMessage();
     JOptionPane.showMessageDialog(null, message);
     updateView();
+    checkGameOver();
+    checkComputerTurn();
   }
 
   private void attackTarget() {
@@ -316,6 +327,8 @@ public class GuiGameControllerImpl implements GameController {
         String message = new AttackTarget("attackTarget", model).execute(params).getMessage();
         JOptionPane.showMessageDialog(null, message);
         updateView();
+        checkGameOver();
+        checkComputerTurn();
       }
     } else {
       JOptionPane.showMessageDialog(view, "Target is not in current room", "Error",
@@ -331,6 +344,8 @@ public class GuiGameControllerImpl implements GameController {
         String message = model.movePet(roomNumber);
         JOptionPane.showMessageDialog(null, message);
         updateView();
+        checkGameOver();
+        checkComputerTurn();
       } catch (NumberFormatException e) {
         JOptionPane.showMessageDialog(view, "Invalid room number", "Error",
             JOptionPane.ERROR_MESSAGE);
@@ -340,11 +355,50 @@ public class GuiGameControllerImpl implements GameController {
 
   private void updateView() {
     view.updateView(this);
+  }
+
+  private void checkComputerTurn() {
+    if (model.getProgramState() == ProgramState.FINALIZING) {
+      return;
+    }
+    Player currentPlayer = model.getCurrentPlayer();
+    if (currentPlayer.getPlayerType() == PlayerType.COMPUTER) {
+      System.out.println("Computer Turn");
+
+      String message = model.computerPlayerTurn();
+      JOptionPane.showMessageDialog(view, currentPlayer.getPlayerName() + "'s Turn\n" + message,
+          "Computer", JOptionPane.INFORMATION_MESSAGE);
+    }
+    updateView();
+    if (model.getProgramState() == ProgramState.FINALIZING) {
+      return;
+    }
+    if (model.getProgramState() != ProgramState.FINALIZING
+        && currentPlayer.getPlayerType() == PlayerType.COMPUTER) {
+      checkComputerTurn();
+    }
+  }
+
+  private void checkGameOver() {
     ProgramState programState = model.getProgramState();
     if (programState == ProgramState.FINALIZING) {
       JOptionPane.showMessageDialog(view, model.displayFinalMessage(), "Game Over",
           JOptionPane.INFORMATION_MESSAGE);
+      view.setEnabled(false);
+      JMenuBar menuBar = view.getJMenuBar();
+      menuBar.setEnabled(true);
+      for (Component component : menuBar.getComponents()) {
+        component.setEnabled(true);
+        if (component instanceof JMenu) {
+          JMenu menu = (JMenu) component;
+          for (int i = 0; i < menu.getItemCount(); i++) {
+            JMenuItem menuItem = menu.getItem(i);
+            if (menuItem != null) {
+              menuItem.setEnabled(true);
+            }
+          }
+        }
+      }
     }
   }
-
 }

@@ -198,4 +198,8 @@ public class GuiView extends JFrame {
     this.repaint();
     this.requestFocus();
   }
+
+  public void displayComputerPlayerTurnInfo(String computerPlayerTurn) {
+    turnInformationArea.setText(computerPlayerTurn);
+  }
 }

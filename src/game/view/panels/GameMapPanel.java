@@ -33,7 +33,6 @@ public class GameMapPanel extends JPanel {
   private int numColumns;
   private Color[] playerColors = { Color.RED, Color.BLUE, Color.GREEN, Color.GRAY, Color.ORANGE,
       Color.PINK, Color.CYAN, Color.MAGENTA, Color.DARK_GRAY, Color.LIGHT_GRAY };
-
   private Map<Player, Color> playerColorMap = new HashMap<>();
   private Player currentPlayer;
   private Map<Ellipse2D, Player> playerShapes = new HashMap<>();
@@ -128,7 +127,7 @@ public class GameMapPanel extends JPanel {
       int targetX = targetRoom.getUpperLeftCol() * scale;
       int targetY = targetRoom.getUpperLeftRow() * scale;
 
-      int targetSize = Math.max(scale / 4, 20);
+      int targetSize = Math.max(scale / 4, 30);
       Image scaledImage = targetImage.getScaledInstance(targetSize, targetSize, Image.SCALE_SMOOTH);
 
       targetX += (scale - targetSize) / 2;

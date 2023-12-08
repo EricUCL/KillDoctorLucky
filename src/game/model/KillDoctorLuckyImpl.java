@@ -313,9 +313,10 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
       return "Max players limit reached!";
     }
     String playerName = "ComputerPlayer" + players.size();
-    Player player = new PlayerImpl(playerName, 0, 10, PlayerType.COMPUTER);
+    int roomIndex = randomGenerator.getRandomNumberInRange(0, rooms.size() - 1);
+    Player player = new PlayerImpl(playerName, roomIndex, 20, PlayerType.COMPUTER);
     this.players.add(player);
-    Room room = rooms.get(0);
+    Room room = rooms.get(roomIndex);
     room.addPlayer(player);
     return "Computer Player added successfully";
   }
@@ -535,9 +536,7 @@ public class KillDoctorLuckyImpl implements KillDoctorLucky {
         if (currentRoom.getItems().isEmpty()) {
           return computerPlayerTurn();
         }
-        int randomItemIndex = randomGenerator.getRandomNumberInRange(0,
-            currentRoom.getItems().size() - 1);
-        Item pickedItem = currentRoom.getItems().get(randomItemIndex);
+        Item pickedItem = currentRoom.getItems().get(0);
         OperationResult result = pickItem(pickedItem.getId());
         if (result.isSuccess()) {
           return "Computer player picked item " + pickedItem.getName();
