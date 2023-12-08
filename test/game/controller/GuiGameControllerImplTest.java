@@ -2,8 +2,6 @@ package game.controller;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
-import org.junit.Test;
 import game.constants.PlayerType;
 import game.model.MockKillDoctorLuckyImpl;
 import game.model.PlayerImpl;
@@ -14,6 +12,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for GameControllerImpl.
