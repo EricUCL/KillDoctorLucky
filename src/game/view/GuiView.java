@@ -6,6 +6,8 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -17,19 +19,21 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import game.controller.GuiGameControllerImpl;
+import game.controller.command.Command;
 import game.model.KillDoctorLucky;
+import game.model.ReadonlyGameModel;
 import game.view.panels.GameMapPanel;
 
-public class GuiView extends JFrame {
-  KillDoctorLucky model;
-  private JButton setMapButton;
-  private JButton addPlayerButton;
-  private JButton startGameButton;
+public class GuiView extends JFrame implements View {
+  private final ReadonlyGameModel model;
+  private final JButton setMapButton;
+  private final JButton addPlayerButton;
+  private final JButton startGameButton;
   private JTextArea turnsCountArea;
   private JTextArea targetInfoArea;
   private JTextArea turnInformationArea;
   private JTextArea commandsInformationArea;
-  private JSplitPane splitPane;
+  private final JSplitPane splitPane;
   private JPanel gameMapPanel;
   private JMenuItem newGameMenuItem;
 
@@ -92,7 +96,6 @@ public class GuiView extends JFrame {
       System.exit(0);
     });
 
-    //    optionsMenu.add(newGameMenuItem);
     optionsMenu.add(quitMenuItem);
 
     menuBar.add(optionsMenu);
@@ -199,7 +202,23 @@ public class GuiView extends JFrame {
     this.requestFocus();
   }
 
-  public void displayComputerPlayerTurnInfo(String computerPlayerTurn) {
-    turnInformationArea.setText(computerPlayerTurn);
+  @Override
+  public void displayOptions(List<Command> commands) throws IOException {
+
+  }
+
+  @Override
+  public void displayMessage(String message) throws IOException {
+
+  }
+
+  @Override
+  public void displayError(String error) throws IOException {
+
+  }
+
+  @Override
+  public void prompt(String promptMessage) throws IOException {
+
   }
 }

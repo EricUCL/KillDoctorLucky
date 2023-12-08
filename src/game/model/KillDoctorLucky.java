@@ -1,15 +1,13 @@
 package game.model;
 
-import java.util.List;
 import game.constants.PlayerType;
-import game.constants.ProgramState;
 import game.utils.OperationResult;
 
 /**
  * This interface represents the KillDoctorLucky game. It has all the methods which are required for
  * the game to be played.
  */
-public interface KillDoctorLucky {
+public interface KillDoctorLucky extends ReadonlyGameModel {
   /**
    * Execute a move of the target, which doesn't require any input as target will be moving
    * according the room index orders.
@@ -19,61 +17,11 @@ public interface KillDoctorLucky {
   String moveTarget();
 
   /**
-   * Return the description of the room.
-   *
-   * @param roomIdx index of the room for which we need description.
-   * @return room description, which contains items and neighbors information.
-   */
-  String displayRoomDescription(int roomIdx);
-
-  /**
-   * Function for getting neighbours for a specified room with index.
-   *
-   * @param index Index of the room for which we have get neighbors
-   * @return Returns list of rooms.
-   */
-  List<Integer> getNeighboursOfRoom(int index);
-
-  /**
    * Function for generate the image of the world.
    *
    * @return image path.
    */
   String createWorldImage();
-
-  /**
-   * Function for getting information about item. This is being used by GameWorld to show item
-   * info.
-   *
-   * @param itemIdx index of the item.
-   * @return item name and damage.
-   */
-  String displayItemInfo(int itemIdx);
-
-  /**
-   * Function for getting the world description. This is being used by GameWorld to show world
-   * information.
-   *
-   * @return Returns the world description.
-   */
-  String getWorldDesc();
-
-  /**
-   * Function for getting information of the target. This is being used by GameWorld to show target
-   * info.
-   *
-   * @return target name, room index and health.
-   */
-  String displayTargetInfo();
-
-  /**
-   * Function for checking if two rooms are neighbors or not.
-   *
-   * @param current current room object
-   * @param other   other room object
-   * @return true if they are neighbors, false otherwise.
-   */
-  boolean isNeighbor(Room current, Room other);
 
   /**
    * Function for setting the number of rows in the world.
@@ -83,25 +31,11 @@ public interface KillDoctorLucky {
   void setNumRows(int numRows);
 
   /**
-   * Function for getting the number of rows in the world.
-   *
-   * @return number of rows
-   */
-  int getNumRows();
-
-  /**
    * Function for setting the number of columns in the world.
    *
    * @param numCols number of columns
    */
   void setNumCols(int numCols);
-
-  /**
-   * Function for getting the number of columns in the world.
-   *
-   * @return number of columns
-   */
-  int getNumCols();
 
   /**
    * Sets the name of the game world.
@@ -164,20 +98,7 @@ public interface KillDoctorLucky {
    */
   String addComputerPlayer();
 
-  /**
-   * Retrieves a player from the game world based on their name.
-   *
-   * @param playerName The name of the player to retrieve.
-   * @return The {@link Player} instance corresponding to the provided name.
-   */
-  Player getPlayer(String playerName);
 
-  /**
-   * Fetches the player who currently has the turn in the game.
-   *
-   * @return The {@link Player} instance representing the current player.
-   */
-  Player getCurrentPlayer();
 
   /**
    * Starts the game and initializes all game mechanics.
@@ -202,54 +123,11 @@ public interface KillDoctorLucky {
   String lookAround();
 
   /**
-   * Retrieves the current turn count.
-   *
-   * @return The current turn number.
-   */
-  int getTurnCount();
-
-  /**
-   * Provides the maximum allowed turns for the game.
-   *
-   * @return The maximum number of turns.
-   */
-  int getMaxTurns();
-
-  /**
    * Sets the maximum allowed turns for the game.
    *
    * @param maxTurns The maximum number of turns.
    */
   void setMaxTurns(int maxTurns);
-
-  /**
-   * Retrieves the current state of the game program.
-   *
-   * @return The current state of the program.
-   */
-  ProgramState getProgramState();
-
-  /**
-   * Lists items available in the room the current player is located in.
-   *
-   * @return A string representation of items in the current room.
-   */
-  String getItemsInCurrentRoom();
-
-  /**
-   * Provides a list of all active players in the game.
-   *
-   * @return A list of all players.
-   */
-  List<Player> getPlayers();
-
-  /**
-   * Offers a description of a specific player.
-   *
-   * @param playerName The name of the player whose description is needed.
-   * @return A string representation detailing the player's status and inventory.
-   */
-  String displayPlayerDescription(String playerName);
 
   /**
    * Facilitates the turn for a computer-controlled player.
@@ -288,45 +166,4 @@ public interface KillDoctorLucky {
    */
   OperationResult attackTarget(String itemId);
 
-  /**
-   * Lists items available in the current player's inventory.
-   *
-   * @return A string representation of items in the current player's inventory.
-   */
-  String displayItemsByCurrentPlayer();
-
-  /**
-   * Provides final message after the game is over.
-   *
-   * @return A string message indicating the end of the game.
-   */
-  String displayFinalMessage();
-
-  /**
-   * Retrieves a list of all rooms in the game.
-   *
-   * @return A list of all rooms.
-   */
-  List<Room> getRooms();
-
-  /**
-   * Retrieves Turn Information about the game.
-   *
-   * @return Turn Information.
-   */
-  String getTurnInfo();
-
-  /**
-   * Retrieves the target of the game.
-   *
-   * @return The {@link Target} instance representing the target.
-   */
-  Target getTarget();
-
-  /**
-   * Retrieves the current room of the game.
-   *
-   * @return The {@link Room} instance representing the current room.
-   */
-  Room getCurrentRoom();
 }

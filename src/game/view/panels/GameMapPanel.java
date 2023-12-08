@@ -17,8 +17,8 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import game.controller.GuiGameControllerImpl;
-import game.model.KillDoctorLucky;
 import game.model.Player;
+import game.model.ReadonlyGameModel;
 import game.model.Room;
 import game.model.Target;
 import game.view.listeners.MouseClickListener;
@@ -40,7 +40,7 @@ public class GameMapPanel extends JPanel {
   private Map<Rectangle2D, Room> roomShapes = new HashMap<>();
   private Image targetImage;
 
-  public GameMapPanel(KillDoctorLucky model, GuiGameControllerImpl controller) {
+  public GameMapPanel(ReadonlyGameModel model, GuiGameControllerImpl controller) {
     this.rooms = model.getRooms();
     this.numRows = model.getNumRows();
     this.numColumns = model.getNumCols();
