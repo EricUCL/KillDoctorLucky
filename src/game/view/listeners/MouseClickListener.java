@@ -1,21 +1,22 @@
 package game.view.listeners;
 
-import game.controller.GuiGameControllerImpl;
-import game.model.Player;
-import game.model.Room;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.Map;
+import game.controller.GuiGameController;
+import game.model.Player;
+import game.model.Room;
 
 public class MouseClickListener extends MouseAdapter {
   private final Map<Ellipse2D, Player> playerShapes;
-  private final GuiGameControllerImpl controller;
+  private final GuiGameController controller;
   private Map<Rectangle2D, Room> roomShapes = new HashMap<>();
 
-  public MouseClickListener(Map<Ellipse2D, Player> playerShapes, Map<Rectangle2D, Room> roomShapes, GuiGameControllerImpl controller) {
+  public MouseClickListener(Map<Ellipse2D, Player> playerShapes, Map<Rectangle2D, Room> roomShapes,
+      GuiGameController controller) {
     this.playerShapes = playerShapes;
     this.controller = controller;
     this.roomShapes = roomShapes;

@@ -42,9 +42,9 @@ import game.view.GuiView;
 import game.view.listeners.ButtonListener;
 import game.view.listeners.KeyboardListener;
 
-public class GuiGameControllerImpl implements GameController {
-  private KillDoctorLucky model;
-  private GuiView view;
+public class GuiGameControllerImpl implements GuiGameController {
+  private final KillDoctorLucky model;
+  private final GuiView view;
   private Readable fileReader;
 
   public GuiGameControllerImpl(KillDoctorLucky model, GuiView view, Readable fileReader) {
@@ -69,7 +69,7 @@ public class GuiGameControllerImpl implements GameController {
    * @param fileReader path of the file
    * @throws IllegalArgumentException if file isn't found
    */
-  public void readFile(Readable fileReader) throws IOException {
+  private void readFile(Readable fileReader) throws IOException {
     try (BufferedReader br = new BufferedReader((Reader) fileReader)) {
       String line = br.readLine();
       String[] worldInfo = line.trim().split("\\s+");

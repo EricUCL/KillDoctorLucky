@@ -18,7 +18,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import game.controller.GuiGameControllerImpl;
+import game.controller.GuiGameController;
 import game.controller.command.Command;
 import game.model.KillDoctorLucky;
 import game.model.ReadonlyGameModel;
@@ -172,7 +172,7 @@ public class GuiView extends JFrame implements View {
     this.setVisible(true);
   }
 
-  public void updateView(GuiGameControllerImpl listener) {
+  public void updateView(GuiGameController listener) {
 
     GameMapPanel newGameMapPanel = new GameMapPanel(model, listener);
 

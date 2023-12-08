@@ -1,12 +1,12 @@
 package game.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import game.constants.PlayerType;
 import game.constants.ProgramState;
 import game.utils.OperationResult;
 import game.utils.RandomGenerator;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This class represents the KillDoctorLuckyImpl class. It implements the KillDoctorLucky interface
@@ -22,6 +22,7 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
   private final int currentPlayerIndex;
   private final int currentTurn;
   private ProgramState programState;
+  private String message = "";
 
   /**
    * Constructor for the KillDoctorLuckyImpl class.
@@ -49,6 +50,16 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
   @Override
   public List<Room> getRooms() {
     return rooms;
+  }
+
+  @Override
+  public Target getTarget() {
+    return null;
+  }
+
+  @Override
+  public Room getCurrentRoom() {
+    return null;
   }
 
   @Override
@@ -106,6 +117,16 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
             && currentUpperLeftRow - 1 <= otherLowerRightRow);
 
     return rowNeighbor || colNeighbor;
+  }
+
+  @Override
+  public int getNumRows() {
+    return 0;
+  }
+
+  @Override
+  public int getNumCols() {
+    return 0;
   }
 
   @Override
@@ -220,7 +241,8 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public String movePlayer(int roomIndex) {
-    return "Move Player Activated!";
+    message = "Move Player Activated!";
+    return message;
   }
 
   @Override
@@ -255,6 +277,11 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
   @Override
   public String lookAround() {
     return "Look Around Activated!";
+  }
+
+  @Override
+  public void setMaxTurns(int maxTurns) {
+
   }
 
   @Override
@@ -303,8 +330,12 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
 
   @Override
   public String displayPlayerDescription(String playerName) {
+    message = "Display Player Description Activated!";
+    return message;
+  }
 
-    return "Display Player Description Activated!";
+  public String getMessage() {
+    return message;
   }
 
   @Override
@@ -343,6 +374,11 @@ public class MockKillDoctorLuckyImpl implements KillDoctorLucky {
   public String displayItemsByCurrentPlayer() {
 
     return "Display Items By Current Player Activated!";
+  }
+
+  @Override
+  public String getTurnInfo() {
+    return null;
   }
 
   @Override

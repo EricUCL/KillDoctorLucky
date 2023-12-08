@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import game.controller.GuiGameControllerImpl;
+import game.controller.GuiGameController;
 import game.model.Player;
 import game.model.ReadonlyGameModel;
 import game.model.Room;
@@ -27,20 +27,18 @@ import game.view.listeners.MouseClickListener;
  * Panel that displays the game board.
  */
 public class GameMapPanel extends JPanel {
-  private List<Room> rooms;
-  private int numRows;
-  private Target target;
-  private int numColumns;
-  private Color[] playerColors = { Color.RED, Color.BLUE, Color.GREEN, Color.GRAY, Color.ORANGE,
-      Color.PINK, Color.CYAN, Color.MAGENTA, Color.DARK_GRAY, Color.LIGHT_GRAY };
-  private Map<Player, Color> playerColorMap = new HashMap<>();
-  private Player currentPlayer;
-  private Map<Ellipse2D, Player> playerShapes = new HashMap<>();
+  private final List<Room> rooms;
+  private final int numRows;
+  private final Target target;
+  private final int numColumns;
+  private final Map<Player, Color> playerColorMap = new HashMap<>();
+  private final Player currentPlayer;
+  private final Map<Ellipse2D, Player> playerShapes = new HashMap<>();
 
-  private Map<Rectangle2D, Room> roomShapes = new HashMap<>();
+  private final Map<Rectangle2D, Room> roomShapes = new HashMap<>();
   private Image targetImage;
 
-  public GameMapPanel(ReadonlyGameModel model, GuiGameControllerImpl controller) {
+  public GameMapPanel(ReadonlyGameModel model, GuiGameController controller) {
     this.rooms = model.getRooms();
     this.numRows = model.getNumRows();
     this.numColumns = model.getNumCols();
@@ -55,6 +53,8 @@ public class GameMapPanel extends JPanel {
 
     List<Player> allPlayers = model.getPlayers();
     for (int i = 0; i < allPlayers.size(); i++) {
+      Color[] playerColors = { Color.RED, Color.BLUE, Color.GREEN, Color.GRAY, Color.ORANGE,
+          Color.PINK, Color.CYAN, Color.MAGENTA, Color.DARK_GRAY, Color.LIGHT_GRAY };
       playerColorMap.put(allPlayers.get(i), playerColors[i % playerColors.length]);
     }
 
