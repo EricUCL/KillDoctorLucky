@@ -1,14 +1,14 @@
 package game;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import game.controller.GameController;
 import game.controller.GuiGameControllerImpl;
 import game.model.KillDoctorLucky;
 import game.model.KillDoctorLuckyImpl;
 import game.utils.RandomGenerator;
 import game.view.GuiView;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import javax.swing.SwingUtilities;
 
 /**
