@@ -3,6 +3,7 @@ package game.controller;
 import static org.junit.Assert.assertEquals;
 
 import game.constants.PlayerType;
+import game.constants.ProgramState;
 import game.model.MockKillDoctorLuckyImpl;
 import game.model.PlayerImpl;
 import game.model.RoomImpl;
@@ -59,8 +60,24 @@ public class GuiGameControllerImplTest {
   }
 
   @Test
+  public void testHumanPlayerWins() throws IOException {
+    mockModel.setProgramState(ProgramState.FINALIZING);
+    gameController.startGame();
+    assertEquals(mockModel.displayFinalMessage(), "Game Over!");
+  }
+
+  @Test
   public void testHandleRoomClick() {
     gameController.handleRoomClick(new RoomImpl(1, "Room1", 1, 1, 1, 2));
     assertEquals(mockModel.getMessage(), "Move Player Activated!");
   }
+
+  @Test
+  public void testMaxTurns() throws IOException {
+    mockModel.setProgramState(ProgramState.FINALIZING);
+    gameController.startGame();
+    assertEquals(mockModel.displayFinalMessage(), "Game Over!");
+  }
+
+
 }
